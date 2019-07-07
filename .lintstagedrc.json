@@ -1,0 +1,23 @@
+{
+  "linters": {
+    "*.php": [
+      "prettier --write",
+      "./.lintstaged-phpmd",
+      "git add"
+    ],
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ],
+    "*.{css,scss}": [
+      "prettier --write",
+      "stylelint --fix",
+      "git add"
+    ],
+    "*.{yaml,yml,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  }
+}
