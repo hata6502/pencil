@@ -3,6 +3,9 @@
     "stylelint-config-standard",
     "stylelint-config-standard-scss"
   ],
+  "plugins": [
+    "stylelint-no-unsupported-browser-features"
+  ],
   "rules": {
     "plugin/no-unsupported-browser-features": [
       true,
