@@ -9,5 +9,8 @@
 @endsection
 
 @section('content')
-  TEST
+  <div class="article article-draw">
+    {{--<h2>お絵かきのツイート</h2>--}}
+    <canvas id="drawing-canvas"></canvas>
+  </div>
 @endsection
