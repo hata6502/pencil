@@ -14,7 +14,7 @@ function finishPath(x: number, y: number) {
 }
 
 export function render(element: HTMLCanvasElement): void {
-    //const context = element.getContext('2d')
+    /* const context = element.getContext('2d') */
 
     element.style.width = CANVAS_WIDTH * 2 + 'px'
     element.style.height = CANVAS_HEIGHT * 2 + 'px'
