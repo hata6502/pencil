@@ -1,4 +1,3 @@
-import * as drawingCanvas from './DrawingCanvas'
+import DrawingCanvas from './drawing-canvas'
 
-const drawingCanvasElement = <HTMLCanvasElement>document.getElementById('drawing-canvas')
-drawingCanvas.render(drawingCanvasElement)
+new DrawingCanvas(<HTMLCanvasElement>document.getElementById('drawing-canvas'))
