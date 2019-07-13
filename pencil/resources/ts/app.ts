@@ -1,11 +1,23 @@
-import DrawingButton from './drawing-button'
+import DrawingWindow from './drawing-window'
+import DrawingDialog from './drawing-dialog'
 import DrawingCanvas from './drawing-canvas'
+import PreviewCanvas from './preview-canvas'
 
-const drawingWindow = document.getElementById('drawing-window')
-new DrawingButton(<HTMLButtonElement>document.getElementById('drawing-button'), () => {
-    if (drawingWindow !== null) {
-        drawingWindow.style.display = 'block'
+const drawingWindow = new DrawingWindow(
+    <HTMLDivElement>document.getElementById('drawing-window'),
+    () => {
         drawingCanvas.isDisplay = true
+    },
+    () => {
+        drawingCanvas.isDisplay = false
+        previewCanvas.setDrawing(drawingCanvas.getDrawing())
     }
-})
+)
+
+new DrawingDialog(<HTMLDivElement>document.getElementById('drawing-dialog'))
+
 const drawingCanvas = new DrawingCanvas(<HTMLCanvasElement>document.getElementById('drawing-canvas'))
+
+const previewCanvas = new PreviewCanvas(<HTMLCanvasElement>document.getElementById('preview-canvas'), () => {
+    drawingWindow.display()
+})

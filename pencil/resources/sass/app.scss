@@ -1,5 +1,10 @@
 @import './ress.min.css';
 
+#drawing-canvas,
+#preview-canvas {
+  border: 1px solid lightgray;
+}
+
 #drawing-window {
   position: fixed;
   top: 0;
@@ -9,16 +14,12 @@
   height: 100vh;
   background-color: rgba(black, 0.5);
 
-  .drawing-dialog {
+  #drawing-dialog {
     position: absolute;
     top: 50%;
     left: 50%;
     padding: 1rem;
     background-color: white;
     transform: translateX(-50%) translateY(-50%);
-
-    #drawing-canvas {
-      border: 1px solid lightgray;
-    }
   }
 }
