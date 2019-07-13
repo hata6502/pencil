@@ -14,7 +14,7 @@ export default class {
     }
 
     display() {
-        this.element.style.display = 'block'
+        this.element.style.display = 'table'
         this.ondisplay()
     }
 

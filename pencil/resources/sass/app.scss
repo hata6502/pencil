@@ -19,31 +19,36 @@ $danger: tomato;
   height: 100%;
   background-color: rgba(black, 0.5);
 
-  #drawing-dialog {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    padding: 16px 12px;
-    background-color: white;
-    transform: translateX(-50%) translateY(-50%);
+  & > div {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
 
-    & > table {
-      & > tbody > tr > td {
-        padding: 0 4px;
-        vertical-align: top;
+    #drawing-dialog {
+      display: inline-block;
+      padding: 16px 12px;
+      background-color: white;
 
-        .drawing-dialog-sidebar {
-          .pencil-button {
+      & > table {
+        & > tbody > tr > td {
+          padding: 0 4px;
+          vertical-align: top;
+
+          .drawing-dialog-sidebar {
             width: 64px;
-            height: 64px;
-            margin-bottom: 8px;
-            border: 1px solid;
-            border-color: lightgray;
-            border-radius: 50%;
 
-            &.active {
-              background-color: rgba($primary, 0.5);
-              border-color: transparent;
+            .pencil-button {
+              width: 64px;
+              height: 64px;
+              margin-bottom: 8px;
+              border: 1px solid;
+              border-color: lightgray;
+              border-radius: 50%;
+
+              &.active {
+                background-color: rgba($primary, 0.5);
+                border-color: transparent;
+              }
             }
           }
         }
