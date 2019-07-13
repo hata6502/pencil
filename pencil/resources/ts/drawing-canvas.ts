@@ -8,14 +8,18 @@ function startPath(context: CanvasRenderingContext2D, x: number, y: number): voi
     context.fillRect(x * CANVAS_ZOOM, y * CANVAS_ZOOM, CANVAS_ZOOM, CANVAS_ZOOM)
 }
 
-function movePath(context: CanvasRenderingContext2D, x: number, y: number): void {
+function movePath(context: CanvasRenderingContext2D, fromX: number, fromY: number, toX: number, toY: number): void {
     context.fillStyle = DRAW_COLOR
-    context.fillRect(x * CANVAS_ZOOM, y * CANVAS_ZOOM, CANVAS_ZOOM, CANVAS_ZOOM)
-}
-
-function finishPath(context: CanvasRenderingContext2D, x: number, y: number): void {
-    context.fillStyle = DRAW_COLOR
-    context.fillRect(x * CANVAS_ZOOM, y * CANVAS_ZOOM, CANVAS_ZOOM, CANVAS_ZOOM)
+    const distance = Math.round(Math.sqrt(Math.pow(toX - fromX, 2.0) + Math.pow(toY - fromY, 2.0))) + 1
+    for (let i = 0; i <= distance; i++) {
+        const rate = i / distance
+        context.fillRect(
+            (fromX + Math.round((toX - fromX) * rate)) * CANVAS_ZOOM,
+            (fromY + Math.round((toY - fromY) * rate)) * CANVAS_ZOOM,
+            CANVAS_ZOOM,
+            CANVAS_ZOOM
+        )
+    }
 }
 
 function pointerToCanvasPosition(element: HTMLCanvasElement, event: PointerEvent): { x: number; y: number } {
@@ -32,25 +36,29 @@ function initializeWiiUEvents(element: HTMLCanvasElement): void {
     }
 
     let isDrawingPath: boolean = false
+    let prevX: number, prevY: number
 
     setInterval(() => {
         const gamepad = (<any>window).wiiu.gamepad.update()
 
         if (gamepad.tpTouch) {
-            //const rect = element.getBoundingClientRect()
+            const rect = element.getBoundingClientRect()
+
+            const x = Math.floor((gamepad.contentX - rect.left) / CANVAS_ZOOM)
+            const y = Math.floor((gamepad.contentY - rect.top) / CANVAS_ZOOM)
 
             if (isDrawingPath) {
-                movePath(context, 0, 0)
+                movePath(context, prevX, prevY, x, y)
+                prevX = x
+                prevY = y
             } else {
-                startPath(context, 0, 0)
+                startPath(context, x, y)
+                prevX = x
+                prevY = y
             }
 
             isDrawingPath = true
         } else {
-            if (isDrawingPath) {
-                finishPath(context, 0, 0)
-            }
-
             isDrawingPath = false
         }
     }, 1)
@@ -63,29 +71,34 @@ function initializePointerEvents(element: HTMLCanvasElement): void {
     }
 
     let isDrawingPath: boolean = false
+    let prevX: number, prevY: number
 
     element.onpointerdown = (event: PointerEvent) => {
         isDrawingPath = true
         let { x, y } = pointerToCanvasPosition(element, event)
         startPath(context, x, y)
+        prevX = x
+        prevY = y
     }
     element.onpointermove = (event: PointerEvent) => {
         if (isDrawingPath) {
             let { x, y } = pointerToCanvasPosition(element, event)
-            movePath(context, x, y)
+            movePath(context, prevX, prevY, x, y)
+            prevX = x
+            prevY = y
         }
     }
     document.addEventListener('pointerup', (event: PointerEvent) => {
         isDrawingPath = false
         let { x, y } = pointerToCanvasPosition(element, event)
-        finishPath(context, x, y)
+        movePath(context, prevX, prevY, x, y)
     })
 }
 
 export default class {
     constructor(element: HTMLCanvasElement) {
-        element.style.width = CANVAS_WIDTH * CANVAS_ZOOM + 'px'
-        element.style.height = CANVAS_HEIGHT * CANVAS_ZOOM + 'px'
+        element.setAttribute('width', (CANVAS_WIDTH * CANVAS_ZOOM).toString())
+        element.setAttribute('height', (CANVAS_HEIGHT * CANVAS_ZOOM).toString())
 
         if (navigator.userAgent.toLowerCase().indexOf('nintendo wiiu') != -1) {
             initializeWiiUEvents(element)

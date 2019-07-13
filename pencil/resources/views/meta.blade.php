@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <title>@if(isset($title)){{ $title }} - @endif{{ config('app.name') }}</title>
 @if(isset($description)) <meta name="description" content="{{ $description }}"> @endif
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 @if(isset($robots)) <meta name="robots" content="{{ $robots }}"> @endif
 
