@@ -57,9 +57,11 @@ function initializePointerEvents(element: HTMLCanvasElement): void {
         }
     }
     document.addEventListener('pointerup', (event: PointerEvent) => {
+        if (isDrawingPath) {
+            let { x, y } = pointerToCanvasPosition(element, event)
+            movePath(context, prevX, prevY, x, y)
+        }
         isDrawingPath = false
-        let { x, y } = pointerToCanvasPosition(element, event)
-        movePath(context, prevX, prevY, x, y)
     })
 }
 
