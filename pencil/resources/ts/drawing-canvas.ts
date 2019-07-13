@@ -9,10 +9,12 @@ function startPath(context: CanvasRenderingContext2D, x: number, y: number): voi
 }
 
 function movePath(context: CanvasRenderingContext2D, fromX: number, fromY: number, toX: number, toY: number): void {
-    context.fillStyle = DRAW_COLOR
     const distance = Math.round(Math.sqrt(Math.pow(toX - fromX, 2.0) + Math.pow(toY - fromY, 2.0))) + 1
+
+    context.fillStyle = DRAW_COLOR
     for (let i = 0; i <= distance; i++) {
         const rate = i / distance
+
         context.fillRect(
             (fromX + Math.round((toX - fromX) * rate)) * CANVAS_ZOOM,
             (fromY + Math.round((toY - fromY) * rate)) * CANVAS_ZOOM,
@@ -26,42 +28,8 @@ function pointerToCanvasPosition(element: HTMLCanvasElement, event: PointerEvent
     const rect = element.getBoundingClientRect()
     let x = Math.floor((event.clientX - rect.left) / CANVAS_ZOOM)
     let y = Math.floor((event.clientY - rect.top) / CANVAS_ZOOM)
+
     return { x, y }
-}
-
-function initializeWiiUEvents(element: HTMLCanvasElement): void {
-    const context = element.getContext('2d')
-    if (context === null) {
-        throw "Couldn't get context. "
-    }
-
-    let isDrawingPath: boolean = false
-    let prevX: number, prevY: number
-
-    setInterval(() => {
-        const gamepad = (<any>window).wiiu.gamepad.update()
-
-        if (gamepad.tpTouch) {
-            const rect = element.getBoundingClientRect()
-
-            const x = Math.floor((gamepad.contentX - rect.left) / CANVAS_ZOOM)
-            const y = Math.floor((gamepad.contentY - rect.top) / CANVAS_ZOOM)
-
-            if (isDrawingPath) {
-                movePath(context, prevX, prevY, x, y)
-                prevX = x
-                prevY = y
-            } else {
-                startPath(context, x, y)
-                prevX = x
-                prevY = y
-            }
-
-            isDrawingPath = true
-        } else {
-            isDrawingPath = false
-        }
-    }, 1)
 }
 
 function initializePointerEvents(element: HTMLCanvasElement): void {
@@ -96,14 +64,53 @@ function initializePointerEvents(element: HTMLCanvasElement): void {
 }
 
 export default class {
+    isDisplay: boolean = false
+
     constructor(element: HTMLCanvasElement) {
         element.setAttribute('width', (CANVAS_WIDTH * CANVAS_ZOOM).toString())
         element.setAttribute('height', (CANVAS_HEIGHT * CANVAS_ZOOM).toString())
 
         if (navigator.userAgent.toLowerCase().indexOf('nintendo wiiu') != -1) {
-            initializeWiiUEvents(element)
+            this.initializeWiiUEvents(element)
         } else {
             initializePointerEvents(element)
         }
+    }
+
+    private initializeWiiUEvents(element: HTMLCanvasElement): void {
+        const context = element.getContext('2d')
+        if (context === null) {
+            throw "Couldn't get context. "
+        }
+
+        let isDrawingPath: boolean = false
+        let prevX: number, prevY: number
+
+        setInterval(() => {
+            if (this.isDisplay) {
+                const gamepad = (<any>window).wiiu.gamepad.update()
+
+                if (gamepad.tpTouch) {
+                    const rect = element.getBoundingClientRect()
+
+                    const x = Math.floor((gamepad.contentX - rect.left) / CANVAS_ZOOM)
+                    const y = Math.floor((gamepad.contentY - rect.top) / CANVAS_ZOOM)
+
+                    if (isDrawingPath) {
+                        movePath(context, prevX, prevY, x, y)
+                        prevX = x
+                        prevY = y
+                    } else {
+                        startPath(context, x, y)
+                        prevX = x
+                        prevY = y
+                    }
+
+                    isDrawingPath = true
+                } else {
+                    isDrawingPath = false
+                }
+            }
+        }, 1)
     }
 }
