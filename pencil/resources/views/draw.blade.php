@@ -11,6 +11,11 @@
 @section('content')
   <div class="article article-draw">
     <h2>お絵かきのツイート</h2>
-    <canvas id="drawing-canvas"></canvas>
+    <button id="drawing-button">ウィンドウ表示</button>
+    <div id="drawing-window">
+      <div class="drawing-dialog">
+        <canvas id="drawing-canvas"></canvas>
+      </div>
+    </div>
   </div>
 @endsection
