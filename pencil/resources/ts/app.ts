@@ -18,6 +18,10 @@ new DrawingDialog(<HTMLDivElement>document.getElementById('drawing-dialog'))
 
 const drawingCanvas = new DrawingCanvas(<HTMLCanvasElement>document.getElementById('drawing-canvas'))
 
+Array.prototype.forEach.call(document.getElementsByClassName('pencil-button'), (pencilButton: HTMLButtonElement) => {
+    pencilButton.classList.toggle('active')
+})
+
 const previewCanvas = new PreviewCanvas(<HTMLCanvasElement>document.getElementById('preview-canvas'), () => {
     drawingWindow.display()
 })

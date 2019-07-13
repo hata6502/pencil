@@ -29,12 +29,7 @@ function pointerToCanvasPosition(element: HTMLCanvasElement, event: PointerEvent
     return { x, y }
 }
 
-function initializePointerEvents(element: HTMLCanvasElement): void {
-    const context = element.getContext('2d')
-    if (context === null) {
-        throw "Couldn't get context. "
-    }
-
+function initializePointerEvents(element: HTMLCanvasElement, context: CanvasRenderingContext2D): void {
     let isDrawingPath: boolean = false
     let prevX: number, prevY: number
 
@@ -81,7 +76,7 @@ export default class {
         if (navigator.userAgent.toLowerCase().indexOf('nintendo wiiu') != -1) {
             this.initializeWiiUEvents()
         } else {
-            initializePointerEvents(this.element)
+            initializePointerEvents(this.element, this.context)
         }
     }
 
