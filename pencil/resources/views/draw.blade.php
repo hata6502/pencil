@@ -24,9 +24,9 @@
                 </td>
                 <td>
                   <div class="drawing-dialog-sidebar">
-                    <button class="pencil-button active"><img src="/images/pencil-light.png"></button>
-                    <button class="pencil-button"><img src="/images/pencil-medium.png"></button>
-                    <button class="pencil-button"><img src="/images/pencil-bold.png"></button>
+                    <button class="pencil-button" data-brush="light"><img src="/images/pencil-light.png"></button>
+                    <button class="pencil-button active" data-brush="medium"><img src="/images/pencil-medium.png"></button>
+                    <button class="pencil-button" data-brush="bold"><img src="/images/pencil-bold.png"></button>
                   </div>
                 </td>
               </tr>

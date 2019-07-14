@@ -1,6 +1,7 @@
 import DrawingWindow from './drawing-window'
 import DrawingDialog from './drawing-dialog'
 import DrawingCanvas from './drawing-canvas'
+import PencilButton from './pencil-button'
 import PreviewCanvas from './preview-canvas'
 
 const drawingWindow = new DrawingWindow(
@@ -18,9 +19,22 @@ new DrawingDialog(<HTMLDivElement>document.getElementById('drawing-dialog'))
 
 const drawingCanvas = new DrawingCanvas(<HTMLCanvasElement>document.getElementById('drawing-canvas'))
 
-Array.prototype.forEach.call(document.getElementsByClassName('pencil-button'), (pencilButton: HTMLButtonElement) => {
-    pencilButton.classList.toggle('active')
-})
+let pencilButtons: PencilButton[] = []
+Array.prototype.forEach.call(
+    document.getElementsByClassName('pencil-button'),
+    (pencilButtonElement: HTMLButtonElement) => {
+        const pencilButton = new PencilButton(pencilButtonElement, () => {
+            pencilButtons.forEach((pencilButton: PencilButton) => {
+                pencilButton.inactivate()
+            })
+
+            pencilButton.activate()
+            drawingCanvas.brush = pencilButton.getBrush()
+        })
+
+        pencilButtons.push(pencilButton)
+    }
+)
 
 const previewCanvas = new PreviewCanvas(<HTMLCanvasElement>document.getElementById('preview-canvas'), () => {
     drawingWindow.display()
