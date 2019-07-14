@@ -20,6 +20,11 @@
             <tbody>
               <tr>
                 <td>
+                  <div id="stick-cursor">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
                   <canvas id="drawing-canvas"></canvas>
                 </td>
                 <td>

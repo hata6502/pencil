@@ -31,8 +31,37 @@ $danger: tomato;
 
       & > table {
         & > tbody > tr > td {
+          position: relative;
           padding: 0 4px;
           vertical-align: top;
+
+          #stick-cursor {
+            position: absolute;
+            display: none;
+
+            div:first-child {
+              position: absolute;
+              top: 4px;
+              width: 10px;
+              border-top: 2px solid black;
+            }
+
+            div:nth-child(2) {
+              position: absolute;
+              left: 4px;
+              height: 10px;
+              border-left: 2px solid black;
+            }
+
+            div:last-child {
+              position: absolute;
+              top: 4px;
+              left: 4px;
+              width: 2px;
+              height: 2px;
+              border-top: 2px solid white;
+            }
+          }
 
           .drawing-dialog-sidebar {
             width: 64px;

@@ -1,0 +1,82 @@
+import * as Settings from './settings'
+
+export default class {
+    x: number = Math.floor(Settings.CANVAS_WIDTH / 2)
+    y: number = Math.floor(Settings.CANVAS_HEIGHT / 2)
+    private element: HTMLDivElement
+
+    constructor(element: HTMLDivElement, onenter: () => void) {
+        let isEnterDown: boolean = false
+
+        this.element = element
+
+        window.addEventListener('keydown', (event: KeyboardEvent) => {
+            switch (event.keyCode) {
+                case Settings.KEYCODE_UP:
+                    this.y--
+                    break
+
+                case Settings.KEYCODE_DOWN:
+                    this.y++
+                    break
+
+                case Settings.KEYCODE_LEFT:
+                    this.x--
+                    break
+
+                case Settings.KEYCODE_RIGHT:
+                    this.x++
+                    break
+
+                case Settings.KEYCODE_ENTER:
+                    isEnterDown = true
+                    break
+
+                default:
+                    return
+            }
+
+            if (isEnterDown) {
+                onenter()
+            }
+
+            this.display()
+            event.preventDefault()
+        })
+
+        window.addEventListener('keyup', (event: KeyboardEvent) => {
+            switch (event.keyCode) {
+                case Settings.KEYCODE_ENTER:
+                    isEnterDown = false
+                    break
+            }
+        })
+
+        if (navigator.userAgent.toLowerCase().indexOf('nintendo wiiu') != -1) {
+            setInterval(() => {
+                const gamepad = (<any>window).wiiu.gamepad.update()
+
+                if (gamepad.lStickX !== 0.0 || gamepad.lStickY !== 0.0) {
+                    this.x += gamepad.lStickX
+                    this.y -= gamepad.lStickY
+
+                    if (isEnterDown) {
+                        onenter()
+                    }
+
+                    this.display()
+                }
+            }, 1)
+        }
+    }
+
+    hide() {
+        this.element.style.display = 'none'
+    }
+
+    private display() {
+        this.element.style.left = Math.floor(this.x) * Settings.CANVAS_ZOOM + 1 + 'px'
+        this.element.style.top = Math.floor(this.y) * Settings.CANVAS_ZOOM - 3 + 'px'
+        this.element.style.display = 'block'
+    }
+}

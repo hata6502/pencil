@@ -8,53 +8,6 @@ function getBrushPattern(brush: string): number[][] {
     return (<any>Settings.BRUSH_PATTERNS)[brush]
 }
 
-function draw(context: CanvasRenderingContext2D, originX: number, originY: number, brushPattern: number[][]) {
-    let y: number = originY - Math.floor(brushPattern.length / 2)
-    brushPattern.forEach(column => {
-        let x: number = originX - Math.floor(column.length / 2)
-        column.forEach(pattern => {
-            if (pattern) {
-                context.fillRect(
-                    x * Settings.CANVAS_ZOOM,
-                    y * Settings.CANVAS_ZOOM,
-                    Settings.CANVAS_ZOOM,
-                    Settings.CANVAS_ZOOM
-                )
-            }
-
-            x++
-        })
-
-        y++
-    })
-}
-
-function startPath(context: CanvasRenderingContext2D, x: number, y: number, brush: string): void {
-    const brushPattern = getBrushPattern(brush)
-
-    context.fillStyle = Settings.DRAW_COLOR
-    draw(context, x, y, brushPattern)
-}
-
-function movePath(
-    context: CanvasRenderingContext2D,
-    fromX: number,
-    fromY: number,
-    toX: number,
-    toY: number,
-    brush: string
-): void {
-    const brushPattern = getBrushPattern(brush)
-    const distance = Math.round(Math.sqrt(Math.pow(toX - fromX, 2.0) + Math.pow(toY - fromY, 2.0))) + 1
-
-    context.fillStyle = Settings.DRAW_COLOR
-    for (let i = 0; i < distance; i++) {
-        const rate = i / (distance - 1)
-
-        draw(context, fromX + Math.round((toX - fromX) * rate), fromY + Math.round((toY - fromY) * rate), brushPattern)
-    }
-}
-
 function pointerToCanvasPosition(element: HTMLCanvasElement, event: PointerEvent): { x: number; y: number } {
     const rect = element.getBoundingClientRect()
     let x = Math.floor((event.clientX - rect.left) / Settings.CANVAS_ZOOM)
@@ -68,14 +21,16 @@ export default class {
     brush: string
     private element: HTMLCanvasElement
     private context: CanvasRenderingContext2D
+    ondrawstart: () => void
 
-    constructor(element: HTMLCanvasElement) {
+    constructor(element: HTMLCanvasElement, ondrawstart: () => void) {
         this.element = element
         const context = this.element.getContext('2d')
         if (context === null) {
             throw "Couldn't get context. "
         }
         this.context = context
+        this.ondrawstart = ondrawstart
 
         this.brush = Settings.DRAW_BRUSH
 
@@ -98,6 +53,41 @@ export default class {
         )
     }
 
+    draw(originX: number, originY: number) {
+        const brushPattern = getBrushPattern(this.brush)
+
+        this.context.fillStyle = Settings.DRAW_COLOR
+
+        let y: number = originY - Math.floor(brushPattern.length / 2)
+        brushPattern.forEach(column => {
+            let x: number = originX - Math.floor(column.length / 2)
+            column.forEach(pattern => {
+                if (pattern) {
+                    this.context.fillRect(
+                        x * Settings.CANVAS_ZOOM,
+                        y * Settings.CANVAS_ZOOM,
+                        Settings.CANVAS_ZOOM,
+                        Settings.CANVAS_ZOOM
+                    )
+                }
+
+                x++
+            })
+
+            y++
+        })
+    }
+
+    private drawLine(fromX: number, fromY: number, toX: number, toY: number): void {
+        const distance = Math.round(Math.sqrt(Math.pow(toX - fromX, 2.0) + Math.pow(toY - fromY, 2.0))) + 1
+
+        for (let i = 0; i < distance; i++) {
+            const rate = i / (distance - 1)
+
+            this.draw(fromX + Math.round((toX - fromX) * rate), fromY + Math.round((toY - fromY) * rate))
+        }
+    }
+
     private initializeWiiUEvents(): void {
         let isDrawingPath: boolean = false
         let prevX: number, prevY: number
@@ -113,11 +103,12 @@ export default class {
                     const y = Math.floor((gamepad.contentY - rect.top) / Settings.CANVAS_ZOOM)
 
                     if (isDrawingPath) {
-                        movePath(this.context, prevX, prevY, x, y, this.brush)
+                        this.drawLine(prevX, prevY, x, y)
                         prevX = x
                         prevY = y
                     } else {
-                        startPath(this.context, x, y, this.brush)
+                        this.ondrawstart()
+                        this.draw(x, y)
                         prevX = x
                         prevY = y
                     }
@@ -137,14 +128,15 @@ export default class {
         this.element.onpointerdown = (event: PointerEvent) => {
             isDrawingPath = true
             let { x, y } = pointerToCanvasPosition(this.element, event)
-            startPath(this.context, x, y, this.brush)
+            this.ondrawstart()
+            this.draw(x, y)
             prevX = x
             prevY = y
         }
         this.element.onpointermove = (event: PointerEvent) => {
             if (isDrawingPath) {
                 let { x, y } = pointerToCanvasPosition(this.element, event)
-                movePath(this.context, prevX, prevY, x, y, this.brush)
+                this.drawLine(prevX, prevY, x, y)
                 prevX = x
                 prevY = y
             }
@@ -152,7 +144,7 @@ export default class {
         document.addEventListener('pointerup', (event: PointerEvent) => {
             if (isDrawingPath) {
                 let { x, y } = pointerToCanvasPosition(this.element, event)
-                movePath(this.context, prevX, prevY, x, y, this.brush)
+                this.drawLine(prevX, prevY, x, y)
             }
             isDrawingPath = false
         })
