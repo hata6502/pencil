@@ -20,7 +20,21 @@
             <tbody>
               <tr>
                 <td>
+                  <div class="drawing-dialog-sidebar">
+                    <button class="palette-button active" style="background-color: #000000; "></button>
+                    <button class="palette-button" style="background-color: #ff0000; "></button>
+                    <button class="palette-button" style="background-color: #00ff00; "></button>
+                    <button class="palette-button" style="background-color: #ffff00; "></button>
+                    <button class="palette-button" style="background-color: #0000ff; "></button>
+                    <button class="palette-button" style="background-color: #ff00ff; "></button>
+                    <button class="palette-button" style="background-color: #00ffff; "></button>
+                    <button class="palette-button" style="background-color: #ffffff; "></button>
+                  </div>
+                </td>
+                <td>
                   <div id="stick-cursor">
+                    <div></div>
+                    <div></div>
                     <div></div>
                     <div></div>
                     <div></div>

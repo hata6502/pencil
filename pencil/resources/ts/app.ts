@@ -2,6 +2,7 @@ import DrawingWindow from './drawing-window'
 import DrawingDialog from './drawing-dialog'
 import DrawingCanvas from './drawing-canvas'
 import PencilButton from './pencil-button'
+import PaletteButton from './palette-button'
 import StickCursor from './stick-cursor'
 import PreviewCanvas from './preview-canvas'
 
@@ -36,6 +37,23 @@ Array.prototype.forEach.call(
         })
 
         pencilButtons.push(pencilButton)
+    }
+)
+
+let paletteButtons: PaletteButton[] = []
+Array.prototype.forEach.call(
+    document.getElementsByClassName('palette-button'),
+    (paletteButtonElement: HTMLButtonElement) => {
+        const paletteButton = new PaletteButton(paletteButtonElement, (color: string) => {
+            paletteButtons.forEach((paletteButton: PaletteButton) => {
+                paletteButton.inactivate()
+            })
+
+            paletteButton.activate()
+            drawingCanvas.color = color
+        })
+
+        paletteButtons.push(paletteButton)
     }
 )
 

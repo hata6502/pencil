@@ -66,7 +66,7 @@ export default class {
 
                     this.display()
                 }
-            }, 1)
+            }, 16)
         }
     }
 
@@ -75,8 +75,8 @@ export default class {
     }
 
     private display() {
-        this.element.style.left = Math.floor(this.x) * Settings.CANVAS_ZOOM + 1 + 'px'
-        this.element.style.top = Math.floor(this.y) * Settings.CANVAS_ZOOM - 3 + 'px'
+        this.element.style.left = Math.floor(this.x) * Settings.CANVAS_ZOOM + 3 + 'px'
+        this.element.style.top = Math.floor(this.y) * Settings.CANVAS_ZOOM - 1 + 'px'
         this.element.style.display = 'block'
     }
 }

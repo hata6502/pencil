@@ -19,9 +19,10 @@ function pointerToCanvasPosition(element: HTMLCanvasElement, event: PointerEvent
 export default class {
     isDisplay: boolean = false
     brush: string
+    color: string = Settings.DRAW_COLOR
     private element: HTMLCanvasElement
     private context: CanvasRenderingContext2D
-    ondrawstart: () => void
+    private ondrawstart: () => void
 
     constructor(element: HTMLCanvasElement, ondrawstart: () => void) {
         this.element = element
@@ -56,7 +57,7 @@ export default class {
     draw(originX: number, originY: number) {
         const brushPattern = getBrushPattern(this.brush)
 
-        this.context.fillStyle = Settings.DRAW_COLOR
+        this.context.fillStyle = this.color
 
         let y: number = originY - Math.floor(brushPattern.length / 2)
         brushPattern.forEach(column => {
@@ -90,6 +91,7 @@ export default class {
 
     private initializeWiiUEvents(): void {
         let isDrawingPath: boolean = false
+        let isOnDrawStartDispatched: boolean = false
         let prevX: number, prevY: number
 
         setInterval(() => {
@@ -107,18 +109,29 @@ export default class {
                         prevX = x
                         prevY = y
                     } else {
-                        this.ondrawstart()
                         this.draw(x, y)
                         prevX = x
                         prevY = y
                     }
 
+                    if (
+                        (isOnDrawStartDispatched =
+                            x >= 0 &&
+                            x < Settings.CANVAS_WIDTH &&
+                            y >= 0 &&
+                            y < Settings.CANVAS_HEIGHT &&
+                            !isOnDrawStartDispatched)
+                    ) {
+                        this.ondrawstart()
+                    }
+
                     isDrawingPath = true
                 } else {
                     isDrawingPath = false
+                    isOnDrawStartDispatched = false
                 }
             }
-        }, 1)
+        }, 16)
     }
 
     private initializePointerEvents(): void {

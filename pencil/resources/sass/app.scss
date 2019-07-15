@@ -39,27 +39,32 @@ $danger: tomato;
             position: absolute;
             display: none;
 
-            div:first-child {
+            div {
               position: absolute;
-              top: 4px;
-              width: 10px;
-              border-top: 2px solid black;
-            }
-
-            div:nth-child(2) {
-              position: absolute;
-              left: 4px;
-              height: 10px;
-              border-left: 2px solid black;
-            }
-
-            div:last-child {
-              position: absolute;
-              top: 4px;
-              left: 4px;
+              top: 0;
+              left: 0;
               width: 2px;
               height: 2px;
-              border-top: 2px solid white;
+              border-top: 2px solid black;
+
+              &:nth-child(2) {
+                left: 4px;
+              }
+
+              &:nth-child(3) {
+                top: 4px;
+              }
+
+              &:nth-child(4) {
+                top: 4px;
+                left: 4px;
+              }
+
+              &:nth-child(5) {
+                top: 2px;
+                left: 2px;
+                border-color: white;
+              }
             }
           }
 
@@ -77,6 +82,19 @@ $danger: tomato;
               &.active {
                 background-color: rgba($primary, 0.5);
                 border-color: transparent;
+              }
+            }
+
+            .palette-button {
+              width: 26px;
+              height: 26px;
+              margin-bottom: 4px;
+              border: 1px solid lightgray;
+              border-width: 3px;
+              border-radius: 50%;
+
+              &.active {
+                border-color: $primary;
               }
             }
           }
