@@ -29,6 +29,9 @@
                     <button class="palette-button" style="background-color: #ff00ff; "></button>
                     <button class="palette-button" style="background-color: #00ffff; "></button>
                     <button class="palette-button" style="background-color: #ffffff; "></button>
+
+                    <button id="redo-button" class="history-button" disabled><img src="/images/redo.png"></button>
+                    <button id="undo-button" class="history-button" disabled><img src="/images/undo.png"></button>
                   </div>
                 </td>
                 <td>

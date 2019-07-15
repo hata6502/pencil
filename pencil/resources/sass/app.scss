@@ -71,7 +71,8 @@ $danger: tomato;
           .drawing-dialog-sidebar {
             width: 64px;
 
-            .pencil-button {
+            .pencil-button,
+            .history-button {
               width: 64px;
               height: 64px;
               margin-bottom: 8px;
@@ -82,6 +83,10 @@ $danger: tomato;
               &.active {
                 background-color: rgba($primary, 0.5);
                 border-color: transparent;
+              }
+
+              &:disabled {
+                opacity: 0.25;
               }
             }
 

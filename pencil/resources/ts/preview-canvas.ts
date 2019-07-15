@@ -30,7 +30,7 @@ export default class {
         element.onclick = onclick
     }
 
-    setDrawing(drawing: ImageData) {
+    setDrawing(drawing: ImageData): void {
         this.context.putImageData(drawing, 0, 0)
     }
 }

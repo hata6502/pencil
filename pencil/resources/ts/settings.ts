@@ -1,6 +1,7 @@
 export const CANVAS_WIDTH = 320
 export const CANVAS_HEIGHT = 140
 export const CANVAS_ZOOM = 2
+
 export const DRAW_BRUSH = 'medium'
 export const DRAW_COLOR = 'black'
 
@@ -24,3 +25,5 @@ export const KEYCODE_DOWN = 40
 export const KEYCODE_LEFT = 37
 export const KEYCODE_RIGHT = 39
 export const KEYCODE_ENTER = 13
+
+export const HISTORY_MAX_LENGTH = 11
