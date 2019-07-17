@@ -14,7 +14,7 @@
     "stylelint --fix",
     "git add"
   ],
-  "*.{yaml,yml,md}": [
+  "*.{html,yaml,yml,md}": [
     "prettier --write",
     "git add"
   ]

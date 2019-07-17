@@ -1,13 +1,5 @@
 import * as Settings from './settings'
 
-function getBrushPattern(brush: string): number[][] {
-    if (!(brush in Settings.BRUSH_PATTERNS)) {
-        throw `Couldn't get brush pattern: ${brush}. `
-    }
-
-    return (<any>Settings.BRUSH_PATTERNS)[brush]
-}
-
 function pointerToCanvasPosition(element: HTMLCanvasElement, event: PointerEvent): { x: number; y: number } {
     const rect = element.getBoundingClientRect()
     let x = Math.floor((event.clientX - rect.left) / Settings.CANVAS_ZOOM)
@@ -16,15 +8,19 @@ function pointerToCanvasPosition(element: HTMLCanvasElement, event: PointerEvent
     return { x, y }
 }
 
+type Mode = 'pencil' | 'text'
+
 export default class {
     isDisplay: boolean = false
     brush: string
     color: string = Settings.DRAW_COLOR
+    ontouchdrawstart: (() => void) | undefined = undefined
+    onchangehistory: ((index: number, length: number) => void) | undefined = undefined
+    text: string = ''
+    mode: Mode = 'pencil'
     private element: HTMLCanvasElement
     private context: CanvasRenderingContext2D
     private history: ImageData[] = []
-    ontouchdrawstart: (() => void) | undefined = undefined
-    onchangehistory: ((index: number, length: number) => void) | undefined = undefined
     private historyIndex = -1
 
     constructor(element: HTMLCanvasElement) {
@@ -65,28 +61,40 @@ export default class {
     }
 
     draw(originX: number, originY: number) {
-        const brushPattern = getBrushPattern(this.brush)
+        const brush = Settings.BRUSH_PATTERNS[this.brush]
 
         this.context.fillStyle = this.color
 
-        let y: number = originY - Math.floor(brushPattern.length / 2)
-        brushPattern.forEach(column => {
-            let x: number = originX - Math.floor(column.length / 2)
-            column.forEach(pattern => {
-                if (pattern) {
-                    this.context.fillRect(
-                        x * Settings.CANVAS_ZOOM,
-                        y * Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM
-                    )
-                }
+        switch (this.mode) {
+            case 'pencil': {
+                let y: number = originY - Math.floor(brush.pattern.length / 2)
+                brush.pattern.forEach(column => {
+                    let x: number = originX - Math.floor(column.length / 2)
+                    column.forEach(pattern => {
+                        if (pattern) {
+                            this.context.fillRect(
+                                x * Settings.CANVAS_ZOOM,
+                                y * Settings.CANVAS_ZOOM,
+                                Settings.CANVAS_ZOOM,
+                                Settings.CANVAS_ZOOM
+                            )
+                        }
 
-                x++
-            })
+                        x++
+                    })
 
-            y++
-        })
+                    y++
+                })
+                break
+            }
+
+            case 'text': {
+                this.context.font = brush.fontsize * Settings.CANVAS_ZOOM + 'px sans-serif'
+                this.context.textBaseline = 'middle'
+                this.context.fillText(this.text, originX * Settings.CANVAS_ZOOM, originY * Settings.CANVAS_ZOOM)
+                break
+            }
+        }
     }
 
     finishDraw(): void {
@@ -226,6 +234,10 @@ export default class {
     }
 
     private drawLine(fromX: number, fromY: number, toX: number, toY: number): void {
+        if (this.mode == 'text') {
+            return
+        }
+
         const distance = Math.round(Math.sqrt(Math.pow(toX - fromX, 2.0) + Math.pow(toY - fromY, 2.0))) + 1
 
         for (let i = 0; i < distance; i++) {

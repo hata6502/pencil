@@ -5,6 +5,7 @@ import PencilButton from './pencil-button'
 import PaletteButton from './palette-button'
 import HistoryButton from './history-button'
 import StickCursor from './stick-cursor'
+import TextInput from './text-input'
 import PreviewCanvas from './preview-canvas'
 
 const drawingWindow = new DrawingWindow(
@@ -40,6 +41,9 @@ Array.prototype.forEach.call(
 
             pencilButton.activate()
             drawingCanvas.brush = pencilButton.getBrush()
+
+            textInput.inactivate()
+            drawingCanvas.mode = 'pencil'
         })
 
         pencilButtons.push(pencilButton)
@@ -83,6 +87,12 @@ const stickCursor = new StickCursor(
         drawingCanvas.finishDraw()
     }
 )
+
+const textInput = new TextInput(<HTMLInputElement>document.getElementById('text-input'))
+textInput.onactive = text => {
+    drawingCanvas.text = text
+    drawingCanvas.mode = 'text'
+}
 
 const previewCanvas = new PreviewCanvas(<HTMLCanvasElement>document.getElementById('preview-canvas'), () => {
     drawingWindow.display()

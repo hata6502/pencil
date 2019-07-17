@@ -103,6 +103,20 @@ $danger: tomato;
               }
             }
           }
+
+          #text-input {
+            width: 100%;
+            border: 1px solid lightgray;
+
+            &.active {
+              border-color: $primary;
+              border-width: 2px;
+            }
+
+            &:not(.active) {
+              padding: 1px;
+            }
+          }
         }
       }
     }

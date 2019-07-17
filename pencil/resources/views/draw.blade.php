@@ -52,6 +52,13 @@
                   </div>
                 </td>
               </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <input id="text-input" placeholder="テキストを入力して埋め込みます。">
+                </td>
+                <td></td>
+              </tr>
             </tbody>
           </table>
         </div>
