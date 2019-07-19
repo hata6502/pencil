@@ -4,6 +4,14 @@
 $primary: mediumslateblue;
 $danger: tomato;
 
+// layout
+.noscroll {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
 // draw
 #drawing-canvas,
 #preview-canvas {

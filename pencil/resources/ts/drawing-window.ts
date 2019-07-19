@@ -15,11 +15,13 @@ export default class {
 
     display() {
         this.element.style.display = 'table'
+        document.body.classList.add('noscroll')
         this.ondisplay()
     }
 
     hide() {
         this.element.style.display = 'none'
+        document.body.classList.remove('noscroll')
         this.onhide()
     }
 }

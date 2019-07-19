@@ -10,7 +10,35 @@
 
 @section('content')
   <div class="article article-draw">
-    <h2>お絵かきのツイート</h2>
+    <h2>Pencil</h2>
+    <h3>drawing-beta version</h3>
+    <p>Maintainer: <a href="https://twitter.com/bluehood_admin">@bluehood_admin</a><br><br></p>
+    <p>
+      BlueHood 後継お絵かきアプリ「Pencil」の drawing-beta 版です。<br>
+      お絵かき機能のみ先行公開いたします。お絵かきの保存や投稿はできません。<br>
+      お絵かきの使いやすさなどをフィードバックしてくださるとうれしいです。<br>
+      <br>
+    </p>
+    <p>
+      This is drawing-beta version of Pencil: a drawing app post BlueHood. <br>
+      It can only drawing, without save drawing and post. <br>
+      Please feedback to me about usability and so on! <br>
+      <br>
+    </p>
+    <p>
+      プライバシーポリシー<br>
+      当アプリでは、エラー収集サービス「<a href="https://sentry.io/">Sentry</a>」を利用しています。<br>
+      このエラー情報は匿名で収集されており、個人を特定するものではありません。<br>
+      <br>
+    </p>
+    <p>
+      Privacy Policy<br>
+      This application uses <a href="https://sentry.io/">Sentry</a>: error logging service. <br>
+      Sended error informations contain no personal information. <br>
+      <br>
+    </p>
+    <p>↓タッチするとお絵かきウィンドウが開きます。 Tap or click here to draw. </p>
+    
     <canvas id="preview-canvas"></canvas>
     <div id="drawing-window">
       <div>
