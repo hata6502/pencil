@@ -1,3 +1,6 @@
+import 'core-js/stable'
+import * as Sentry from '@sentry/browser'
+
 import DrawingWindow from './drawing-window'
 import DrawingDialog from './drawing-dialog'
 import DrawingCanvas from './drawing-canvas'
@@ -7,6 +10,8 @@ import HistoryButton from './history-button'
 import StickCursor from './stick-cursor'
 import TextInput from './text-input'
 import PreviewCanvas from './preview-canvas'
+
+Sentry.init({ dsn: 'https://19e4397c2e5c47279823b887f7c74444@sentry.io/1509084' })
 
 const drawingWindow = new DrawingWindow(
     <HTMLDivElement>document.getElementById('drawing-window'),
