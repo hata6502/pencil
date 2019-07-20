@@ -27,14 +27,16 @@
     </p>
     <p>
       プライバシーポリシー<br>
-      当アプリでは、エラー収集サービス「<a href="https://sentry.io/">Sentry</a>」を利用しています。<br>
-      このエラー情報は匿名で収集されており、個人を特定するものではありません。<br>
+      当アプリでは、アクセス解析として「<a href="https://www.google.com/analytics/terms/jp.html">Googleアナリティクス</a>」、<br>
+      エラー収集として「<a href="https://sentry.io/">Sentry</a>」を利用しています。<br>
+      送信される情報は匿名で収集されており、個人を特定するものではありません。<br>
       <br>
     </p>
     <p>
       Privacy Policy<br>
-      This application uses <a href="https://sentry.io/">Sentry</a>: error logging service. <br>
-      Sended error informations contain no personal information. <br>
+      This application uses <a href="https://www.google.com/analytics/terms/jp.html">Google Analytics</a>: access logging service, <br>
+      and <a href="https://sentry.io/">Sentry</a>: error logging service. <br>
+      These sended informations contain no personal information. <br>
       <br>
     </p>
     <p>↓タッチするとお絵かきウィンドウが開きます。 Tap or click here to draw. </p>
