@@ -14,7 +14,7 @@
 <meta property="og:url" content="{{ $canonical }}">
 <meta property="og:title" content="{{ $title??config('app.name') }}">
 @if(isset($description)) <meta property="og:description" content="{{ $description }}"> @endif
-<meta property="og:image" content="{{ $og_image??url('/images/og.png') }}">
+<meta property="og:image" content="{{ $og_image??url('/images/wing.png') }}">
 
 <link rel="canonical" href="{{ $canonical }}">
 <link rel="icon" href="{{ url('/images/favicon@32px.png') }}" sizes="32x32">
