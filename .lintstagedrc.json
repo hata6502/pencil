@@ -1,7 +1,6 @@
 {
   "*.php": [
     "prettier --write",
-    "./.lintstaged-phpmd",
     "git add"
   ],
   "*.{js,jsx,ts,tsx}": [
