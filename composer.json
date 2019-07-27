@@ -1,8 +1,0 @@
-{
-    "name": "blue-hood/pencil",
-    "type": "project",
-    "license": "MIT",
-    "require": {
-        "phpmd/phpmd": "^2.6"
-    }
-}
