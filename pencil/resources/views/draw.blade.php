@@ -52,13 +52,13 @@
                 <td>
                   <div class="drawing-dialog-sidebar">
                     <button class="palette-button active" style="background-color: #000000; "></button>
-                    <button class="palette-button" style="background-color: #ff0000; "></button>
-                    <button class="palette-button" style="background-color: #00ff00; "></button>
-                    <button class="palette-button" style="background-color: #ffff00; "></button>
-                    <button class="palette-button" style="background-color: #0000ff; "></button>
-                    <button class="palette-button" style="background-color: #ff00ff; "></button>
-                    <button class="palette-button" style="background-color: #00ffff; "></button>
                     <button class="palette-button" style="background-color: #ffffff; "></button>
+                    <button class="palette-button" style="background-color: #ff0000; "></button>
+                    <button class="palette-button" style="background-color: #00ffff; "></button>
+                    <button class="palette-button" style="background-color: #00ff00; "></button>
+                    <button class="palette-button" style="background-color: #ff00ff; "></button>
+                    <button class="palette-button" style="background-color: #0000ff; "></button>
+                    <button class="palette-button" style="background-color: #ffff00; "></button>
 
                     <button id="redo-button" class="history-button" disabled><img src="/images/redo.png"></button>
                     <button id="undo-button" class="history-button" disabled><img src="/images/undo.png"></button>
