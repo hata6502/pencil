@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
 use Socialite;
+use App\User;
 use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -15,6 +18,18 @@ class LoginController extends Controller
 
     public function callback()
     {
-        $user = Socialite::driver('twitter')->user();
+        $twitterUser = Socialite::driver('twitter')->user();
+        $user = User::updateOrCreate([
+            'id' => $twitterUser->id
+        ]);
+        Auth::login($user);
+
+        return redirect()->intended();
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('top');
     }
 }
