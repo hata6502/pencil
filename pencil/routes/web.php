@@ -12,3 +12,8 @@
 */
 
 Route::get('', 'TopController@draw')->name('draw');
+
+Route::group(['middleware' => 'auth.very_basic'], function () {
+    Route::get('login', 'Auth\LoginController@login')->name('login');
+    Route::get('login/callback', 'Auth\LoginController@callback')->name('callback');
+});

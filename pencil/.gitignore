@@ -15,3 +15,4 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 /laradock
+/config/very_basic_auth.php
