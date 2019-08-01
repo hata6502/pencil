@@ -11,14 +11,15 @@
 |
 */
 
-Route::get('', 'TopController@draw')->name('top');
+Route::get('', 'TopController@index')->name('top');
 
 Route::group(['middleware' => 'auth.very_basic'], function () {
-    Route::get('login', 'Auth\LoginController@login')->name('login');
-    Route::get('login/callback', 'Auth\LoginController@callback')->name('callback');
-    Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+    Route::get('login', 'AuthController@login')->name('login');
+    Route::get('login/callback', 'AuthController@callback')->name('callback');
+    Route::get('logout', 'AuthController@logout')->name('logout');
 });
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('post', 'TopController@draw')->name('post');
+    Route::get('draw', 'TopController@draw')->name('draw');
+    Route::post('post', 'TwitterController@post')->name('post');
 });
