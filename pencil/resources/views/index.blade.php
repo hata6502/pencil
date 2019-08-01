@@ -3,27 +3,49 @@
 
 @section('meta')
   @include('meta', [
-    'title' => 'お絵かきの投稿',
+    'description' => 'Twitter に直接投稿できる気軽なお絵かきサービスです。',
   ])
+  {{-- 画像の上からお絵かきを重ねたり、自分の気持ちをアイコンで添えることもできます。 --}}
 @endsection
 
 @section('content')
   <div class="article article-draw">
-    <h2>お絵かきの投稿</h2>
+    <h2>Pencil</h2>
+    <h3>drawing-beta version</h3>
+    <p>Maintainer: <a href="https://twitter.com/bluehood_admin">@bluehood_admin</a><br><br></p>
+    <p>
+      BlueHood 後継お絵かきアプリ「Pencil」の drawing-beta 版です。<br>
+      お絵かき機能のみ先行公開いたします。お絵かきの保存や投稿はできません。<br>
+      お絵かきの使いやすさなどをフィードバックしてくださるとうれしいです。<br>
+      <br>
+    </p>
+    <p>
+      This is drawing-beta version of Pencil: a drawing app post BlueHood. <br>
+      It can only drawing, without save drawing and post. <br>
+      Please feedback to me about usability and so on! <br>
+      <br>
+    </p>
+    <p>
+      プライバシーポリシー<br>
+      当アプリでは、アクセス解析として「<a href="https://www.google.com/analytics/terms/jp.html">Googleアナリティクス</a>」、<br>
+      エラー収集として「<a href="https://sentry.io/">Sentry</a>」を利用しています。<br>
+      送信される情報は匿名で収集されており、個人を特定するものではありません。<br>
+      <br>
+    </p>
+    <p>
+      Privacy Policy<br>
+      This application uses <a href="https://www.google.com/analytics/terms/jp.html">Google Analytics</a>: access logging service, <br>
+      and <a href="https://sentry.io/">Sentry</a>: error logging service. <br>
+      These sended informations contain no personal information. <br>
+      <br>
+    </p>
     <p>↓タッチするとお絵かきウィンドウが開きます。 Tap or click here to draw. </p>
     
     <canvas id="preview-canvas"></canvas>
-
-    <form action="{{ route('post') }}" method="POST">
-      {{ csrf_field() }}
-
-      <input name="drawing" type="hidden">
-      <input type="submit" value="ツイート">
-    </form>
-
     <div id="drawing-window">
       <div>
         <div id="drawing-dialog">
+          {{-- flex 非対応のためテーブルレイアウト --}}
           <table>
             <tbody>
               <tr>
