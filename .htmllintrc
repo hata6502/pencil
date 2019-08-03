@@ -59,7 +59,7 @@
     "line-no-trailing-whitespace": true,
     "line-max-len": false,
     "line-max-len-ignore-regex": false,
-    "head-req-title": true,
+    "head-req-title": false,
     "title-no-dup": true,
     "title-max-len": 60,
     "html-req-lang": false,
