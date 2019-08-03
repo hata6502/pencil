@@ -1,13 +1,46 @@
 .top {
-  h1 {
+  .header {
+    position: relative;
+    padding-top: 37.5%;
     margin: 16px 0;
 
-    & > * {
-      vertical-align: middle;
+    h1 {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      & > * {
+        vertical-align: middle;
+      }
+
+      img {
+        width: 64px;
+        height: auto;
+      }
     }
 
-    img {
-      width: 64px;
+    .horizon {
+      position: absolute;
+      top: 60%;
+      right: 0;
+      left: 0;
+      height: 40%;
+      background-image: url('/images/ground.png');
+      background-repeat: repeat;
+      border-top: 4px solid rgb(150, 150, 150);
+    }
+
+    .landscape {
+      position: absolute;
+      top: 0;
+      right: 10%;
+    }
+
+    .animal {
+      position: absolute;
+      bottom: 0;
+      left: 10%;
+      width: 224px;
       height: auto;
     }
   }
