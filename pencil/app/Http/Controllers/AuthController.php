@@ -19,9 +19,13 @@ class AuthController extends Controller
     public function callback()
     {
         $twitterUser = Socialite::driver('twitter')->user();
-        $user = User::updateOrCreate([
-            'id' => $twitterUser->id
-        ]);
+        $user = User::updateOrCreate(
+            ['id' => $twitterUser->id],
+            [
+                'token' => $twitterUser->token,
+                'token_secret' => $twitterUser->tokenSecret
+            ]
+        );
         Auth::login($user);
 
         return redirect()->intended();
