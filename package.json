@@ -22,6 +22,8 @@
     "@typescript-eslint/parser": "^1.12.0",
     "eslint": "^6.0.1",
     "eslint-config-prettier": "^6.0.0",
+    "htmllint": "^0.7.2",
+    "htmllint-cli": "0.0.7",
     "husky": "^3.0.0",
     "lint-staged": "^9.2.0",
     "prettier": "^1.18.2",
@@ -31,12 +33,12 @@
     "stylelint-config-standard-scss": "^1.1.0",
     "stylelint-no-unsupported-browser-features": "^3.0.2",
     "stylelint-scss": "^3.9.1",
-    "typescript": "^3.5.3",
     "textlint": "^11.3.1",
     "textlint-filter-rule-comments": "^1.2.2",
+    "textlint-plugin-html": "^0.2.0",
     "textlint-rule-preset-japanese": "^4.0.4",
     "textlint-rule-preset-jtf-style": "^2.3.3",
     "textlint-rule-prh": "^5.2.1",
-    "textlint-plugin-html": "^0.2.0"
+    "typescript": "^3.5.3"
   }
 }

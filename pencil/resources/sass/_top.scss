@@ -1,0 +1,18 @@
+.top {
+  h1 {
+    margin: 16px 0;
+
+    & > * {
+      vertical-align: middle;
+    }
+
+    img {
+      width: 64px;
+      height: auto;
+    }
+  }
+
+  p {
+    margin-bottom: 16px;
+  }
+}
