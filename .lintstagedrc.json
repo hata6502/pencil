@@ -1,6 +1,11 @@
 {
-  "*.php": [
+  "!(*.blade).php": [
     "prettier --write",
+    "git add"
+  ],
+  "*.blade.php": [
+    "prettier --write --parser=html",
+    "textlint",
     "git add"
   ],
   "*.{js,jsx,ts,tsx}": [
@@ -11,11 +16,6 @@
   "*.{css,scss}": [
     "prettier --write",
     "stylelint --fix",
-    "git add"
-  ],
-  "*.blade.php": [
-    "prettier --write",
-    "textlint",
     "git add"
   ],
   "*.{html,yaml,yml,md}": [

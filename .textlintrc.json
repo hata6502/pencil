@@ -2,6 +2,13 @@
   "filters": {
     "comments": true
   },
+  "plugins": {
+    "html": {
+      "extensions": [
+        ".php"
+      ]
+    }
+  },
   "rules": {
     "preset-japanese": true,
     "preset-jtf-style": {
