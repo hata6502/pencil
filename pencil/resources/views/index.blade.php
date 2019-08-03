@@ -10,7 +10,7 @@
 
 @section('content')
   <div class="article article-draw">
-    <h2>Pencil</h2>
+    <h2>Hood Pencil</h2>
     <h3>drawing-beta version</h3>
     <p>Maintainer: <a href="https://twitter.com/bluehood_admin">@bluehood_admin</a><br><br></p>
     <p>

@@ -13,8 +13,14 @@
     "stylelint --fix",
     "git add"
   ],
+  "*.blade.php": [
+    "prettier --write",
+    "textlint",
+    "git add"
+  ],
   "*.{html,yaml,yml,md}": [
     "prettier --write",
+    "textlint",
     "git add"
   ]
 }

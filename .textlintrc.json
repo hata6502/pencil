@@ -1,0 +1,16 @@
+{
+  "filters": {
+    "comments": true
+  },
+  "rules": {
+    "preset-japanese": true,
+    "preset-jtf-style": {
+      "3.1.1.全角文字と半角文字の間": false
+    },
+    "prh": {
+      "rulePaths": [
+        "node_modules/prh/prh-rules/media/WEB+DB_PRESS.yml"
+      ]
+    }
+  }
+}
