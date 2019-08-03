@@ -9,10 +9,22 @@
 @section('content')
 <div class="top container">
     <div>
-        <h1>
-            <img src="{{ url('images/wing.png') }}" alt="羽根" />
-            Hood Pencil
-        </h1>
+        <div class="header">
+            @php $landscapes = glob(public_path('images/landscapes/*.png')); $landscapeUrl =
+            url(str_replace(public_path(), '', $landscapes[array_rand($landscapes)])); $landscapeAlt =
+            basename($landscapeUrl, '.png'); $animals = glob(public_path('images/animals/*.png')); $animalUrl =
+            url(str_replace(public_path(), '', $animals[array_rand($animals)])); $animalAlt = basename($animalUrl,
+            '.png'); @endphp
+
+            <h1>
+                <img src="{{ url('images/wing.png') }}" alt="羽根" />
+                Hood Pencil
+            </h1>
+            <div class="horizon"></div>
+            <img class="landscape" src="{{ $landscapeUrl }}" alt="{{ $landscapeAlt }}" />
+            <img class="animal" src="{{ $animalUrl }}" alt="{{ $animalAlt }}" />
+        </div>
+
         <h2>プライバシーポリシー</h2>
         <p>
             当アプリケーションでは、アクセス解析として「<a href="https://www.google.com/analytics/terms/jp.html"
