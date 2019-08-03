@@ -1,5 +1,5 @@
 {
-  "*.php": [
+  "!(*.blade).php": [
     "prettier --write",
     "git add"
   ],
@@ -13,8 +13,9 @@
     "stylelint --fix",
     "git add"
   ],
-  "*.{html,yaml,yml,md}": [
+  "*.{blade.php,html,yaml,yml,md}": [
     "prettier --write",
+    "textlint",
     "git add"
   ]
 }
