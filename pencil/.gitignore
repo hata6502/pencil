@@ -16,3 +16,5 @@ npm-debug.log
 yarn-error.log
 /laradock
 /config/very_basic_auth.php
+/config/backup.php
+/resources/lang/vendor
