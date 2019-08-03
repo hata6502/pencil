@@ -1,0 +1,19 @@
+.noscroll {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+@mixin container($padding) {
+  padding-right: $padding;
+  padding-left: $padding;
+
+  & > div {
+    max-width: 800px;
+    margin-right: auto;
+    margin-left: auto;
+
+    @content;
+  }
+}
