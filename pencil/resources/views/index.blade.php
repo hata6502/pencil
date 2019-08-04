@@ -16,13 +16,13 @@
             url(str_replace(public_path(), '', $animals[array_rand($animals)])); $animalAlt = basename($animalUrl,
             '.png'); @endphp
 
+            <div class="horizon"></div>
+            <img class="landscape" src="{{ $landscapeUrl }}" alt="{{ $landscapeAlt }}" />
+            <img class="animal" src="{{ $animalUrl }}" alt="{{ $animalAlt }}" />
             <h1>
                 <img src="{{ url('images/wing.png') }}" alt="羽根" />
                 Hood Pencil
             </h1>
-            <div class="horizon"></div>
-            <img class="landscape" src="{{ $landscapeUrl }}" alt="{{ $landscapeAlt }}" />
-            <img class="animal" src="{{ $animalUrl }}" alt="{{ $animalAlt }}" />
         </div>
 
         <h2>プライバシーポリシー</h2>

@@ -2,3 +2,10 @@ $color-black: black;
 $color-white: white;
 $color-primary: mediumslateblue;
 $color-danger: tomato;
+
+$colors: (
+  black: $color-black,
+  white: $color-white,
+  primary: $color-primary,
+  danger: $color-danger
+);
