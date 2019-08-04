@@ -1,0 +1,17 @@
+.noscroll {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.container {
+  padding-right: 8px;
+  padding-left: 8px;
+
+  & > div {
+    max-width: 800px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
