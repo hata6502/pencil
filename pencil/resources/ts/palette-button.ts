@@ -1,23 +1,25 @@
 export default class {
-    private element: HTMLButtonElement
+    private element: HTMLButtonElement;
 
     constructor(element: HTMLButtonElement, onpick: (color: string) => void) {
-        this.element = element
+        this.element = element;
 
-        this.element.onclick = () => {
-            if (this.element.style.backgroundColor === null) {
-                throw "Couldn't get background-color property. "
-            }
-
-            onpick(this.element.style.backgroundColor)
+        const color = this.element.dataset.color;
+        if (color === undefined) {
+            throw "Couldn't get data-color attribute. ";
         }
+
+        this.element.style.backgroundColor = color;
+        this.element.onclick = () => {
+            onpick(color);
+        };
     }
 
     activate(): void {
-        this.element.classList.add('active')
+        this.element.classList.add('active');
     }
 
     inactivate(): void {
-        this.element.classList.remove('active')
+        this.element.classList.remove('active');
     }
 }
