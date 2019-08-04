@@ -4,21 +4,6 @@
     padding-top: 37.5%;
     margin: 16px 0;
 
-    h1 {
-      position: absolute;
-      top: 0;
-      left: 0;
-
-      & > * {
-        vertical-align: middle;
-      }
-
-      img {
-        width: 64px;
-        height: auto;
-      }
-    }
-
     .horizon {
       position: absolute;
       top: 60%;
@@ -34,14 +19,32 @@
       position: absolute;
       top: 0;
       right: 10%;
+      width: 30%;
+      height: auto;
     }
 
     .animal {
       position: absolute;
       bottom: 0;
       left: 10%;
-      width: 224px;
+      width: 25%;
       height: auto;
+    }
+
+    h1 {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: rgba($color-white, 0.8);
+
+      & > * {
+        vertical-align: middle;
+      }
+
+      img {
+        width: 64px;
+        height: auto;
+      }
     }
   }
 
