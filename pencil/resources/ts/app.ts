@@ -8,8 +8,11 @@ import PencilButton from './pencil-button'
 import PaletteButton from './palette-button'
 import HistoryButton from './history-button'
 import StickCursor from './stick-cursor'
+import PointerListener from './pointer-listener'
 import TextInput from './text-input'
 import PreviewCanvas from './preview-canvas'
+import * as Settings from './settings'
+
 
 Sentry.init({ dsn: 'https://19e4397c2e5c47279823b887f7c74444@sentry.io/1509084' })
 
@@ -27,9 +30,6 @@ const drawingWindow = new DrawingWindow(
 new DrawingDialog(<HTMLDivElement>document.getElementById('drawing-dialog'))
 
 const drawingCanvas = new DrawingCanvas(<HTMLCanvasElement>document.getElementById('drawing-canvas'))
-drawingCanvas.ontouchdrawstart = () => {
-    stickCursor.hide()
-}
 drawingCanvas.onchangehistory = (index, length) => {
     undoButton.setDisabled(index <= 0)
     redoButton.setDisabled(index >= length - 1)
@@ -81,17 +81,31 @@ const redoButton = new HistoryButton(<HTMLButtonElement>document.getElementById(
 })
 
 const stickCursor = new StickCursor(
-    <HTMLDivElement>document.getElementById('stick-cursor'),
-    () => {
-        drawingCanvas.startDraw(false)
-    },
-    () => {
-        drawingCanvas.draw(Math.floor(stickCursor.x), Math.floor(stickCursor.y))
-    },
-    () => {
-        drawingCanvas.finishDraw()
-    }
+    <HTMLDivElement>document.getElementById('stick-cursor')
 )
+stickCursor.onmove = () => {
+    drawingCanvas.movePath(Math.floor(stickCursor.x), Math.floor(stickCursor.y))
+};
+stickCursor.onend = () => {
+    drawingCanvas.finishPath()
+};
+
+
+const pointerListener = new PointerListener();
+pointerListener.onstart = () => {
+    stickCursor.hide()
+};
+pointerListener.onmove = (screenX, screenY) => {
+    // ポインターのスクリーン座標を drawingCanvas との相対座標に変換します。
+    const canvasPosition = drawingCanvas.getScreenPosition();
+    const canvasX = Math.floor((screenX - 2 - canvasPosition.x) / Settings.CANVAS_ZOOM);
+    const canvasY = Math.floor((screenY - 2 - canvasPosition.y) / Settings.CANVAS_ZOOM);
+
+    drawingCanvas.movePath(canvasX, canvasY)
+};
+pointerListener.onend = () => {
+    drawingCanvas.finishPath()
+};
 
 const textInput = new TextInput(<HTMLInputElement>document.getElementById('text-input'))
 textInput.onactive = text => {
