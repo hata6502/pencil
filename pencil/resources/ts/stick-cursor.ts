@@ -3,18 +3,13 @@ import * as Settings from './settings'
 export default class {
     x: number = Math.floor(Settings.CANVAS_WIDTH / 2)
     y: number = Math.floor(Settings.CANVAS_HEIGHT / 2)
+    onmove: (() => void) | undefined = undefined
+    onend: (() => void) | undefined = undefined
     private element: HTMLDivElement
     private isEnterPressed: boolean = false
-    private isDrawing: boolean = false
-    private ondrawstart: () => void
-    private ondraw: () => void
-    private ondrawend: () => void
 
-    constructor(element: HTMLDivElement, ondrawstart: () => void, ondraw: () => void, ondrawend: () => void) {
+    constructor(element: HTMLDivElement) {
         this.element = element
-        this.ondrawstart = ondrawstart
-        this.ondraw = ondraw
-        this.ondrawend = ondrawend
 
         window.addEventListener('keydown', (event: KeyboardEvent) => {
             switch (event.keyCode) {
@@ -42,18 +37,17 @@ export default class {
                     return
             }
 
-            this.draw()
+            this.move()
             event.preventDefault()
         })
 
         window.addEventListener('keyup', (event: KeyboardEvent) => {
             switch (event.keyCode) {
                 case Settings.KEYCODE_ENTER:
-                    if (this.isDrawing) {
-                        this.ondrawend()
+                    if (this.isEnterPressed && this.onend !== undefined) {
+                        this.onend()
                     }
                     this.isEnterPressed = false
-                    this.isDrawing = false
                     break
             }
         })
@@ -65,7 +59,7 @@ export default class {
                 if (gamepad.lStickX !== 0.0 || gamepad.lStickY !== 0.0) {
                     this.x += gamepad.lStickX
                     this.y -= gamepad.lStickY
-                    this.draw()
+                    this.move()
                 }
             }, 16)
         }
@@ -75,15 +69,9 @@ export default class {
         this.element.style.display = 'none'
     }
 
-    private draw() {
-        if (this.isEnterPressed) {
-            if (this.x >= 0 && this.x < Settings.CANVAS_WIDTH && this.y >= 0 && this.y < Settings.CANVAS_HEIGHT) {
-                if (!this.isDrawing) {
-                    this.ondrawstart()
-                    this.isDrawing = true
-                }
-                this.ondraw()
-            }
+    private move() {
+        if (this.isEnterPressed && this.onmove !== undefined) {
+            this.onmove()
         }
 
         this.element.style.left = Math.floor(this.x) * Settings.CANVAS_ZOOM + 3 + 'px'
