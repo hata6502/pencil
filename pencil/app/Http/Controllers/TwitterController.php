@@ -13,8 +13,8 @@ class TwitterController extends Controller
     {
         $user = Auth::user();
         $twitterOAuth = new TwitterOAuth(
-            config('twitteroauth.consumer_key'),
-            config('twitteroauth.consumer_secret'),
+            config('twitter.consumer_key'),
+            config('twitter.consumer_secret'),
             $user->token,
             $user->token_secret
         );
