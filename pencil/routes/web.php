@@ -14,8 +14,8 @@
 Route::get('', 'TopController@index')->name('top');
 
 Route::group(['middleware' => 'auth.very_basic'], function () {
-    Route::get('login', 'AuthController@login')->name('login');
-    Route::get('login/callback', 'AuthController@callback')->name('callback');
+    Route::get('login', 'AuthController@twitterLogin')->name('login');
+    Route::get('login/callback', 'AuthController@twitterCallback')->name('callback');
     Route::get('logout', 'AuthController@logout')->name('logout');
 });
 
