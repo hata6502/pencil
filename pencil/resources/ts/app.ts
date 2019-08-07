@@ -109,6 +109,8 @@ textInput.onactive = text => {
     drawingCanvas.mode = 'text';
 };
 
+drawingCanvas.tone = Settings.TONES.verticalBold;
+
 const previewCanvas = new PreviewCanvas(<HTMLCanvasElement>document.getElementById('preview-canvas'), () => {
     drawingWindow.display();
 });
