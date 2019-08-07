@@ -154,10 +154,10 @@ export default class {
             return;
         }
 
-        const distance = Math.round(Math.sqrt(Math.pow(toX - fromX, 2.0) + Math.pow(toY - fromY, 2.0))) + 1;
+        const distance = Math.round(Math.sqrt(Math.pow(toX - fromX, 2.0) + Math.pow(toY - fromY, 2.0)));
 
         for (let i = 0; i < distance; i++) {
-            const rate = i / (distance - 1);
+            const rate = i / distance;
 
             this.drawPoint(fromX + Math.round((toX - fromX) * rate), fromY + Math.round((toY - fromY) * rate));
         }
