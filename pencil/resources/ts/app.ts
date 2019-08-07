@@ -34,41 +34,35 @@ drawingCanvas.onchangehistory = (index, length) => {
 };
 
 let pencilButtons: PencilButton[] = [];
-Array.prototype.forEach.call(
-    document.getElementsByClassName('pencil-button'),
-    (pencilButtonElement: HTMLButtonElement) => {
-        const pencilButton = new PencilButton(pencilButtonElement, () => {
-            pencilButtons.forEach((pencilButton: PencilButton) => {
-                pencilButton.inactivate();
-            });
-
-            pencilButton.activate();
-            drawingCanvas.brush = pencilButton.getBrush();
-
-            textInput.inactivate();
-            drawingCanvas.mode = 'pencil';
+Array.prototype.forEach.call(document.getElementsByClassName('pencil-button'), (element: HTMLButtonElement) => {
+    const pencilButton = new PencilButton(element, () => {
+        pencilButtons.forEach((pencilButton: PencilButton) => {
+            pencilButton.inactivate();
         });
 
-        pencilButtons.push(pencilButton);
-    }
-);
+        pencilButton.activate();
+        drawingCanvas.brush = pencilButton.getBrush();
+
+        textInput.inactivate();
+        drawingCanvas.mode = 'pencil';
+    });
+
+    pencilButtons.push(pencilButton);
+});
 
 let paletteButtons: PaletteButton[] = [];
-Array.prototype.forEach.call(
-    document.getElementsByClassName('palette-button'),
-    (paletteButtonElement: HTMLButtonElement) => {
-        const paletteButton = new PaletteButton(paletteButtonElement, (color: string) => {
-            paletteButtons.forEach((paletteButton: PaletteButton) => {
-                paletteButton.inactivate();
-            });
-
-            paletteButton.activate();
-            drawingCanvas.color = color;
+Array.prototype.forEach.call(document.getElementsByClassName('palette-button'), (element: HTMLButtonElement) => {
+    const paletteButton = new PaletteButton(element, (color: string) => {
+        paletteButtons.forEach((paletteButton: PaletteButton) => {
+            paletteButton.inactivate();
         });
 
-        paletteButtons.push(paletteButton);
-    }
-);
+        paletteButton.activate();
+        drawingCanvas.color = color;
+    });
+
+    paletteButtons.push(paletteButton);
+});
 
 const undoButton = new HistoryButton(<HTMLButtonElement>document.getElementById('undo-button'), () => {
     drawingCanvas.undo();
@@ -117,6 +111,14 @@ toneWindow.onhide = () => {
 };
 
 new ModalDialog(<HTMLDivElement>document.getElementById('tone-dialog'));
+
+Array.prototype.forEach.call(document.getElementsByClassName('tone-button'), (element: HTMLButtonElement) => {
+    element.onclick = () => {
+        if (element.dataset.tone !== undefined) {
+            drawingCanvas.tone = Settings.TONES[element.dataset.tone];
+        }
+    };
+});
 
 const previewCanvas = new PreviewCanvas(<HTMLCanvasElement>document.getElementById('preview-canvas'), () => {
     drawingWindow.display();
