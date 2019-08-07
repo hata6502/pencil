@@ -1,8 +1,8 @@
 import 'core-js/stable';
 import * as Sentry from '@sentry/browser';
 
-import DrawingWindow from './drawing-window';
-import DrawingDialog from './drawing-dialog';
+import ModalWindow from './modal-window';
+import ModalDialog from './modal-dialog';
 import DrawingCanvas from './drawing-canvas';
 import PencilButton from './pencil-button';
 import PaletteButton from './palette-button';
@@ -15,18 +15,17 @@ import * as Settings from './settings';
 
 Sentry.init({ dsn: 'https://19e4397c2e5c47279823b887f7c74444@sentry.io/1509084' });
 
-const drawingWindow = new DrawingWindow(
-    <HTMLDivElement>document.getElementById('drawing-window'),
-    () => {
-        drawingCanvas.isDisplay = true;
-    },
-    () => {
-        drawingCanvas.isDisplay = false;
-        previewCanvas.setDrawing(drawingCanvas.getDrawing());
-    }
-);
+const drawingWindow = new ModalWindow(<HTMLDivElement>document.getElementById('drawing-window'));
+drawingWindow.ondisplay = () => {
+    drawingCanvas.isDisplay = true;
+    toneWindow.display();
+};
+drawingWindow.onhide = () => {
+    drawingCanvas.isDisplay = false;
+    previewCanvas.setDrawing(drawingCanvas.getDrawing());
+};
 
-new DrawingDialog(<HTMLDivElement>document.getElementById('drawing-dialog'));
+new ModalDialog(<HTMLDivElement>document.getElementById('drawing-dialog'));
 
 const drawingCanvas = new DrawingCanvas(<HTMLCanvasElement>document.getElementById('drawing-canvas'));
 drawingCanvas.onchangehistory = (index, length) => {
@@ -109,7 +108,15 @@ textInput.onactive = text => {
     drawingCanvas.mode = 'text';
 };
 
-drawingCanvas.tone = Settings.TONES.verticalBold;
+const toneWindow = new ModalWindow(<HTMLDivElement>document.getElementById('tone-window'));
+toneWindow.ondisplay = () => {
+    drawingCanvas.isDisplay = false;
+};
+toneWindow.onhide = () => {
+    drawingCanvas.isDisplay = true;
+};
+
+new ModalDialog(<HTMLDivElement>document.getElementById('tone-dialog'));
 
 const previewCanvas = new PreviewCanvas(<HTMLCanvasElement>document.getElementById('preview-canvas'), () => {
     drawingWindow.display();
