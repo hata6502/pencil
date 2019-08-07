@@ -107,7 +107,23 @@
                 </div>
                 <div id="tone-window" class="modal-window">
                     <div>
-                        <div id="tone-dialog"></div>
+                        <div id="tone-dialog">
+                            <button class="tone-button" data-tone="black">black</button>
+                            <button class="tone-button" data-tone="white">white</button>
+                            <button class="tone-button" data-tone="dotLight">dotLight</button>
+                            <button class="tone-button" data-tone="dotMedium">dotMedium</button>
+                            <button class="tone-button" data-tone="dotBold">dotBold</button>
+                            <button class="tone-button" data-tone="verticalLight">verticalLight</button>
+                            <button class="tone-button" data-tone="verticalMedium">verticalMedium</button>
+                            <button class="tone-button" data-tone="verticalBold">verticalBold</button>
+                            <button class="tone-button" data-tone="horizontalLight">horizontalLight</button>
+                            <button class="tone-button" data-tone="horizontalMedium">horizontalMedium</button>
+                            <button class="tone-button" data-tone="horizontalBold">horizontalBold</button>
+                            <button class="tone-button" data-tone="slashLight">slashLight</button>
+                            <button class="tone-button" data-tone="slashBold">slashBold</button>
+                            <button class="tone-button" data-tone="backslashLight">backslashLight</button>
+                            <button class="tone-button" data-tone="backslashBold">backslashBold</button>
+                        </div>
                     </div>
                 </div>
             </div>
