@@ -9,7 +9,7 @@ export default class {
     text: string = '';
     mode: Mode = 'pencil';
     isDisplay: boolean = false;
-    tone: number[][] = [[1]];
+    tone: number[][] = Settings.TONES.black;
 
     private element: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
@@ -52,13 +52,15 @@ export default class {
     movePath(x: number, y: number): void {
         if (this.isDisplay) {
             if (x >= 0 && x < Settings.CANVAS_WIDTH && y >= 0 && y < Settings.CANVAS_HEIGHT) {
+                this.isDrawing = true;
+            }
+
+            if (this.isDrawing) {
                 if (this.prevX == -1) {
                     this.drawPoint(x, y);
                 } else {
                     this.drawLine(this.prevX, this.prevY, x, y);
                 }
-
-                this.isDrawing = true;
             }
 
             this.prevX = x;
@@ -120,10 +122,10 @@ export default class {
 
                 brush.pattern.forEach(column => {
                     let x = originX - Math.floor(column.length / 2);
-                    const toneColumn = this.tone[y % this.tone.length];
+                    const toneColumn = this.tone[Math.abs(y) % this.tone.length];
 
                     column.forEach(pattern => {
-                        if (pattern && toneColumn[x % toneColumn.length]) {
+                        if (pattern && toneColumn[Math.abs(x) % toneColumn.length]) {
                             this.context.fillRect(
                                 x * Settings.CANVAS_ZOOM,
                                 y * Settings.CANVAS_ZOOM,
