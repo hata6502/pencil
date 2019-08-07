@@ -46,7 +46,7 @@
 
         <canvas id="preview-canvas"></canvas>
 
-        <div id="drawing-window">
+        <div id="drawing-window" class="modal-window">
             <div>
                 <div id="drawing-dialog">
                     <table>
@@ -104,6 +104,11 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div id="tone-window" class="modal-window">
+                    <div>
+                        <div id="tone-dialog"></div>
+                    </div>
                 </div>
             </div>
         </div>
