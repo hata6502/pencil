@@ -120,7 +120,7 @@ Array.prototype.forEach.call(document.getElementsByClassName('tone-button'), (bu
         }
     };
 
-    const toneCanvas = new ToneCanvas(<HTMLCanvasElement>button.firstChild);
+    const toneCanvas = new ToneCanvas(button.getElementsByTagName('canvas')[0]);
     if (button.dataset.tone !== undefined) {
         toneCanvas.setTone(Settings.TONES[button.dataset.tone]);
     }
