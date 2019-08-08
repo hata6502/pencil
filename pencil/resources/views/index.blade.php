@@ -108,74 +108,42 @@
                 <div id="tone-window" class="modal-window">
                     <div>
                         <div id="tone-dialog">
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <button class="tone-button" data-tone="black"><canvas></canvas></button>
-                                        </td>
-                                        <td>
-                                            <button class="tone-button" data-tone="verticalBold">
-                                                <canvas></canvas>
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button class="tone-button" data-tone="verticalMedium">
-                                                <canvas></canvas>
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button class="tone-button" data-tone="verticalLight">
-                                                <canvas></canvas>
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button class="tone-button" data-tone="dotBold"><canvas></canvas></button>
-                                        </td>
-                                        <td>
-                                            <button class="tone-button" data-tone="slashLight">
-                                                <canvas></canvas>
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button class="tone-button" data-tone="backslashLight">
-                                                <canvas></canvas>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <button class="tone-button" data-tone="dotMedium"><canvas></canvas></button>
-                                        </td>
-                                        <td>
-                                            <button class="tone-button" data-tone="horizontalBold">
-                                                <canvas></canvas>
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button class="tone-button" data-tone="horizontalMedium">
-                                                <canvas></canvas>
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button class="tone-button" data-tone="horizontalLight">
-                                                <canvas></canvas>
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button class="tone-button" data-tone="dotLight"><canvas></canvas></button>
-                                        </td>
-                                        <td>
-                                            <button class="tone-button" data-tone="slashBold"><canvas></canvas></button>
-                                        </td>
-                                        <td>
-                                            <button class="tone-button" data-tone="backslashBold">
-                                                <canvas></canvas>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div>
+                                <button class="tone-button" data-tone="black"><canvas></canvas></button>
+                                <button class="tone-button" data-tone="verticalBold">
+                                    <canvas></canvas>
+                                </button>
+                                <button class="tone-button" data-tone="verticalMedium">
+                                    <canvas></canvas>
+                                </button>
+                                <button class="tone-button" data-tone="verticalLight">
+                                    <canvas></canvas>
+                                </button>
+                                <button class="tone-button" data-tone="dotBold"><canvas></canvas></button>
+                                <button class="tone-button" data-tone="slashLight">
+                                    <canvas></canvas>
+                                </button>
+                                <button class="tone-button" data-tone="backslashLight">
+                                    <canvas></canvas>
+                                </button>
+                            </div>
+                            <div>
+                                <button class="tone-button" data-tone="dotMedium"><canvas></canvas></button>
+                                <button class="tone-button" data-tone="horizontalBold">
+                                    <canvas></canvas>
+                                </button>
+                                <button class="tone-button" data-tone="horizontalMedium">
+                                    <canvas></canvas>
+                                </button>
+                                <button class="tone-button" data-tone="horizontalLight">
+                                    <canvas></canvas>
+                                </button>
+                                <button class="tone-button" data-tone="dotLight"><canvas></canvas></button>
+                                <button class="tone-button" data-tone="slashBold"><canvas></canvas></button>
+                                <button class="tone-button" data-tone="backslashBold">
+                                    <canvas></canvas>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
