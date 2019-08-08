@@ -19,6 +19,26 @@
   border: 1px solid rgba($color-black, 0.1);
 }
 
+.pencil-button,
+.history-button,
+.tone-button {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 8px;
+  border: 1px solid;
+  border-color: rgba($color-black, 0.1);
+  border-radius: 50%;
+
+  &.active {
+    background-color: rgba($color-primary, 0.5);
+    border-color: transparent;
+  }
+
+  &:disabled {
+    opacity: 0.25;
+  }
+}
+
 #drawing-dialog {
   display: inline-block;
   padding: 16px 12px;
@@ -66,25 +86,6 @@
       .drawing-dialog-sidebar {
         width: 64px;
 
-        .pencil-button,
-        .history-button {
-          width: 64px;
-          height: 64px;
-          margin-bottom: 8px;
-          border: 1px solid;
-          border-color: rgba($color-black, 0.1);
-          border-radius: 50%;
-
-          &.active {
-            background-color: rgba($color-primary, 0.5);
-            border-color: transparent;
-          }
-
-          &:disabled {
-            opacity: 0.25;
-          }
-        }
-
         .palette-button {
           width: 26px;
           height: 26px;
@@ -120,4 +121,9 @@
   display: inline-block;
   padding: 16px;
   background-color: $color-white;
+
+  .tone-button {
+    margin: 4px;
+    background-color: rgba($color-black, 0.1);
+  }
 }

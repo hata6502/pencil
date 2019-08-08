@@ -10,10 +10,11 @@ import HistoryButton from './history-button';
 import StickCursor from './stick-cursor';
 import PointerListener from './pointer-listener';
 import TextInput from './text-input';
+import ToneCanvas from './tone-canvas';
 import PreviewCanvas from './preview-canvas';
 import * as Settings from './settings';
 
-Sentry.init({ dsn: 'https://19e4397c2e5c47279823b887f7c74444@sentry.io/1509084' });
+Sentry.init({ dsn: Settings.SENTRY_DSN });
 
 const drawingWindow = new ModalWindow(<HTMLDivElement>document.getElementById('drawing-window'));
 drawingWindow.ondisplay = () => {
@@ -112,12 +113,17 @@ toneWindow.onhide = () => {
 
 new ModalDialog(<HTMLDivElement>document.getElementById('tone-dialog'));
 
-Array.prototype.forEach.call(document.getElementsByClassName('tone-button'), (element: HTMLButtonElement) => {
-    element.onclick = () => {
-        if (element.dataset.tone !== undefined) {
-            drawingCanvas.tone = Settings.TONES[element.dataset.tone];
+Array.prototype.forEach.call(document.getElementsByClassName('tone-button'), (button: HTMLButtonElement) => {
+    button.onclick = () => {
+        if (button.dataset.tone !== undefined) {
+            drawingCanvas.tone = Settings.TONES[button.dataset.tone];
         }
     };
+
+    const toneCanvas = new ToneCanvas(<HTMLCanvasElement>button.firstChild);
+    if (button.dataset.tone !== undefined) {
+        toneCanvas.setTone(Settings.TONES[button.dataset.tone]);
+    }
 });
 
 const previewCanvas = new PreviewCanvas(<HTMLCanvasElement>document.getElementById('preview-canvas'), () => {
