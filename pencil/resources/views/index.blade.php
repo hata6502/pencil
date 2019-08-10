@@ -25,6 +25,11 @@
             </h1>
         </div>
 
+        <h2>Drawing Only Beta Version</h2>
+        <p>
+            現在開発中のため、お絵かきの投稿はできません。
+        </p>
+
         <h2>プライバシーポリシー</h2>
         <p>
             当アプリケーションでは、アクセス解析として「<a href="https://www.google.com/analytics/terms/jp.html"
@@ -46,7 +51,7 @@
 
         <canvas id="preview-canvas"></canvas>
 
-        <div id="drawing-window">
+        <div id="drawing-window" class="modal-window">
             <div>
                 <div id="drawing-dialog">
                     <table>
@@ -80,6 +85,7 @@
                                         <div></div>
                                     </div>
                                     <canvas id="drawing-canvas"></canvas>
+                                    <input id="text-input" placeholder="テキストを入力して埋め込みます。" />
                                 </td>
                                 <td>
                                     <div class="drawing-dialog-sidebar">
@@ -92,18 +98,54 @@
                                         <button class="pencil-button" data-brush="bold">
                                             <img src="{{ url('images/pencil-bold.png') }}" alt="太いペン" />
                                         </button>
+                                        <button id="tone-window-button"><canvas></canvas></button>
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td></td>
-                                <td>
-                                    <input id="text-input" placeholder="テキストを入力して埋め込みます。" />
-                                </td>
-                                <td></td>
-                            </tr>
                         </tbody>
                     </table>
+                </div>
+                <div id="tone-window" class="modal-window">
+                    <div>
+                        <div id="tone-dialog">
+                            <div>
+                                <button class="tone-button" data-tone="black"><canvas></canvas></button>
+                                <button class="tone-button" data-tone="dotBold"><canvas></canvas></button>
+                                <button class="tone-button" data-tone="slashBold"><canvas></canvas></button>
+                                <button class="tone-button" data-tone="backslashBold">
+                                    <canvas></canvas>
+                                </button>
+                                <button class="tone-button" data-tone="verticalBold">
+                                    <canvas></canvas>
+                                </button>
+                                <button class="tone-button" data-tone="verticalMedium">
+                                    <canvas></canvas>
+                                </button>
+                                <button class="tone-button" data-tone="verticalLight">
+                                    <canvas></canvas>
+                                </button>
+                            </div>
+                            <div>
+                                <button class="tone-button" data-tone="dotMedium"><canvas></canvas></button>
+                                <button class="tone-button" data-tone="dotLight"><canvas></canvas></button>
+                                <button class="tone-button" data-tone="slashLight">
+                                    <canvas></canvas>
+                                </button>
+                                <button class="tone-button" data-tone="backslashLight">
+                                    <canvas></canvas>
+                                </button>
+                                <button class="tone-button" data-tone="horizontalBold">
+                                    <canvas></canvas>
+                                </button>
+                                <button class="tone-button" data-tone="horizontalMedium">
+                                    <canvas></canvas>
+                                </button>
+                                <button class="tone-button" data-tone="horizontalLight">
+                                    <canvas></canvas>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

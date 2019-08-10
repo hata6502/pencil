@@ -1,48 +1,43 @@
-import * as Settings from './settings'
+import * as Settings from './settings';
 
-function pointerToCanvasPosition(element: HTMLCanvasElement, event: PointerEvent): { x: number; y: number } {
-    const rect = element.getBoundingClientRect()
-    let x = Math.floor((event.clientX - rect.left) / Settings.CANVAS_ZOOM)
-    let y = Math.floor((event.clientY - rect.top) / Settings.CANVAS_ZOOM)
-
-    return { x, y }
-}
-
-type Mode = 'pencil' | 'text'
+type Mode = 'pencil' | 'text';
 
 export default class {
-    isDisplay: boolean = false
-    brush: string
-    color: string = Settings.DRAW_COLOR
-    ontouchdrawstart: (() => void) | undefined = undefined
-    onchangehistory: ((index: number, length: number) => void) | undefined = undefined
-    text: string = ''
-    mode: Mode = 'pencil'
-    private element: HTMLCanvasElement
-    private context: CanvasRenderingContext2D
-    private history: ImageData[] = []
-    private historyIndex = -1
+    brush: string;
+    color: string = Settings.DRAW_COLOR;
+    onchangehistory: ((index: number, length: number) => void) | undefined = undefined;
+    text: string = '';
+    mode: Mode = 'pencil';
+    isDisplay: boolean = false;
+    tone: number[][] = Settings.TONES.black;
+
+    private element: HTMLCanvasElement;
+    private context: CanvasRenderingContext2D;
+    private history: ImageData[] = [];
+    private historyIndex = -1;
+    private prevX: number = -1;
+    private prevY: number = -1;
+    private isDrawing: boolean = false;
 
     constructor(element: HTMLCanvasElement) {
-        this.element = element
-        const context = this.element.getContext('2d')
+        this.element = element;
+        const context = this.element.getContext('2d');
         if (context === null) {
-            throw "Couldn't get context. "
+            throw "Couldn't get context. ";
         }
-        this.context = context
+        this.context = context;
 
-        this.brush = Settings.DRAW_BRUSH
+        this.brush = Settings.DRAW_BRUSH;
 
-        this.element.setAttribute('width', (Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM).toString())
-        this.element.setAttribute('height', (Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM).toString())
+        this.element.setAttribute('width', (Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM).toString());
+        this.element.setAttribute('height', (Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM).toString());
 
-        this.backupCanvas()
+        this.backupCanvas();
+    }
 
-        if (navigator.userAgent.toLowerCase().indexOf('nintendo wiiu') != -1) {
-            this.initializeWiiUEvents()
-        } else {
-            this.initializePointerEvents()
-        }
+    getScreenPosition(): { x: number; y: number } {
+        const rect = this.element.getBoundingClientRect();
+        return { x: rect.left, y: rect.top };
     }
 
     getDrawing(): ImageData {
@@ -51,199 +46,139 @@ export default class {
             0,
             Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM,
             Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM
-        )
+        );
     }
 
-    startDraw(isTouch: boolean): void {
-        if (isTouch && this.ontouchdrawstart !== undefined) {
-            this.ontouchdrawstart()
-        }
-    }
-
-    draw(originX: number, originY: number) {
-        const brush = Settings.BRUSH_PATTERNS[this.brush]
-
-        this.context.fillStyle = this.color
-
-        switch (this.mode) {
-            case 'pencil': {
-                let y: number = originY - Math.floor(brush.pattern.length / 2)
-                brush.pattern.forEach(column => {
-                    let x: number = originX - Math.floor(column.length / 2)
-                    column.forEach(pattern => {
-                        if (pattern) {
-                            this.context.fillRect(
-                                x * Settings.CANVAS_ZOOM,
-                                y * Settings.CANVAS_ZOOM,
-                                Settings.CANVAS_ZOOM,
-                                Settings.CANVAS_ZOOM
-                            )
-                        }
-
-                        x++
-                    })
-
-                    y++
-                })
-                break
+    movePath(x: number, y: number): void {
+        if (this.isDisplay) {
+            if (x >= 0 && x < Settings.CANVAS_WIDTH && y >= 0 && y < Settings.CANVAS_HEIGHT) {
+                this.isDrawing = true;
             }
 
-            case 'text': {
-                this.context.font = brush.fontsize * Settings.CANVAS_ZOOM + 'px sans-serif'
-                this.context.textBaseline = 'middle'
-                this.context.fillText(this.text, originX * Settings.CANVAS_ZOOM, originY * Settings.CANVAS_ZOOM)
-                break
+            if (this.isDrawing) {
+                if (this.prevX == -1) {
+                    this.drawPoint(x, y);
+                } else {
+                    this.drawLine(this.prevX, this.prevY, x, y);
+                }
             }
+
+            this.prevX = x;
+            this.prevY = y;
         }
     }
 
-    finishDraw(): void {
-        this.backupCanvas()
-    }
-
-    private backupCanvas(): void {
-        while (this.history.length - 1 > this.historyIndex) {
-            this.history.pop()
+    finishPath(): void {
+        if (this.isDrawing) {
+            this.isDrawing = false;
+            this.backupCanvas();
         }
 
-        this.history.push(this.getDrawing())
-
-        while (this.history.length > Settings.HISTORY_MAX_LENGTH) {
-            this.history.shift()
-        }
-
-        this.historyIndex = this.history.length - 1
-        if (this.onchangehistory !== undefined) {
-            this.onchangehistory(this.historyIndex, this.history.length)
-        }
+        this.prevX = -1;
     }
 
     undo(): void {
         if (this.historyIndex <= 0) {
-            return
+            return;
         }
 
-        const drawing = this.history[--this.historyIndex]
+        const drawing = this.history[--this.historyIndex];
         if (drawing === undefined) {
-            return
+            return;
         }
 
-        this.context.putImageData(drawing, 0, 0)
+        this.context.putImageData(drawing, 0, 0);
 
         if (this.onchangehistory !== undefined) {
-            this.onchangehistory(this.historyIndex, this.history.length)
+            this.onchangehistory(this.historyIndex, this.history.length);
         }
     }
 
     redo(): void {
         if (this.historyIndex >= this.history.length - 1) {
-            return
+            return;
         }
 
-        const drawing = this.history[++this.historyIndex]
+        const drawing = this.history[++this.historyIndex];
         if (drawing === undefined) {
-            return
+            return;
         }
 
-        this.context.putImageData(drawing, 0, 0)
+        this.context.putImageData(drawing, 0, 0);
 
         if (this.onchangehistory !== undefined) {
-            this.onchangehistory(this.historyIndex, this.history.length)
+            this.onchangehistory(this.historyIndex, this.history.length);
         }
     }
 
-    private initializeWiiUEvents(): void {
-        let isDrawing: boolean = false
-        let prevX: number | null, prevY: number
+    private drawPoint(originX: number, originY: number) {
+        const brush = Settings.BRUSHES[this.brush];
 
-        setInterval(() => {
-            if (this.isDisplay) {
-                const gamepad = (<any>window).wiiu.gamepad.update()
+        this.context.fillStyle = this.color;
 
-                if (gamepad.tpTouch) {
-                    const rect = this.element.getBoundingClientRect()
+        switch (this.mode) {
+            case 'pencil': {
+                let y = originY - Math.floor(brush.pattern.length / 2);
 
-                    const x = Math.floor((gamepad.contentX - rect.left) / Settings.CANVAS_ZOOM)
-                    const y = Math.floor((gamepad.contentY - rect.top) / Settings.CANVAS_ZOOM)
+                brush.pattern.forEach(column => {
+                    let x = originX - Math.floor(column.length / 2);
+                    const toneColumn = this.tone[Math.abs(y) % this.tone.length];
 
-                    if (x >= 0 && x < Settings.CANVAS_WIDTH && y >= 0 && y < Settings.CANVAS_HEIGHT) {
-                        if (!isDrawing) {
-                            this.startDraw(true)
+                    column.forEach(pattern => {
+                        if (pattern && toneColumn[Math.abs(x) % toneColumn.length]) {
+                            this.context.fillRect(
+                                x * Settings.CANVAS_ZOOM,
+                                y * Settings.CANVAS_ZOOM,
+                                Settings.CANVAS_ZOOM,
+                                Settings.CANVAS_ZOOM
+                            );
                         }
 
-                        isDrawing = true
-                    }
+                        x++;
+                    });
 
-                    if (isDrawing) {
-                        if (prevX !== null) {
-                            this.drawLine(prevX, prevY, x, y)
-                        } else {
-                            this.draw(x, y)
-                        }
-                    }
-
-                    prevX = x
-                    prevY = y
-                } else {
-                    if (isDrawing) {
-                        this.finishDraw()
-                    }
-
-                    isDrawing = false
-                    prevX = null
-                }
+                    y++;
+                });
+                break;
             }
-        }, 16)
-    }
 
-    private initializePointerEvents(): void {
-        let isDrawing: boolean = false
-        let prevX: number, prevY: number
-
-        this.element.onpointerdown = (event: PointerEvent) => {
-            isDrawing = true
-            let { x, y } = pointerToCanvasPosition(this.element, event)
-            this.startDraw(true)
-            this.draw(x, y)
-            prevX = x
-            prevY = y
-
-            event.preventDefault()
+            case 'text': {
+                this.context.font = brush.fontsize * Settings.CANVAS_ZOOM + 'px sans-serif';
+                this.context.textBaseline = 'middle';
+                this.context.fillText(this.text, originX * Settings.CANVAS_ZOOM, originY * Settings.CANVAS_ZOOM);
+                break;
+            }
         }
-        this.element.onpointermove = (event: PointerEvent) => {
-            if (isDrawing) {
-                let { x, y } = pointerToCanvasPosition(this.element, event)
-                this.drawLine(prevX, prevY, x, y)
-                prevX = x
-                prevY = y
-            }
-
-            event.preventDefault()
-        }
-        document.addEventListener('pointerup', (event: PointerEvent) => {
-            if (isDrawing) {
-                let { x, y } = pointerToCanvasPosition(this.element, event)
-                this.drawLine(prevX, prevY, x, y)
-
-                this.finishDraw()
-            }
-            isDrawing = false
-
-            event.preventDefault()
-        })
     }
 
     private drawLine(fromX: number, fromY: number, toX: number, toY: number): void {
         if (this.mode == 'text') {
-            return
+            return;
         }
 
-        const distance = Math.round(Math.sqrt(Math.pow(toX - fromX, 2.0) + Math.pow(toY - fromY, 2.0))) + 1
+        const distance = Math.round(Math.sqrt(Math.pow(toX - fromX, 2.0) + Math.pow(toY - fromY, 2.0)));
 
         for (let i = 0; i < distance; i++) {
-            const rate = i / (distance - 1)
+            const rate = i / distance;
 
-            this.draw(fromX + Math.round((toX - fromX) * rate), fromY + Math.round((toY - fromY) * rate))
+            this.drawPoint(fromX + Math.round((toX - fromX) * rate), fromY + Math.round((toY - fromY) * rate));
+        }
+    }
+
+    private backupCanvas(): void {
+        while (this.history.length - 1 > this.historyIndex) {
+            this.history.pop();
+        }
+
+        this.history.push(this.getDrawing());
+
+        while (this.history.length > Settings.HISTORY_MAX_LENGTH) {
+            this.history.shift();
+        }
+
+        this.historyIndex = this.history.length - 1;
+        if (this.onchangehistory !== undefined) {
+            this.onchangehistory(this.historyIndex, this.history.length);
         }
     }
 }

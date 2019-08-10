@@ -1,9 +1,4 @@
-#drawing-canvas,
-#preview-canvas {
-  border: 1px solid rgba($color-black, 0.1);
-}
-
-#drawing-window {
+.modal-window {
   position: fixed;
   top: 0;
   left: 0;
@@ -16,102 +11,121 @@
     display: table-cell;
     text-align: center;
     vertical-align: middle;
+  }
+}
 
-    #drawing-dialog {
-      display: inline-block;
-      padding: 16px 12px;
-      background-color: $color-white;
+#drawing-canvas,
+#preview-canvas {
+  border: 1px solid rgba($color-black, 0.1);
+}
 
-      & > table {
-        & > tbody > tr > td {
-          position: relative;
-          padding: 0 4px;
-          vertical-align: top;
+.pencil-button,
+.history-button,
+#tone-window-button,
+.tone-button {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 8px;
+  border: 1px solid;
+  border-color: rgba($color-black, 0.1);
+  border-radius: 50%;
 
-          #stick-cursor {
-            position: absolute;
-            display: none;
+  &.active {
+    background-color: rgba($color-primary, 0.5);
+    border-color: transparent;
+  }
 
-            div {
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 2px;
-              height: 2px;
-              border-top: 2px solid $color-black;
+  &:disabled {
+    opacity: 0.25;
+  }
+}
 
-              &:nth-child(2) {
-                left: 4px;
-              }
+#drawing-dialog {
+  display: inline-block;
+  padding: 16px 12px;
+  background-color: $color-white;
 
-              &:nth-child(3) {
-                top: 4px;
-              }
+  & > table {
+    & > tbody > tr > td {
+      position: relative;
+      padding: 0 4px;
+      vertical-align: top;
 
-              &:nth-child(4) {
-                top: 4px;
-                left: 4px;
-              }
+      #stick-cursor {
+        position: absolute;
+        display: none;
 
-              &:nth-child(5) {
-                top: 2px;
-                left: 2px;
-                border-color: $color-white;
-              }
-            }
+        div {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 2px;
+          height: 2px;
+          border-top: 2px solid $color-black;
+
+          &:nth-child(2) {
+            left: 4px;
           }
 
-          .drawing-dialog-sidebar {
-            width: 64px;
-
-            .pencil-button,
-            .history-button {
-              width: 64px;
-              height: 64px;
-              margin-bottom: 8px;
-              border: 1px solid;
-              border-color: rgba($color-black, 0.1);
-              border-radius: 50%;
-
-              &.active {
-                background-color: rgba($color-primary, 0.5);
-                border-color: transparent;
-              }
-
-              &:disabled {
-                opacity: 0.25;
-              }
-            }
-
-            .palette-button {
-              width: 26px;
-              height: 26px;
-              margin-bottom: 4px;
-              border: 1px solid rgba($color-black, 0.1);
-              border-width: 3px;
-              border-radius: 50%;
-
-              &.active {
-                border-color: $color-primary;
-              }
-            }
+          &:nth-child(3) {
+            top: 4px;
           }
 
-          #text-input {
-            width: 100%;
-            border: 1px solid rgba($color-black, 0.1);
+          &:nth-child(4) {
+            top: 4px;
+            left: 4px;
+          }
 
-            &.active {
-              border-color: $color-primary;
-              border-width: 2px;
-            }
-
-            &:not(.active) {
-              padding: 1px;
-            }
+          &:nth-child(5) {
+            top: 2px;
+            left: 2px;
+            border-color: $color-white;
           }
         }
       }
+
+      .drawing-dialog-sidebar {
+        width: 64px;
+
+        .palette-button {
+          width: 26px;
+          height: 26px;
+          margin-bottom: 4px;
+          border: 1px solid rgba($color-black, 0.1);
+          border-width: 3px;
+          border-radius: 50%;
+
+          &.active {
+            border-color: $color-primary;
+          }
+        }
+      }
+
+      #text-input {
+        display: block;
+        width: 100%;
+        border: 1px solid rgba($color-black, 0.1);
+
+        &.active {
+          border-color: $color-primary;
+          border-width: 2px;
+        }
+
+        &:not(.active) {
+          padding: 1px;
+        }
+      }
     }
+  }
+}
+
+#tone-dialog {
+  display: inline-block;
+  padding: 16px;
+  background-color: $color-white;
+
+  .tone-button {
+    margin: 4px;
+    background-color: rgba($color-black, 0.1);
   }
 }
