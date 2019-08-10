@@ -9,6 +9,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 @if(isset($robots)) <meta name="robots" content="{{ $robots }}" /> @endif
 
+<link rel="manifest" href="{{ url('/manifest.json') }}" />
+
 <meta name="twitter:card" content="{{ $twitter_card??'summary' }}" />
 <meta name="twitter:site" content="@bluehood_admin" />
 <meta property="og:url" content="{{ $canonical }}" />
