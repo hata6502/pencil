@@ -19,7 +19,6 @@ Sentry.init({ dsn: Settings.SENTRY_DSN });
 const drawingWindow = new ModalWindow(<HTMLDivElement>document.getElementById('drawing-window'));
 drawingWindow.ondisplay = () => {
     drawingCanvas.isDisplay = true;
-    toneWindow.display();
 };
 drawingWindow.onhide = () => {
     drawingCanvas.isDisplay = false;
@@ -103,6 +102,13 @@ textInput.onactive = text => {
     drawingCanvas.mode = 'text';
 };
 
+const toneWindowButton = <HTMLButtonElement>document.getElementById('tone-window-button');
+toneWindowButton.onclick = () => {
+    toneWindow.display();
+};
+
+const toneWindowButttonCanvas = new ToneCanvas(toneWindowButton.getElementsByTagName('canvas')[0]);
+
 const toneWindow = new ModalWindow(<HTMLDivElement>document.getElementById('tone-window'));
 toneWindow.ondisplay = () => {
     drawingCanvas.isDisplay = false;
@@ -117,7 +123,10 @@ Array.prototype.forEach.call(document.getElementsByClassName('tone-button'), (bu
     button.onclick = () => {
         if (button.dataset.tone !== undefined) {
             drawingCanvas.tone = Settings.TONES[button.dataset.tone];
+            toneWindowButttonCanvas.setTone(Settings.TONES[button.dataset.tone]);
         }
+
+        toneWindow.hide();
     };
 
     const toneCanvas = new ToneCanvas(button.getElementsByTagName('canvas')[0]);
