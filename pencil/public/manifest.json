@@ -1,0 +1,21 @@
+{
+  "lang": "ja-JP",
+  "name": "Hood Pencil",
+  "short_name": "Pencil",
+  "description": "Twitter に直接投稿できる気軽なお絵かきサービスです。",
+  "start_url": ".",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "images/favicon@32px.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "images/favicon@192px.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
