@@ -21,6 +21,7 @@
 
 .pencil-button,
 .history-button,
+#tone-window-button,
 .tone-button {
   width: 64px;
   height: 64px;
@@ -101,6 +102,7 @@
       }
 
       #text-input {
+        display: block;
         width: 100%;
         border: 1px solid rgba($color-black, 0.1);
 
