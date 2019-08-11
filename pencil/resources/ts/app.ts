@@ -16,6 +16,12 @@ import * as Settings from './settings';
 
 Sentry.init({ dsn: Settings.SENTRY_DSN });
 
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js');
+    });
+}
+
 const drawingWindow = new ModalWindow(<HTMLDivElement>document.getElementById('drawing-window'));
 drawingWindow.ondisplay = () => {
     drawingCanvas.isDisplay = true;
