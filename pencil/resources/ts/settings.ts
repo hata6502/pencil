@@ -1,7 +1,7 @@
 export const SENTRY_DSN = 'https://19e4397c2e5c47279823b887f7c74444@sentry.io/1509084';
 
 export const CANVAS_WIDTH = 320;
-export const CANVAS_HEIGHT = 130;
+export const CANVAS_HEIGHT = 180;
 export const CANVAS_ZOOM = 2;
 
 export const DRAW_BRUSH = 'medium';

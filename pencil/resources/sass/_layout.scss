@@ -4,6 +4,11 @@ html {
 
 .noscroll {
   position: fixed;
+  width: 100%;
+}
+
+canvas {
+  vertical-align: bottom;
 }
 
 .container {

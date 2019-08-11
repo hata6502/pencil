@@ -18,6 +18,7 @@
 #tone-dialog {
   display: inline-block;
   padding: 8px;
+  text-align: left;
   background-color: $color-white;
 }
 
@@ -26,53 +27,64 @@
   border: 1px solid rgba($color-black, 0.1);
 }
 
-.pencil-button,
-.history-button,
-#tone-window-button,
-.tone-button {
-  width: 64px;
-  height: 64px;
-  border: 1px solid;
-  border-color: rgba($color-black, 0.1);
-  border-radius: 50%;
-
-  &.active {
-    background-color: rgba($color-primary, 0.5);
-    border-color: transparent;
-  }
-
-  &:disabled {
-    opacity: 0.25;
-  }
-}
-
 #drawing-dialog {
   .toolbar {
-    & > * {
-      margin: 0 4px 8px;
+    margin-bottom: 4px;
+
+    & > div {
+      display: inline-block;
+      margin: 0 8px;
       vertical-align: middle;
     }
 
-    .palette-buttons {
-      display: inline-block;
+    .history-button {
+      vertical-align: middle;
 
-      .palette-button {
-        width: 26px;
-        height: 26px;
-        margin: 2px;
+      &:disabled {
+        opacity: 0.25;
+      }
+
+      img {
+        vertical-align: middle;
+      }
+    }
+
+    .pencil-button {
+      width: 32px;
+      height: 32px;
+      vertical-align: middle;
+      border: 1px solid rgba($color-black, 0.1);
+      border-radius: 50%;
+
+      &.active {
+        background-color: rgba($color-primary, 0.5);
+        border-color: transparent;
+      }
+    }
+
+    #tone-window-button {
+      canvas {
         border: 1px solid rgba($color-black, 0.1);
-        border-width: 3px;
-        border-radius: 50%;
+      }
+    }
 
-        &.active {
-          border-color: $color-primary;
-        }
+    .palette-button {
+      width: 32px;
+      height: 32px;
+      vertical-align: sub;
+      border: 1px solid rgba($color-black, 0.1);
+      border-width: 3px;
+      border-radius: 50%;
+
+      &.active {
+        border-color: $color-primary;
       }
     }
   }
 
   .canvas-container {
     position: relative;
+    margin-bottom: 4px;
 
     #stick-cursor {
       position: absolute;
@@ -126,7 +138,11 @@
 
 #tone-dialog {
   .tone-button {
+    width: 64px;
+    height: 64px;
     margin: 4px;
     background-color: rgba($color-black, 0.1);
+    border: 1px solid rgba($color-black, 0.1);
+    border-radius: 50%;
   }
 }

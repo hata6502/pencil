@@ -55,35 +55,37 @@
             <div>
                 <div id="drawing-dialog">
                     <div class="toolbar">
-                        <button id="undo-button" class="history-button" disabled>
-                            <img src="{{ url('images/undo.png') }}" alt="元に戻す" />
-                        </button>
-                        <button id="redo-button" class="history-button" disabled>
-                            <img src="{{ url('images/redo.png') }}" alt="やり直し" />
-                        </button>
-                        <button class="pencil-button" data-brush="light">
-                            <img src="{{ url('images/pencil-light.png') }}" alt="細いペン" />
-                        </button>
-                        <button class="pencil-button active" data-brush="medium">
-                            <img src="{{ url('images/pencil-medium.png') }}" alt="ペン" />
-                        </button>
-                        <button class="pencil-button" data-brush="bold">
-                            <img src="{{ url('images/pencil-bold.png') }}" alt="太いペン" />
-                        </button>
-                        <button id="tone-window-button"><canvas></canvas></button>
-                        <div class="palette-buttons">
-                            <div>
-                                <button class="palette-button active" data-color="#000000"></button>
-                                <button class="palette-button" data-color="#ffffff"></button>
-                                <button class="palette-button" data-color="#ff0000"></button>
-                                <button class="palette-button" data-color="#00ffff"></button>
-                            </div>
-                            <div>
-                                <button class="palette-button" data-color="#00ff00"></button>
-                                <button class="palette-button" data-color="#ff00ff"></button>
-                                <button class="palette-button" data-color="#0000ff"></button>
-                                <button class="palette-button" data-color="#ffff00"></button>
-                            </div>
+                        <div>
+                            <button id="undo-button" class="history-button" disabled>
+                                <img src="{{ url('images/undo.png') }}" alt="元に戻す" />
+                            </button>
+                            <button id="redo-button" class="history-button" disabled>
+                                <img src="{{ url('images/redo.png') }}" alt="やり直し" />
+                            </button>
+                        </div>
+                        <div>
+                            <button class="pencil-button" data-brush="light">
+                                <img src="{{ url('images/pencil-light.png') }}" alt="細いペン" />
+                            </button>
+                            <button class="pencil-button active" data-brush="medium">
+                                <img src="{{ url('images/pencil-medium.png') }}" alt="ペン" />
+                            </button>
+                            <button class="pencil-button" data-brush="bold">
+                                <img src="{{ url('images/pencil-bold.png') }}" alt="太いペン" />
+                            </button>
+                        </div>
+                        <div>
+                            <button id="tone-window-button"><canvas></canvas></button>
+                        </div>
+                        <div>
+                            <button class="palette-button active" data-color="#000000"></button>
+                            <button class="palette-button" data-color="#ffffff"></button>
+                            <button class="palette-button" data-color="#ff0000"></button>
+                            <button class="palette-button" data-color="#00ffff"></button>
+                            <button class="palette-button" data-color="#00ff00"></button>
+                            <button class="palette-button" data-color="#ff00ff"></button>
+                            <button class="palette-button" data-color="#0000ff"></button>
+                            <button class="palette-button" data-color="#ffff00"></button>
                         </div>
                     </div>
                     <div class="canvas-container">
