@@ -1,10 +1,26 @@
-const CACHE_NAME = 'hood-pencil-cache-v0.1.3';
+const CACHE_NAME = 'hood-pencil-cache-v0.1.4';
 const URLS_TO_CACHE = ['/', '/js/app.js', '/css/app.css'];
 
 self.addEventListener('install', (event: any) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
             return cache.addAll(URLS_TO_CACHE);
+        })
+    );
+});
+
+self.addEventListener('activate', (event: any) => {
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            const promises: Promise<boolean>[] = [];
+
+            cacheNames.forEach(cacheName => {
+                if (cacheName !== CACHE_NAME) {
+                    promises.push(caches.delete(cacheName));
+                }
+            });
+
+            return Promise.all(promises);
         })
     );
 });
