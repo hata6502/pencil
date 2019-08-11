@@ -6,7 +6,7 @@
     "noImplicitReturns": true,
     "noImplicitAny": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": true
   },
   "include": [
     "resources/ts/**/*"
