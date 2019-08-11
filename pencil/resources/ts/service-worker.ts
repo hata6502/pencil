@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hood-pencil-cache-v0.1.1';
+const CACHE_NAME = 'hood-pencil-cache-v0.1.3';
 const URLS_TO_CACHE = ['/', '/js/app.js', '/css/app.css'];
 
 self.addEventListener('install', (event: any) => {
