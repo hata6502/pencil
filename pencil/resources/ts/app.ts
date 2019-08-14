@@ -1,4 +1,4 @@
-import 'core-js/stable';
+import 'core-js/modules/es.object.assign';
 import * as Sentry from '@sentry/browser';
 
 import ModalWindow from './modal-window';
