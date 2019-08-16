@@ -36,15 +36,12 @@ export default class {
     private initializePointerEvents(): void {
         document.addEventListener('mousedown', (event: MouseEvent) => {
             this.pointerdown(event.clientX, event.clientY);
-            event.preventDefault();
         });
         document.addEventListener('mousemove', (event: MouseEvent) => {
             this.pointermove(event.clientX, event.clientY);
-            event.preventDefault();
         });
         document.addEventListener('mouseup', (event: MouseEvent) => {
             this.pointerup(event.clientX, event.clientY);
-            event.preventDefault();
         });
 
         document.addEventListener('touchstart', (event: TouchEvent) => {
