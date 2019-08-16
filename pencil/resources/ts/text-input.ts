@@ -1,24 +1,22 @@
-export default class {
-    private element: HTMLInputElement
-    onactive: ((text: string) => void) | undefined = undefined
+import VirtualElement from './virtual-element';
+
+export default class extends VirtualElement<HTMLInputElement> {
+    onActive: (text: string) => void = () => {};
 
     constructor(element: HTMLInputElement) {
-        this.element = element
+        super(element);
 
         this.element.onfocus = this.element.oninput = () => {
-            this.activate()
-
-            if (this.onactive !== undefined) {
-                this.onactive(this.element.value)
-            }
-        }
+            this.activate();
+            this.onActive(this.element.value);
+        };
     }
 
     private activate(): void {
-        this.element.classList.add('active')
+        this.element.classList.add('active');
     }
 
     inactivate(): void {
-        this.element.classList.remove('active')
+        this.element.classList.remove('active');
     }
 }

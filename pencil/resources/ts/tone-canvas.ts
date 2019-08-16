@@ -1,12 +1,13 @@
+import VirtualElement from './virtual-element';
 import * as Settings from './settings';
 
-export default class {
-    private element: HTMLCanvasElement;
+export default class extends VirtualElement<HTMLCanvasElement> {
     private context: CanvasRenderingContext2D;
     private tone: number[][] = Settings.TONES.black;
 
     constructor(element: HTMLCanvasElement) {
-        this.element = element;
+        super(element);
+
         const context = this.element.getContext('2d');
         if (context === null) {
             throw "Couldn't get context. ";

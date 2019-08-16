@@ -1,24 +1,30 @@
-export default class {
-    private element: HTMLButtonElement
-    constructor(element: HTMLButtonElement, onclick: (this: GlobalEventHandlers, ev: MouseEvent) => any) {
-        this.element = element
-        this.element.onclick = onclick
+import VirtualElement from './virtual-element';
+
+export default class extends VirtualElement<HTMLButtonElement> {
+    onClick: () => void = () => {};
+
+    constructor(element: HTMLButtonElement) {
+        super(element);
+
+        this.element.onclick = () => {
+            this.onClick();
+        };
     }
 
     getBrush(): string {
-        const brush = this.element.dataset.brush
+        const brush = this.element.dataset.brush;
         if (brush === undefined) {
-            throw "Couldn't get data-brush attribute. "
+            throw "Couldn't get data-brush attribute. ";
         }
 
-        return brush
+        return brush;
     }
 
     activate(): void {
-        this.element.classList.add('active')
+        this.element.classList.add('active');
     }
 
     inactivate(): void {
-        this.element.classList.remove('active')
+        this.element.classList.remove('active');
     }
 }

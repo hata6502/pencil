@@ -1,8 +1,10 @@
-export default class {
-    private element: HTMLButtonElement;
+import VirtualElement from './virtual-element';
 
-    constructor(element: HTMLButtonElement, onpick: (color: string) => void) {
-        this.element = element;
+export default class extends VirtualElement<HTMLButtonElement> {
+    onPick: (color: string) => void = () => {};
+
+    constructor(element: HTMLButtonElement) {
+        super(element);
 
         const color = this.element.dataset.color;
         if (color === undefined) {
@@ -10,8 +12,9 @@ export default class {
         }
 
         this.element.style.backgroundColor = color;
+
         this.element.onclick = () => {
-            onpick(color);
+            this.onPick(color);
         };
     }
 

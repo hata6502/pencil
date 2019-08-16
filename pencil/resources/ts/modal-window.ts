@@ -1,12 +1,13 @@
+import VirtualElement from './virtual-element';
+
 let displayCount = 0;
 
-export default class {
-    ondisplay: (() => void) | undefined = undefined;
-    onhide: (() => void) | undefined = undefined;
-    private element: HTMLDivElement;
+export default class extends VirtualElement<HTMLDivElement> {
+    onDisplay: () => void = () => {};
+    onHide: () => void = () => {};
 
     constructor(element: HTMLDivElement) {
-        this.element = element;
+        super(element);
 
         element.onclick = e => {
             this.hide();
@@ -16,22 +17,14 @@ export default class {
 
     display() {
         this.element.style.display = 'table';
-
-        if (this.ondisplay !== undefined) {
-            this.ondisplay();
-        }
-
+        this.onDisplay();
         document.body.classList.add('noscroll');
         displayCount++;
     }
 
     hide() {
         this.element.style.display = 'none';
-
-        if (this.onhide !== undefined) {
-            this.onhide();
-        }
-
+        this.onHide();
         if (--displayCount <= 0) {
             document.body.classList.remove('noscroll');
         }

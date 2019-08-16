@@ -1,17 +1,17 @@
+import VirtualElement from './virtual-element';
 import * as Settings from './settings';
 
 type Mode = 'pencil' | 'text';
 
-export default class {
+export default class extends VirtualElement<HTMLCanvasElement> {
     brush: string;
     color: string = Settings.DRAW_COLOR;
-    onchangehistory: ((index: number, length: number) => void) | undefined = undefined;
+    onChangeHistory: (index: number, length: number) => void = () => {};
     text: string = '';
     mode: Mode = 'pencil';
     isDisplay: boolean = false;
     tone: number[][] = Settings.TONES.black;
 
-    private element: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
     private history: ImageData[] = [];
     private historyIndex = -1;
@@ -20,7 +20,7 @@ export default class {
     private isDrawing: boolean = false;
 
     constructor(element: HTMLCanvasElement) {
-        this.element = element;
+        super(element);
         const context = this.element.getContext('2d');
         if (context === null) {
             throw "Couldn't get context. ";
@@ -88,10 +88,7 @@ export default class {
         }
 
         this.context.putImageData(drawing, 0, 0);
-
-        if (this.onchangehistory !== undefined) {
-            this.onchangehistory(this.historyIndex, this.history.length);
-        }
+        this.onChangeHistory(this.historyIndex, this.history.length);
     }
 
     redo(): void {
@@ -105,10 +102,7 @@ export default class {
         }
 
         this.context.putImageData(drawing, 0, 0);
-
-        if (this.onchangehistory !== undefined) {
-            this.onchangehistory(this.historyIndex, this.history.length);
-        }
+        this.onChangeHistory(this.historyIndex, this.history.length);
     }
 
     private drawPoint(originX: number, originY: number) {
@@ -177,8 +171,6 @@ export default class {
         }
 
         this.historyIndex = this.history.length - 1;
-        if (this.onchangehistory !== undefined) {
-            this.onchangehistory(this.historyIndex, this.history.length);
-        }
+        this.onChangeHistory(this.historyIndex, this.history.length);
     }
 }
