@@ -95,7 +95,7 @@
                         </div>
                     </div>
                     <div class="canvas-container">
-                        <img id="background-image" src="{{ url('images/background-white.png') }}" alt="背景" />
+                        <canvas id="background-canvas"></canvas>
                         <canvas id="drawing-canvas"></canvas>
                         <div id="stick-cursor">
                             <div></div>
@@ -158,6 +158,10 @@
                             <button class="background-button">
                                 <img src="{{ url('images/background-wide.png') }}" alt="ワイド" />
                             </button>
+                            <button id="background-file-button">
+                                <img src="{{ url('images/background-file.png') }}" alt="ファイル" />
+                            </button>
+                            <input id="background-file" type="file" accept="image/png, image/jpeg" />
                         </div>
                     </div>
                 </div>
