@@ -1,17 +1,25 @@
-export default class {
-    private element: HTMLButtonElement;
+import VirtualElement from './virtual-element';
+import * as Settings from './settings';
 
-    constructor(element: HTMLButtonElement, onpick: (color: string) => void) {
-        this.element = element;
+export default class extends VirtualElement<HTMLButtonElement> {
+    onPick: (color: string) => void = () => {};
+
+    constructor(element: HTMLButtonElement) {
+        super(element);
 
         const color = this.element.dataset.color;
         if (color === undefined) {
             throw "Couldn't get data-color attribute. ";
         }
 
-        this.element.style.backgroundColor = color;
+        if (color != 'transparent') {
+            this.element.style.backgroundColor = color;
+        } else {
+            this.element.style.backgroundImage = `url('${Settings.TRANSPARENT_URL}')`;
+        }
+
         this.element.onclick = () => {
-            onpick(color);
+            this.onPick(color);
         };
     }
 

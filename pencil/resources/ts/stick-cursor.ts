@@ -1,15 +1,15 @@
+import VirtualElement from './virtual-element';
 import * as Settings from './settings';
 
-export default class {
+export default class extends VirtualElement<HTMLDivElement> {
     x: number = Math.floor(Settings.CANVAS_WIDTH / 2);
     y: number = Math.floor(Settings.CANVAS_HEIGHT / 2);
-    onmove: (() => void) | undefined = undefined;
-    onend: (() => void) | undefined = undefined;
-    private element: HTMLDivElement;
+    onMove: () => void = () => {};
+    onEnd: () => void = () => {};
     private isEnterPressed: boolean = false;
 
     constructor(element: HTMLDivElement) {
-        this.element = element;
+        super(element);
 
         window.addEventListener('keydown', (event: KeyboardEvent) => {
             switch (event.keyCode) {
@@ -44,8 +44,8 @@ export default class {
         window.addEventListener('keyup', (event: KeyboardEvent) => {
             switch (event.keyCode) {
                 case Settings.KEYCODE_ENTER:
-                    if (this.isEnterPressed && this.onend !== undefined) {
-                        this.onend();
+                    if (this.isEnterPressed) {
+                        this.onEnd();
                     }
                     this.isEnterPressed = false;
                     break;
@@ -70,8 +70,8 @@ export default class {
     }
 
     private move() {
-        if (this.isEnterPressed && this.onmove !== undefined) {
-            this.onmove();
+        if (this.isEnterPressed) {
+            this.onMove();
         }
 
         this.element.style.left = Math.floor(this.x) * Settings.CANVAS_ZOOM - 1 + 'px';

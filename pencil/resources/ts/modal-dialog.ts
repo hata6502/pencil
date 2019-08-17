@@ -1,7 +1,11 @@
-export default class {
+import VirtualElement from './virtual-element';
+
+export default class extends VirtualElement<HTMLDivElement> {
     constructor(element: HTMLDivElement) {
-        element.onclick = e => {
-            e.stopPropagation()
-        }
+        super(element);
+
+        this.element.onclick = e => {
+            e.stopPropagation();
+        };
     }
 }

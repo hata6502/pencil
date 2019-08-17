@@ -8,6 +8,7 @@ export const DRAW_BRUSH = 'medium';
 export const DRAW_COLOR = 'black';
 
 export const IMAGE_URL = '/images/image.png';
+export const TRANSPARENT_URL = '/images/transparent.png';
 
 interface Brush {
     fontsize: number;

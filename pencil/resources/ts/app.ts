@@ -1,6 +1,5 @@
-import 'core-js/stable';
+import 'core-js/modules/es.object.assign';
 import * as Sentry from '@sentry/browser';
-
 import ModalWindow from './modal-window';
 import ModalDialog from './modal-dialog';
 import DrawingCanvas from './drawing-canvas';
@@ -11,6 +10,7 @@ import StickCursor from './stick-cursor';
 import PointerListener from './pointer-listener';
 import TextInput from './text-input';
 import ToneCanvas from './tone-canvas';
+import BackgroundButton from './background-button';
 import PreviewCanvas from './preview-canvas';
 import * as Settings from './settings';
 
@@ -23,10 +23,10 @@ if ('serviceWorker' in navigator) {
 }
 
 const drawingWindow = new ModalWindow(<HTMLDivElement>document.getElementById('drawing-window'));
-drawingWindow.ondisplay = () => {
+drawingWindow.onDisplay = () => {
     drawingCanvas.isDisplay = true;
 };
-drawingWindow.onhide = () => {
+drawingWindow.onHide = () => {
     drawingCanvas.isDisplay = false;
     previewCanvas.setDrawing(drawingCanvas.getDrawing());
 };
@@ -34,14 +34,15 @@ drawingWindow.onhide = () => {
 new ModalDialog(<HTMLDivElement>document.getElementById('drawing-dialog'));
 
 const drawingCanvas = new DrawingCanvas(<HTMLCanvasElement>document.getElementById('drawing-canvas'));
-drawingCanvas.onchangehistory = (index, length) => {
+drawingCanvas.onChangeHistory = (index, length) => {
     undoButton.setDisabled(index <= 0);
     redoButton.setDisabled(index >= length - 1);
 };
 
-let pencilButtons: PencilButton[] = [];
+const pencilButtons: PencilButton[] = [];
 Array.prototype.forEach.call(document.getElementsByClassName('pencil-button'), (element: HTMLButtonElement) => {
-    const pencilButton = new PencilButton(element, () => {
+    const pencilButton = new PencilButton(element);
+    pencilButton.onClick = () => {
         pencilButtons.forEach((pencilButton: PencilButton) => {
             pencilButton.inactivate();
         });
@@ -51,46 +52,54 @@ Array.prototype.forEach.call(document.getElementsByClassName('pencil-button'), (
 
         textInput.inactivate();
         drawingCanvas.mode = 'pencil';
-    });
+    };
 
     pencilButtons.push(pencilButton);
 });
 
 let paletteButtons: PaletteButton[] = [];
 Array.prototype.forEach.call(document.getElementsByClassName('palette-button'), (element: HTMLButtonElement) => {
-    const paletteButton = new PaletteButton(element, (color: string) => {
+    const paletteButton = new PaletteButton(element);
+    paletteButton.onPick = (color: string) => {
         paletteButtons.forEach((paletteButton: PaletteButton) => {
             paletteButton.inactivate();
         });
 
         paletteButton.activate();
         drawingCanvas.color = color;
-    });
+    };
 
     paletteButtons.push(paletteButton);
 });
 
-const undoButton = new HistoryButton(<HTMLButtonElement>document.getElementById('undo-button'), () => {
+const undoButton = new HistoryButton(<HTMLButtonElement>document.getElementById('undo-button'));
+undoButton.onClick = () => {
     drawingCanvas.undo();
-});
+};
 
-const redoButton = new HistoryButton(<HTMLButtonElement>document.getElementById('redo-button'), () => {
+const redoButton = new HistoryButton(<HTMLButtonElement>document.getElementById('redo-button'));
+redoButton.onClick = () => {
     drawingCanvas.redo();
-});
+};
+
+const backgroundButton = <HTMLButtonElement>document.getElementById('background-button');
+backgroundButton.onclick = () => {
+    backgroundWindow.display();
+};
 
 const stickCursor = new StickCursor(<HTMLDivElement>document.getElementById('stick-cursor'));
-stickCursor.onmove = () => {
+stickCursor.onMove = () => {
     drawingCanvas.movePath(Math.floor(stickCursor.x), Math.floor(stickCursor.y));
 };
-stickCursor.onend = () => {
+stickCursor.onEnd = () => {
     drawingCanvas.finishPath();
 };
 
 const pointerListener = new PointerListener();
-pointerListener.onstart = () => {
+pointerListener.onStart = () => {
     stickCursor.hide();
 };
-pointerListener.onmove = (screenX, screenY) => {
+pointerListener.onMove = (screenX, screenY) => {
     // ポインターのスクリーン座標を drawingCanvas との相対座標に変換します。
     const canvasPosition = drawingCanvas.getScreenPosition();
     const canvasX = Math.floor((screenX - 2 - canvasPosition.x) / Settings.CANVAS_ZOOM);
@@ -98,12 +107,12 @@ pointerListener.onmove = (screenX, screenY) => {
 
     drawingCanvas.movePath(canvasX, canvasY);
 };
-pointerListener.onend = () => {
+pointerListener.onEnd = () => {
     drawingCanvas.finishPath();
 };
 
 const textInput = new TextInput(<HTMLInputElement>document.getElementById('text-input'));
-textInput.onactive = text => {
+textInput.onActive = text => {
     drawingCanvas.text = text;
     drawingCanvas.mode = 'text';
 };
@@ -116,10 +125,10 @@ toneWindowButton.onclick = () => {
 const toneWindowButttonCanvas = new ToneCanvas(toneWindowButton.getElementsByTagName('canvas')[0]);
 
 const toneWindow = new ModalWindow(<HTMLDivElement>document.getElementById('tone-window'));
-toneWindow.ondisplay = () => {
+toneWindow.onDisplay = () => {
     drawingCanvas.isDisplay = false;
 };
-toneWindow.onhide = () => {
+toneWindow.onHide = () => {
     drawingCanvas.isDisplay = true;
 };
 
@@ -141,6 +150,27 @@ Array.prototype.forEach.call(document.getElementsByClassName('tone-button'), (bu
     }
 });
 
-const previewCanvas = new PreviewCanvas(<HTMLCanvasElement>document.getElementById('preview-canvas'), () => {
-    drawingWindow.display();
+const backgroundWindow = new ModalWindow(<HTMLDivElement>document.getElementById('background-window'));
+backgroundWindow.onDisplay = () => {
+    drawingCanvas.isDisplay = false;
+};
+backgroundWindow.onHide = () => {
+    drawingCanvas.isDisplay = true;
+};
+
+new ModalDialog(<HTMLDivElement>document.getElementById('background-dialog'));
+
+Array.prototype.forEach.call(document.getElementsByClassName('background-button'), (element: HTMLButtonElement) => {
+    const backgroundButton = new BackgroundButton(element);
+    backgroundButton.onClick = src => {
+        backgroundImage.src = src;
+        backgroundWindow.hide();
+    };
 });
+
+const backgroundImage = <HTMLImageElement>document.getElementById('background-image');
+
+const previewCanvas = new PreviewCanvas(<HTMLCanvasElement>document.getElementById('preview-canvas'));
+previewCanvas.onClick = () => {
+    drawingWindow.display();
+};

@@ -53,7 +53,7 @@
 
         <div id="drawing-window" class="modal-window">
             <div>
-                <div id="drawing-dialog">
+                <div id="drawing-dialog" class="modal-dialog">
                     <div class="toolbar">
                         <div>
                             <button id="undo-button" class="history-button" disabled>
@@ -61,6 +61,11 @@
                             </button>
                             <button id="redo-button" class="history-button" disabled>
                                 <img src="{{ url('images/redo.png') }}" alt="やり直し" />
+                            </button>
+                        </div>
+                        <div>
+                            <button id="background-button">
+                                <img src="{{ url('images/image.png') }}" alt="背景" />
                             </button>
                         </div>
                         <div>
@@ -86,9 +91,12 @@
                             <button class="palette-button" data-color="#ff00ff"></button>
                             <button class="palette-button" data-color="#0000ff"></button>
                             <button class="palette-button" data-color="#ffff00"></button>
+                            <button class="palette-button" data-color="transparent"></button>
                         </div>
                     </div>
                     <div class="canvas-container">
+                        <img id="background-image" src="{{ url('images/background-white.png') }}" alt="背景" />
+                        <canvas id="drawing-canvas"></canvas>
                         <div id="stick-cursor">
                             <div></div>
                             <div></div>
@@ -96,13 +104,12 @@
                             <div></div>
                             <div></div>
                         </div>
-                        <canvas id="drawing-canvas"></canvas>
                     </div>
                     <input id="text-input" placeholder="テキストを入力して埋め込みます。" />
                 </div>
                 <div id="tone-window" class="modal-window">
                     <div>
-                        <div id="tone-dialog">
+                        <div id="tone-dialog" class="modal-dialog">
                             <div>
                                 <button class="tone-button" data-tone="black"><canvas></canvas></button>
                                 <button class="tone-button" data-tone="dotBold"><canvas></canvas></button>
@@ -139,6 +146,18 @@
                                     <canvas></canvas>
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="background-window" class="modal-window">
+                    <div>
+                        <div id="background-dialog" class="modal-dialog">
+                            <button class="background-button active">
+                                <img src="{{ url('images/background-white.png') }}" alt="ホワイト" />
+                            </button>
+                            <button class="background-button">
+                                <img src="{{ url('images/background-wide.png') }}" alt="ワイド" />
+                            </button>
                         </div>
                     </div>
                 </div>
