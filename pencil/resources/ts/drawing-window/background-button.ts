@@ -1,7 +1,7 @@
-import VirtualElement from './virtual-element';
+import VirtualElement from '../virtual-element';
 
 export default class extends VirtualElement<HTMLButtonElement> {
-    onClick: (src: string) => void = () => {};
+    onClick: (src: string) => void = () => { };
 
     constructor(element: HTMLButtonElement) {
         super(element);

@@ -1,10 +1,10 @@
-import VirtualElement from './virtual-element';
+import VirtualElement from '../virtual-element';
 
 let displayCount = 0;
 
 export default class extends VirtualElement<HTMLDivElement> {
-    onDisplay: () => void = () => {};
-    onHide: () => void = () => {};
+    onDisplay: () => void = () => { };
+    onHide: () => void = () => { };
 
     constructor(element: HTMLDivElement) {
         super(element);

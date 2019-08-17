@@ -1,11 +1,11 @@
-import VirtualElement from './virtual-element';
-import * as Settings from './settings';
+import VirtualElement from '../virtual-element';
+import * as Settings from '../settings';
 
 export default class extends VirtualElement<HTMLDivElement> {
     x: number = Math.floor(Settings.CANVAS_WIDTH / 2);
     y: number = Math.floor(Settings.CANVAS_HEIGHT / 2);
-    onMove: () => void = () => {};
-    onEnd: () => void = () => {};
+    onMove: () => void = () => { };
+    onEnd: () => void = () => { };
     private isEnterPressed: boolean = false;
 
     constructor(element: HTMLDivElement) {
@@ -74,8 +74,8 @@ export default class extends VirtualElement<HTMLDivElement> {
             this.onMove();
         }
 
-        this.element.style.left = Math.floor(this.x) * Settings.CANVAS_ZOOM - 1 + 'px';
-        this.element.style.top = Math.floor(this.y) * Settings.CANVAS_ZOOM - 1 + 'px';
+        this.element.style.left = Math.floor(this.x) * Settings.CANVAS_ZOOM + 'px';
+        this.element.style.top = Math.floor(this.y) * Settings.CANVAS_ZOOM + 'px';
         this.element.style.display = 'block';
     }
 }

@@ -1,5 +1,5 @@
-import VirtualElement from './virtual-element';
-import * as Settings from './settings';
+import VirtualElement from '../virtual-element';
+import * as Settings from '../settings';
 
 export default class extends VirtualElement<HTMLCanvasElement> {
     private context: CanvasRenderingContext2D;
