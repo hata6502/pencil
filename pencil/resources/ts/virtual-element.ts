@@ -1,5 +1,5 @@
 export default class<T extends HTMLElement> {
-    element: T;
+    protected element: T;
 
     constructor(element: T) {
         this.element = element;

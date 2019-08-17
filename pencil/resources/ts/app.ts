@@ -10,6 +10,7 @@ import StickCursor from './stick-cursor';
 import PointerListener from './pointer-listener';
 import TextInput from './text-input';
 import ToneCanvas from './tone-canvas';
+import BackgroundButton from './background-button';
 import PreviewCanvas from './preview-canvas';
 import * as Settings from './settings';
 
@@ -38,7 +39,7 @@ drawingCanvas.onChangeHistory = (index, length) => {
     redoButton.setDisabled(index >= length - 1);
 };
 
-let pencilButtons: PencilButton[] = [];
+const pencilButtons: PencilButton[] = [];
 Array.prototype.forEach.call(document.getElementsByClassName('pencil-button'), (element: HTMLButtonElement) => {
     const pencilButton = new PencilButton(element);
     pencilButton.onClick = () => {
@@ -79,6 +80,11 @@ undoButton.onClick = () => {
 const redoButton = new HistoryButton(<HTMLButtonElement>document.getElementById('redo-button'));
 redoButton.onClick = () => {
     drawingCanvas.redo();
+};
+
+const backgroundButton = <HTMLButtonElement>document.getElementById('background-button');
+backgroundButton.onclick = () => {
+    backgroundWindow.display();
 };
 
 const stickCursor = new StickCursor(<HTMLDivElement>document.getElementById('stick-cursor'));
@@ -143,6 +149,26 @@ Array.prototype.forEach.call(document.getElementsByClassName('tone-button'), (bu
         toneCanvas.setTone(Settings.TONES[button.dataset.tone]);
     }
 });
+
+const backgroundWindow = new ModalWindow(<HTMLDivElement>document.getElementById('background-window'));
+backgroundWindow.onDisplay = () => {
+    drawingCanvas.isDisplay = false;
+};
+backgroundWindow.onHide = () => {
+    drawingCanvas.isDisplay = true;
+};
+
+new ModalDialog(<HTMLDivElement>document.getElementById('background-dialog'));
+
+Array.prototype.forEach.call(document.getElementsByClassName('background-button'), (element: HTMLButtonElement) => {
+    const backgroundButton = new BackgroundButton(element);
+    backgroundButton.onClick = src => {
+        backgroundImage.src = src;
+        backgroundWindow.hide();
+    };
+});
+
+const backgroundImage = <HTMLImageElement>document.getElementById('background-image');
 
 const previewCanvas = new PreviewCanvas(<HTMLCanvasElement>document.getElementById('preview-canvas'));
 previewCanvas.onClick = () => {

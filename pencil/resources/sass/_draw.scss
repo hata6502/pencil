@@ -14,17 +14,29 @@
   }
 }
 
-#drawing-dialog,
-#tone-dialog {
+.modal-dialog {
   display: inline-block;
   padding: 8px;
   text-align: left;
   background-color: $color-white;
 }
 
+#tone-window-button canvas,
 #drawing-canvas,
 #preview-canvas {
   border: 1px solid rgba($color-black, 0.1);
+}
+
+#background-dialog {
+  button {
+    border: 3px solid rgba($color-black, 0.1);
+
+    img {
+      width: 160px;
+      height: auto;
+      vertical-align: bottom;
+    }
+  }
 }
 
 #drawing-dialog {
@@ -49,6 +61,14 @@
       }
     }
 
+    #background-button {
+      img {
+        width: 32px;
+        height: auto;
+        vertical-align: middle;
+      }
+    }
+
     .pencil-button {
       width: 32px;
       height: 32px;
@@ -62,16 +82,11 @@
       }
     }
 
-    #tone-window-button {
-      canvas {
-        border: 1px solid rgba($color-black, 0.1);
-      }
-    }
-
     .palette-button {
       width: 32px;
       height: 32px;
       vertical-align: sub;
+      background-position: center;
       border: 1px solid rgba($color-black, 0.1);
       border-width: 3px;
       border-radius: 50%;
@@ -85,6 +100,18 @@
   .canvas-container {
     position: relative;
     margin-bottom: 4px;
+
+    #background-image {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: 640px;
+      height: auto;
+    }
+
+    #drawing-canvas {
+      position: relative;
+    }
 
     #stick-cursor {
       position: absolute;

@@ -109,6 +109,14 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         const brush = Settings.BRUSHES[this.brush];
 
         this.context.fillStyle = this.color;
+        const fill =
+            this.color != 'transparent'
+                ? (x: number, y: number, w: number, h: number) => {
+                      this.context.fillRect(x, y, w, h);
+                  }
+                : (x: number, y: number, w: number, h: number) => {
+                      this.context.clearRect(x, y, w, h);
+                  };
 
         switch (this.mode) {
             case 'pencil': {
@@ -120,7 +128,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
                     column.forEach(pattern => {
                         if (pattern && toneColumn[Math.abs(x) % toneColumn.length]) {
-                            this.context.fillRect(
+                            fill(
                                 x * Settings.CANVAS_ZOOM,
                                 y * Settings.CANVAS_ZOOM,
                                 Settings.CANVAS_ZOOM,

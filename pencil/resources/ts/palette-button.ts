@@ -1,4 +1,5 @@
 import VirtualElement from './virtual-element';
+import * as Settings from './settings';
 
 export default class extends VirtualElement<HTMLButtonElement> {
     onPick: (color: string) => void = () => {};
@@ -11,7 +12,11 @@ export default class extends VirtualElement<HTMLButtonElement> {
             throw "Couldn't get data-color attribute. ";
         }
 
-        this.element.style.backgroundColor = color;
+        if (color != 'transparent') {
+            this.element.style.backgroundColor = color;
+        } else {
+            this.element.style.backgroundImage = `url('${Settings.TRANSPARENT_URL}')`;
+        }
 
         this.element.onclick = () => {
             this.onPick(color);
