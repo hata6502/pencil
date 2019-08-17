@@ -37,6 +37,10 @@
       vertical-align: bottom;
     }
   }
+
+  #background-file {
+    display: none;
+  }
 }
 
 #drawing-dialog {
@@ -103,12 +107,10 @@
     position: relative;
     margin-bottom: 4px;
 
-    #background-image {
+    #background-canvas {
       position: absolute;
       top: 1px;
       left: 1px;
-      width: 640px;
-      height: auto;
     }
 
     #drawing-canvas {

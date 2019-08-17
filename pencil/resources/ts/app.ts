@@ -1,5 +1,6 @@
-import 'core-js/modules/es.object.assign';
+import 'core-js';
 import * as Sentry from '@sentry/browser';
+
 import ModalWindow from './drawing-window/modal-window';
 import ModalDialog from './drawing-window/modal-dialog';
 import DrawingCanvas from './drawing-window/drawing-canvas';
@@ -11,6 +12,9 @@ import PointerListener from './drawing-window/pointer-listener';
 import TextInput from './drawing-window/text-input';
 import ToneCanvas from './drawing-window/tone-canvas';
 import BackgroundButton from './drawing-window/background-button';
+import BackgroundFileButton from './drawing-window/background-file-button';
+import BackgroundFile from './drawing-window/background-file';
+import BackgroundCanvas from './drawing-window/background-canvas';
 import PreviewCanvas from './preview-canvas';
 import * as Settings from './settings';
 
@@ -103,7 +107,6 @@ pointerListener.onStart = () => {
     stickCursor.hide();
 };
 pointerListener.onMove = (screenX, screenY) => {
-    // ポインターのスクリーン座標を drawingCanvas との相対座標に変換します。
     const canvasPosition = drawingCanvas.getScreenPosition();
     const canvasX = Math.floor((screenX - 2 - canvasPosition.x) / Settings.CANVAS_ZOOM);
     const canvasY = Math.floor((screenY - 2 - canvasPosition.y) / Settings.CANVAS_ZOOM);
@@ -165,13 +168,26 @@ new ModalDialog(<HTMLDivElement>document.getElementById('background-dialog'));
 
 Array.prototype.forEach.call(document.getElementsByClassName('background-button'), (element: HTMLButtonElement) => {
     const backgroundButton = new BackgroundButton(element);
-    backgroundButton.onClick = src => {
-        backgroundImage.src = src;
+    backgroundButton.onClick = image => {
+        backgroundCanvas.setBackground(image);
         backgroundWindow.hide();
     };
 });
 
-const backgroundImage = <HTMLImageElement>document.getElementById('background-image');
+const backgroundFileButton = new BackgroundFileButton(<HTMLButtonElement>(
+    document.getElementById('background-file-button')
+));
+backgroundFileButton.onClick = () => {
+    backgroundFile.click();
+};
+
+const backgroundFile = new BackgroundFile(<HTMLInputElement>document.getElementById('background-file'));
+backgroundFile.onLoad = image => {
+    backgroundCanvas.setBackground(image);
+    backgroundWindow.hide();
+};
+
+const backgroundCanvas = new BackgroundCanvas(<HTMLCanvasElement>document.getElementById('background-canvas'));
 
 const previewCanvas = new PreviewCanvas(<HTMLCanvasElement>document.getElementById('preview-canvas'));
 previewCanvas.onClick = () => {

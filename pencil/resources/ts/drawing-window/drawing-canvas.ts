@@ -6,7 +6,7 @@ type Mode = 'pencil' | 'text';
 export default class extends VirtualElement<HTMLCanvasElement> {
     brush: string;
     color: string = Settings.DRAW_COLOR;
-    onChangeHistory: (index: number, length: number) => void = () => { };
+    onChangeHistory: (index: number, length: number) => void = () => {};
     text: string = '';
     mode: Mode = 'pencil';
     isDisplay: boolean = false;
@@ -21,6 +21,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
     constructor(element: HTMLCanvasElement) {
         super(element);
+
         const context = this.element.getContext('2d');
         if (context === null) {
             throw "Couldn't get context. ";
@@ -112,11 +113,11 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         const fill =
             this.color != 'transparent'
                 ? (x: number, y: number, w: number, h: number) => {
-                    this.context.fillRect(x, y, w, h);
-                }
+                      this.context.fillRect(x, y, w, h);
+                  }
                 : (x: number, y: number, w: number, h: number) => {
-                    this.context.clearRect(x, y, w, h);
-                };
+                      this.context.clearRect(x, y, w, h);
+                  };
 
         switch (this.mode) {
             case 'pencil': {

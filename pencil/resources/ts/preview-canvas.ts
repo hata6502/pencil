@@ -19,7 +19,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.element.setAttribute('width', (Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM).toString());
         this.element.setAttribute('height', (Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM).toString());
 
-        var image = new Image();
+        const image = new Image();
         image.src = Settings.IMAGE_URL;
         image.onload = () => {
             this.context.drawImage(
