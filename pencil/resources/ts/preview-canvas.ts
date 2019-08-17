@@ -24,10 +24,10 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         image.onload = () => {
             this.context.drawImage(
                 image,
-                (Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM - 128) / 2,
-                (Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM - 128) / 2,
-                128,
-                128
+                ((Settings.CANVAS_WIDTH - 64) * Settings.CANVAS_ZOOM) / 2,
+                ((Settings.CANVAS_HEIGHT - 64) * Settings.CANVAS_ZOOM) / 2,
+                64 * Settings.CANVAS_ZOOM,
+                64 * Settings.CANVAS_ZOOM
             );
         };
 

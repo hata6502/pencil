@@ -1,8 +1,8 @@
-import VirtualElement from './virtual-element';
-import * as Settings from './settings';
+import VirtualElement from '../virtual-element';
+import * as Settings from '../settings';
 
 export default class extends VirtualElement<HTMLButtonElement> {
-    onPick: (color: string) => void = () => {};
+    onPick: (color: string) => void = () => { };
 
     constructor(element: HTMLButtonElement) {
         super(element);

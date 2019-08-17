@@ -54,7 +54,7 @@
         <div id="drawing-window" class="modal-window">
             <div>
                 <div id="drawing-dialog" class="modal-dialog">
-                    <div class="toolbar">
+                    <div id="toolbar">
                         <div>
                             <button id="undo-button" class="history-button" disabled>
                                 <img src="{{ url('images/undo.png') }}" alt="元に戻す" />

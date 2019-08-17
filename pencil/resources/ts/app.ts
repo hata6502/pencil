@@ -1,16 +1,16 @@
 import 'core-js/modules/es.object.assign';
 import * as Sentry from '@sentry/browser';
-import ModalWindow from './modal-window';
-import ModalDialog from './modal-dialog';
-import DrawingCanvas from './drawing-canvas';
-import PencilButton from './pencil-button';
-import PaletteButton from './palette-button';
-import HistoryButton from './history-button';
-import StickCursor from './stick-cursor';
-import PointerListener from './pointer-listener';
-import TextInput from './text-input';
-import ToneCanvas from './tone-canvas';
-import BackgroundButton from './background-button';
+import ModalWindow from './drawing-window/modal-window';
+import ModalDialog from './drawing-window/modal-dialog';
+import DrawingCanvas from './drawing-window/drawing-canvas';
+import PencilButton from './drawing-window/pencil-button';
+import PaletteButton from './drawing-window/palette-button';
+import HistoryButton from './drawing-window/history-button';
+import StickCursor from './drawing-window/stick-cursor';
+import PointerListener from './drawing-window/pointer-listener';
+import TextInput from './drawing-window/text-input';
+import ToneCanvas from './drawing-window/tone-canvas';
+import BackgroundButton from './drawing-window/background-button';
 import PreviewCanvas from './preview-canvas';
 import * as Settings from './settings';
 
@@ -32,6 +32,9 @@ drawingWindow.onHide = () => {
 };
 
 new ModalDialog(<HTMLDivElement>document.getElementById('drawing-dialog'));
+
+const toolbar = <HTMLDivElement>document.getElementById('toolbar');
+toolbar.style.width = Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM + 2 + 'px';
 
 const drawingCanvas = new DrawingCanvas(<HTMLCanvasElement>document.getElementById('drawing-canvas'));
 drawingCanvas.onChangeHistory = (index, length) => {
