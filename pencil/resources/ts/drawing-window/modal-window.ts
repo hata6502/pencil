@@ -3,8 +3,8 @@ import VirtualElement from '../virtual-element';
 let displayCount = 0;
 
 export default class extends VirtualElement<HTMLDivElement> {
-    onDisplay: () => void = () => { };
-    onHide: () => void = () => { };
+    onDisplay: () => void = () => {};
+    onHide: () => void = () => {};
 
     constructor(element: HTMLDivElement) {
         super(element);
@@ -16,17 +16,21 @@ export default class extends VirtualElement<HTMLDivElement> {
     }
 
     display() {
-        this.element.style.display = 'table';
-        this.onDisplay();
-        document.body.classList.add('noscroll');
-        displayCount++;
+        if (this.element.style.display == 'none') {
+            this.element.style.display = 'table';
+            this.onDisplay();
+            document.body.classList.add('noscroll');
+            displayCount++;
+        }
     }
 
     hide() {
-        this.element.style.display = 'none';
-        this.onHide();
-        if (--displayCount <= 0) {
-            document.body.classList.remove('noscroll');
+        if (this.element.style.display != 'none') {
+            this.element.style.display = 'none';
+            this.onHide();
+            if (--displayCount <= 0) {
+                document.body.classList.remove('noscroll');
+            }
         }
     }
 }
