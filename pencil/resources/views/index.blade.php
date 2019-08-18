@@ -161,7 +161,16 @@
                             <button id="background-file-button">
                                 <img src="{{ url('images/background-file.png') }}" alt="ファイル" />
                             </button>
-                            <input id="background-file" type="file" accept="image/png, image/jpeg" />
+                            <form
+                                id="background-file-form"
+                                action="{{ route('image') }}"
+                                method="POST"
+                                enctype="multipart/form-data"
+                                target="background-file-iframe"
+                            >
+                                <input id="background-file" name="image" type="file" accept="image/png,image/jpeg" />
+                            </form>
+                            <iframe id="background-file-iframe" name="background-file-iframe"></iframe>
                         </div>
                     </div>
                 </div>
