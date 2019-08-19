@@ -28,10 +28,10 @@ if ('serviceWorker' in navigator) {
 
 const drawingWindow = new ModalWindow(<HTMLDivElement>document.getElementById('drawing-window'));
 drawingWindow.onDisplay = () => {
-    drawingCanvas.isDisplay = true;
+    stickCursor.enable = drawingCanvas.isDisplay = true;
 };
 drawingWindow.onHide = () => {
-    drawingCanvas.isDisplay = false;
+    stickCursor.enable = drawingCanvas.isDisplay = false;
     previewCanvas.setDrawing(drawingCanvas.getDrawing());
 };
 
@@ -132,10 +132,10 @@ const toneWindowButttonCanvas = new ToneCanvas(toneWindowButton.getElementsByTag
 
 const toneWindow = new ModalWindow(<HTMLDivElement>document.getElementById('tone-window'));
 toneWindow.onDisplay = () => {
-    drawingCanvas.isDisplay = false;
+    stickCursor.enable = drawingCanvas.isDisplay = false;
 };
 toneWindow.onHide = () => {
-    drawingCanvas.isDisplay = true;
+    stickCursor.enable = drawingCanvas.isDisplay = true;
 };
 
 new ModalDialog(<HTMLDivElement>document.getElementById('tone-dialog'));
@@ -158,10 +158,10 @@ Array.prototype.forEach.call(document.getElementsByClassName('tone-button'), (bu
 
 const backgroundWindow = new ModalWindow(<HTMLDivElement>document.getElementById('background-window'));
 backgroundWindow.onDisplay = () => {
-    drawingCanvas.isDisplay = false;
+    stickCursor.enable = drawingCanvas.isDisplay = false;
 };
 backgroundWindow.onHide = () => {
-    drawingCanvas.isDisplay = true;
+    stickCursor.enable = drawingCanvas.isDisplay = true;
 };
 
 new ModalDialog(<HTMLDivElement>document.getElementById('background-dialog'));
