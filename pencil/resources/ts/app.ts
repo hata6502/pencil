@@ -183,7 +183,13 @@ backgroundFileButton.onClick = () => {
 
 const backgroundFile = new BackgroundFile(<HTMLInputElement>document.getElementById('background-file'));
 backgroundFile.onSelect = () => {
-    backgroundFileForm.submit();
+    if (!('FileReader' in window) || navigator.userAgent.toLowerCase().indexOf('nintendo wiiu') != -1) {
+        backgroundFileForm.submit();
+    }
+};
+backgroundFile.onLoad = image => {
+    backgroundCanvas.setBackground(image);
+    backgroundWindow.hide();
 };
 
 const backgroundFileForm = <HTMLFormElement>document.getElementById('background-file-form');

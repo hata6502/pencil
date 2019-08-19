@@ -16,7 +16,7 @@ export default class extends VirtualElement<HTMLDivElement> {
     }
 
     display() {
-        if (this.element.style.display == 'none') {
+        if (this.element.style.display != 'table') {
             this.element.style.display = 'table';
             this.onDisplay();
             document.body.classList.add('noscroll');
@@ -25,7 +25,7 @@ export default class extends VirtualElement<HTMLDivElement> {
     }
 
     hide() {
-        if (this.element.style.display != 'none') {
+        if (this.element.style.display == 'table') {
             this.element.style.display = 'none';
             this.onHide();
             if (--displayCount <= 0) {
