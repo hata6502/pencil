@@ -1,23 +1,22 @@
 import VirtualElement from '../virtual-element';
 import * as Settings from '../settings';
 
-type Mode = 'pencil' | 'text';
-
 export default class extends VirtualElement<HTMLCanvasElement> {
     brush: string;
     color: string = Settings.DRAW_COLOR;
     onChangeHistory: (index: number, length: number) => void = () => {};
     text: string = '';
-    mode: Mode = 'pencil';
+    mode: 'pencil' | 'text' = 'pencil';
     isDisplay: boolean = false;
     tone: number[][] = Settings.TONES.black;
 
     private context: CanvasRenderingContext2D;
     private history: ImageData[] = [];
     private historyIndex = -1;
-    private prevX: number = -1;
-    private prevY: number = -1;
+    private prevX: number = NaN;
+    private prevY: number = NaN;
     private isDrawing: boolean = false;
+    private last!: ImageData;
 
     constructor(element: HTMLCanvasElement) {
         super(element);
@@ -57,10 +56,14 @@ export default class extends VirtualElement<HTMLCanvasElement> {
             }
 
             if (this.isDrawing) {
-                if (this.prevX == -1) {
-                    this.drawPoint(x, y);
-                } else {
-                    this.drawLine(this.prevX, this.prevY, x, y);
+                if (this.mode == 'pencil') {
+                    if (isNaN(this.prevX)) {
+                        this.drawPoint(x, y);
+                    } else {
+                        this.drawLine(this.prevX, this.prevY, x, y);
+                    }
+                } else if (this.mode == 'text') {
+                    this.drawText(x, y, 0.25);
                 }
             }
 
@@ -71,11 +74,15 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
     finishPath(): void {
         if (this.isDrawing) {
+            if (this.mode == 'text') {
+                this.drawText(this.prevX, this.prevY, 1);
+            }
+
             this.isDrawing = false;
             this.backup();
         }
 
-        this.prevX = -1;
+        this.prevX = NaN;
     }
 
     undo(): void {
@@ -83,12 +90,13 @@ export default class extends VirtualElement<HTMLCanvasElement> {
             return;
         }
 
-        const drawing = this.history[--this.historyIndex];
-        if (drawing === undefined) {
+        const image = this.history[--this.historyIndex];
+        if (image === undefined) {
             return;
         }
 
-        this.context.putImageData(drawing, 0, 0);
+        this.context.putImageData(image, 0, 0);
+        this.last = image;
         this.onChangeHistory(this.historyIndex, this.history.length);
     }
 
@@ -97,12 +105,13 @@ export default class extends VirtualElement<HTMLCanvasElement> {
             return;
         }
 
-        const drawing = this.history[++this.historyIndex];
-        if (drawing === undefined) {
+        const image = this.history[++this.historyIndex];
+        if (image === undefined) {
             return;
         }
 
-        this.context.putImageData(drawing, 0, 0);
+        this.context.putImageData(image, 0, 0);
+        this.last = image;
         this.onChangeHistory(this.historyIndex, this.history.length);
     }
 
@@ -116,10 +125,15 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.backup();
     }
 
-    private drawPoint(originX: number, originY: number) {
+    private setImage(image: ImageData): void {
+        this.context.putImageData(image, 0, 0);
+    }
+
+    private drawPoint(originX: number, originY: number): void {
         const brush = Settings.BRUSHES[this.brush];
 
         this.context.fillStyle = this.color;
+        this.context.globalAlpha = 1;
         const fill =
             this.color != 'transparent'
                 ? (x: number, y: number, w: number, h: number) => {
@@ -129,39 +143,27 @@ export default class extends VirtualElement<HTMLCanvasElement> {
                       this.context.clearRect(x, y, w, h);
                   };
 
-        switch (this.mode) {
-            case 'pencil': {
-                let y = originY - Math.floor(brush.pattern.length / 2);
+        let y = originY - Math.floor(brush.pattern.length / 2);
 
-                brush.pattern.forEach(column => {
-                    let x = originX - Math.floor(column.length / 2);
-                    const toneColumn = this.tone[Math.abs(y) % this.tone.length];
+        brush.pattern.forEach(column => {
+            let x = originX - Math.floor(column.length / 2);
+            const toneColumn = this.tone[Math.abs(y) % this.tone.length];
 
-                    column.forEach(pattern => {
-                        if (pattern && toneColumn[Math.abs(x) % toneColumn.length]) {
-                            fill(
-                                x * Settings.CANVAS_ZOOM,
-                                y * Settings.CANVAS_ZOOM,
-                                Settings.CANVAS_ZOOM,
-                                Settings.CANVAS_ZOOM
-                            );
-                        }
+            column.forEach(pattern => {
+                if (pattern && toneColumn[Math.abs(x) % toneColumn.length]) {
+                    fill(
+                        x * Settings.CANVAS_ZOOM,
+                        y * Settings.CANVAS_ZOOM,
+                        Settings.CANVAS_ZOOM,
+                        Settings.CANVAS_ZOOM
+                    );
+                }
 
-                        x++;
-                    });
+                x++;
+            });
 
-                    y++;
-                });
-                break;
-            }
-
-            case 'text': {
-                this.context.font = brush.fontsize * Settings.CANVAS_ZOOM + 'px sans-serif';
-                this.context.textBaseline = 'middle';
-                this.context.fillText(this.text, originX * Settings.CANVAS_ZOOM, originY * Settings.CANVAS_ZOOM);
-                break;
-            }
-        }
+            y++;
+        });
     }
 
     private drawLine(fromX: number, fromY: number, toX: number, toY: number): void {
@@ -178,18 +180,32 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         }
     }
 
+    private drawText(x: number, y: number, alpha: number): void {
+        this.setImage(this.last);
+
+        const brush = Settings.BRUSHES[this.brush];
+
+        this.context.fillStyle = this.color;
+        this.context.globalAlpha = alpha;
+        this.context.font = brush.fontsize * Settings.CANVAS_ZOOM + 'px sans-serif';
+        this.context.textBaseline = 'middle';
+        this.context.fillText(this.text, x * Settings.CANVAS_ZOOM, y * Settings.CANVAS_ZOOM);
+    }
+
     private backup(): void {
         while (this.history.length - 1 > this.historyIndex) {
             this.history.pop();
         }
 
-        this.history.push(this.getImage());
+        const image = this.getImage();
+        this.history.push(image);
 
         while (this.history.length > Settings.HISTORY_MAX_LENGTH) {
             this.history.shift();
         }
 
         this.historyIndex = this.history.length - 1;
+        this.last = image;
         this.onChangeHistory(this.historyIndex, this.history.length);
     }
 }
