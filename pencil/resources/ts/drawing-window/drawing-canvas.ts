@@ -63,7 +63,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
                         this.drawLine(this.prevX, this.prevY, x, y);
                     }
                 } else if (this.mode == 'text') {
-                    this.drawText(x, y, 0.25);
+                    this.drawText(x, y, 0.25, false);
                 }
             }
 
@@ -75,7 +75,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
     finishPath(): void {
         if (this.isDrawing) {
             if (this.mode == 'text') {
-                this.drawText(this.prevX, this.prevY, 1);
+                this.drawText(this.prevX, this.prevY, 1, true);
             }
 
             this.isDrawing = false;
@@ -180,7 +180,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         }
     }
 
-    private drawText(x: number, y: number, alpha: number): void {
+    private drawText(x: number, y: number, alpha: number, isNormalize: boolean): void {
         this.setImage(this.last);
 
         const brush = Settings.BRUSHES[this.brush];
@@ -190,6 +190,41 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.context.font = brush.fontsize * Settings.CANVAS_ZOOM + 'px sans-serif';
         this.context.textBaseline = 'middle';
         this.context.fillText(this.text, x * Settings.CANVAS_ZOOM, y * Settings.CANVAS_ZOOM);
+
+        if (isNormalize) {
+            this.normalize();
+        }
+    }
+
+    private normalize(): void {
+        this.context.globalAlpha = 1;
+
+        for (let y = 0; y < Settings.CANVAS_HEIGHT; y++) {
+            for (let x = 0; x < Settings.CANVAS_WIDTH; x++) {
+                const imageData = this.context.getImageData(x * Settings.CANVAS_ZOOM, y * Settings.CANVAS_ZOOM, 1, 1);
+
+                if (imageData.data[3] < 128) {
+                    this.context.clearRect(
+                        x * Settings.CANVAS_ZOOM,
+                        y * Settings.CANVAS_ZOOM,
+                        Settings.CANVAS_ZOOM,
+                        Settings.CANVAS_ZOOM
+                    );
+                } else {
+                    const r = Number(imageData.data[0] >= 128) * 255;
+                    const g = Number(imageData.data[1] >= 128) * 255;
+                    const b = Number(imageData.data[2] >= 128) * 255;
+
+                    this.context.fillStyle = `rgb(${r},${g},${b})`;
+                    this.context.fillRect(
+                        x * Settings.CANVAS_ZOOM,
+                        y * Settings.CANVAS_ZOOM,
+                        Settings.CANVAS_ZOOM,
+                        Settings.CANVAS_ZOOM
+                    );
+                }
+            }
+        }
     }
 
     private backup(): void {
