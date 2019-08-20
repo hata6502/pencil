@@ -4,14 +4,19 @@ import * as Settings from '../settings';
 export default class extends VirtualElement<HTMLDivElement> {
     x: number = Math.floor(Settings.CANVAS_WIDTH / 2);
     y: number = Math.floor(Settings.CANVAS_HEIGHT / 2);
-    onMove: () => void = () => { };
-    onEnd: () => void = () => { };
+    enable: boolean = false;
+    onMove: () => void = () => {};
+    onEnd: () => void = () => {};
     private isEnterPressed: boolean = false;
 
     constructor(element: HTMLDivElement) {
         super(element);
 
         window.addEventListener('keydown', (event: KeyboardEvent) => {
+            if (!this.enable) {
+                return;
+            }
+
             switch (event.keyCode) {
                 case Settings.KEYCODE_UP:
                     this.y--;
@@ -42,6 +47,10 @@ export default class extends VirtualElement<HTMLDivElement> {
         });
 
         window.addEventListener('keyup', (event: KeyboardEvent) => {
+            if (!this.enable) {
+                return;
+            }
+
             switch (event.keyCode) {
                 case Settings.KEYCODE_ENTER:
                     if (this.isEnterPressed) {
@@ -54,6 +63,10 @@ export default class extends VirtualElement<HTMLDivElement> {
 
         if (navigator.userAgent.toLowerCase().indexOf('nintendo wiiu') != -1) {
             setInterval(() => {
+                if (!this.enable) {
+                    return;
+                }
+
                 const gamepad = (<any>window).wiiu.gamepad.update();
 
                 if (gamepad.lStickX !== 0.0 || gamepad.lStickY !== 0.0) {
