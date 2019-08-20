@@ -33,7 +33,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.element.setAttribute('width', (Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM).toString());
         this.element.setAttribute('height', (Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM).toString());
 
-        this.backupCanvas();
+        this.backup();
     }
 
     getScreenPosition(): { x: number; y: number } {
@@ -41,7 +41,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         return { x: rect.left, y: rect.top };
     }
 
-    getDrawing(): ImageData {
+    getImage(): ImageData {
         return this.context.getImageData(
             0,
             0,
@@ -72,7 +72,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
     finishPath(): void {
         if (this.isDrawing) {
             this.isDrawing = false;
-            this.backupCanvas();
+            this.backup();
         }
 
         this.prevX = -1;
@@ -104,6 +104,16 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
         this.context.putImageData(drawing, 0, 0);
         this.onChangeHistory(this.historyIndex, this.history.length);
+    }
+
+    clear(): void {
+        this.context.clearRect(
+            0,
+            0,
+            Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM,
+            Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM
+        );
+        this.backup();
     }
 
     private drawPoint(originX: number, originY: number) {
@@ -168,12 +178,12 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         }
     }
 
-    private backupCanvas(): void {
+    private backup(): void {
         while (this.history.length - 1 > this.historyIndex) {
             this.history.pop();
         }
 
-        this.history.push(this.getDrawing());
+        this.history.push(this.getImage());
 
         while (this.history.length > Settings.HISTORY_MAX_LENGTH) {
             this.history.shift();

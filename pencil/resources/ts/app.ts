@@ -32,7 +32,7 @@ drawingWindow.onDisplay = () => {
 };
 drawingWindow.onHide = () => {
     stickCursor.enable = drawingCanvas.isDisplay = false;
-    previewCanvas.setDrawing(drawingCanvas.getDrawing());
+    previewCanvas.setDrawing(drawingCanvas.getImage());
 };
 
 new ModalDialog(<HTMLDivElement>document.getElementById('drawing-dialog'));
@@ -87,6 +87,17 @@ undoButton.onClick = () => {
 const redoButton = new HistoryButton(<HTMLButtonElement>document.getElementById('redo-button'));
 redoButton.onClick = () => {
     drawingCanvas.redo();
+};
+
+const clearButton = <HTMLButtonElement>document.getElementById('clear-button');
+clearButton.onclick = () => {
+    drawingCanvas.clear();
+    clearButton.disabled = true;
+
+    const timeout = setTimeout(() => {
+        clearButton.disabled = false;
+        clearTimeout(timeout);
+    }, 3000);
 };
 
 const backgroundButton = <HTMLButtonElement>document.getElementById('background-button');

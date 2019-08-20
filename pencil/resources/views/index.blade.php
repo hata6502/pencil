@@ -64,6 +64,11 @@
                             </button>
                         </div>
                         <div>
+                            <button id="clear-button">
+                                <img src="{{ url('images/clear.png') }}" alt="全消し" />
+                            </button>
+                        </div>
+                        <div>
                             <button id="background-button">
                                 <img src="{{ url('images/image.png') }}" alt="背景" />
                             </button>
