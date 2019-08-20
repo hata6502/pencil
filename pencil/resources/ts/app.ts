@@ -92,12 +92,6 @@ redoButton.onClick = () => {
 const clearButton = <HTMLButtonElement>document.getElementById('clear-button');
 clearButton.onclick = () => {
     drawingCanvas.clear();
-    clearButton.disabled = true;
-
-    const timeout = setTimeout(() => {
-        clearButton.disabled = false;
-        clearTimeout(timeout);
-    }, 3000);
 };
 
 const backgroundButton = <HTMLButtonElement>document.getElementById('background-button');

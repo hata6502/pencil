@@ -17,7 +17,7 @@ interface Brush {
 
 export const BRUSHES: { [key: string]: Brush } = {
     light: {
-        fontsize: 12,
+        fontsize: 16,
         pattern: [[1]]
     },
     medium: {
@@ -25,7 +25,7 @@ export const BRUSHES: { [key: string]: Brush } = {
         pattern: [[0, 1, 0], [1, 1, 1], [0, 1, 0]]
     },
     bold: {
-        fontsize: 36,
+        fontsize: 32,
         pattern: [
             [0, 1, 1, 1, 1, 0],
             [1, 1, 1, 1, 1, 1],
