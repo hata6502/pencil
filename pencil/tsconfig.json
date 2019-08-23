@@ -6,7 +6,8 @@
     "noImplicitReturns": true,
     "noImplicitAny": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "jsx": "react"
   },
   "include": [
     "resources/ts/**/*"

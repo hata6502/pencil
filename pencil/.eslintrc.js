@@ -4,7 +4,7 @@ module.exports = {
         commonjs: true,
         es6: true
     },
-    extends: 'eslint:recommended',
+    extends: ['eslint:recommended', 'plugin:react/recommended'],
     globals: {
         Atomics: 'readonly',
         SharedArrayBuffer: 'readonly'
@@ -13,4 +13,4 @@ module.exports = {
         ecmaVersion: 2018
     },
     rules: {}
-}
+};
