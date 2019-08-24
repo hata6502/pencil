@@ -7,7 +7,7 @@
     "noImplicitAny": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "jsx": "react"
+    "jsx": "preserve"
   },
   "include": [
     "resources/ts/**/*"

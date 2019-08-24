@@ -1,21 +1,21 @@
-import { React } from '../virtual-element';
+import { React, AttributeMap } from '../virtual-element';
 import VirtualElement from '../virtual-element';
 
-interface Props {
+interface Props extends AttributeMap {
     src: string;
     alt: string;
 }
 
-export default class A extends VirtualElement<HTMLButtonElement> {
+export default class extends VirtualElement<HTMLButtonElement, Props> {
     onClick: (image: HTMLImageElement) => void = () => {};
 
-    constructor(element: HTMLButtonElement, props: Props) {
-        super(element);
+    constructor(element: HTMLButtonElement | null, props: Props) {
+        super(element || 'button', props);
 
         const click = () => {
             this.onClick(image);
         };
-        const image = <img src={props.src} alt={props.alt} onClick={click} />;
+        const image = <img src={this.props.src} alt={this.props.alt} onClick={click} />;
 
         this.element.appendChild(image);
     }

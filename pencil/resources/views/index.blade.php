@@ -156,27 +156,7 @@
                 </div>
                 <div id="background-window" class="modal-window">
                     <div>
-                        <div id="background-dialog" class="modal-dialog">
-                            <button class="background-button active">
-                                <img src="{{ url('images/background-white.png') }}" alt="ホワイト" />
-                            </button>
-                            <button class="background-button">
-                                <img src="{{ url('images/background-wide.png') }}" alt="ワイド" />
-                            </button>
-                            <button id="background-file-button">
-                                <img src="{{ url('images/background-file.png') }}" alt="ファイル" />
-                            </button>
-                            <form
-                                id="background-file-form"
-                                action="{{ route('image') }}"
-                                method="POST"
-                                enctype="multipart/form-data"
-                                target="background-file-iframe"
-                            >
-                                <input id="background-file" name="image" type="file" accept="image/png,image/jpeg" />
-                            </form>
-                            <iframe id="background-file-iframe" name="background-file-iframe"></iframe>
-                        </div>
+                        <div id="background-dialog" class="modal-dialog"></div>
                     </div>
                 </div>
             </div>

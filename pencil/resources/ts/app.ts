@@ -11,6 +11,7 @@ import StickCursor from './drawing-window/stick-cursor';
 import PointerListener from './drawing-window/pointer-listener';
 import TextInput from './drawing-window/text-input';
 import ToneCanvas from './drawing-window/tone-canvas';
+import BackgroundDialog from './drawing-window/background-dialog';
 import BackgroundButton from './drawing-window/background-button';
 import BackgroundFileButton from './drawing-window/background-file-button';
 import BackgroundFile from './drawing-window/background-file';
@@ -169,14 +170,14 @@ backgroundWindow.onHide = () => {
     stickCursor.enable = drawingCanvas.isDisplay = true;
 };
 
-new ModalDialog(<HTMLDivElement>document.getElementById('background-dialog'));
+new BackgroundDialog(<HTMLDivElement>document.getElementById('background-dialog'));
 
 Array.prototype.forEach.call(document.getElementsByClassName('background-button'), (element: HTMLButtonElement) => {
-    const backgroundButton = new BackgroundButton(element);
+    /*const backgroundButton = new BackgroundButton(element);
     backgroundButton.onClick = image => {
         backgroundCanvas.setBackground(image);
         backgroundWindow.hide();
-    };
+    };*/
 });
 
 const backgroundFileButton = new BackgroundFileButton(<HTMLButtonElement>(
