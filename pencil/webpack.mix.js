@@ -10,17 +10,6 @@ const mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
-mix.babelConfig({
-    plugins: [
-        '@babel/syntax-jsx',
-        [
-            '@babel/transform-react-jsx',
-            {
-                pragma: 'createElement'
-            }
-        ]
-    ]
-});
 
 mix.ts('resources/ts/app.ts', 'public/js');
 mix.ts('resources/ts/service-worker.ts', 'public');

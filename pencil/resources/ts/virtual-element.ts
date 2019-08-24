@@ -1,26 +1,29 @@
-interface ConstructorSignature {
-    new (element: HTMLElement | null, props: AttributeMap): VirtualElement<HTMLElement, AttributeMap>;
+interface ConstructorSignature<HElement, VElement, Props> {
+    new (element: HElement | null, props: Props): VElement;
 }
-type ElementType = ConstructorSignature | keyof HTMLElementTagNameMap;
-type Attribute = any;
+type ElementType<HElement, VElement, Props> =
+    | ConstructorSignature<HElement, VElement, Props>
+    | keyof HTMLElementTagNameMap;
 
-export type AttributeMap = { [name: string]: Attribute };
-
-export const appendChildren = (element: HTMLElement, children: HTMLElement[]) => {
+export const appendChildren = (element: HTMLElement, ...children: HTMLElement[]) => {
     children.forEach(child => {
         element.appendChild(child);
     });
 };
 
-export const createElement = (
-    type: ElementType,
-    attributes: AttributeMap | null,
+export const createElement = <
+    HElement extends HTMLElement,
+    VElement extends VirtualElement<HTMLElement> = VirtualElement<HTMLElement>,
+    Props extends AttributeMap = {}
+>(
+    type: ElementType<HElement, VElement, Props>,
+    attributes: Props | null,
     ...children: HTMLElement[]
-): HTMLElement => {
-    let htmlElement;
+): HElement => {
+    let htmlElement: HElement;
 
     if (typeof type === 'string') {
-        htmlElement = document.createElement(type);
+        htmlElement = <HElement>document.createElement(type);
 
         if (attributes !== null) {
             for (const name in attributes) {
@@ -34,13 +37,13 @@ export const createElement = (
             }
         }
     } else {
-        const props = attributes || {};
+        const props = attributes || <Props>{};
         const virtualElement = new type(null, props);
         console.log(virtualElement);
-        htmlElement = virtualElement.element;
+        htmlElement = <HElement>virtualElement.element;
     }
 
-    appendChildren(htmlElement, children);
+    appendChildren(htmlElement, ...children);
     return htmlElement;
 };
 
