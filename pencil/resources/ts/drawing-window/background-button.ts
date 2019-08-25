@@ -1,21 +1,31 @@
-import { createElement } from '../virtual-element';
-import VirtualElement from '../virtual-element';
+import VirtualElement, { createElement, appendChildren } from '../virtual-element';
 
-export default class extends VirtualElement<HTMLButtonElement, BackGroundButtonProps> {
+export default class extends VirtualElement<HTMLButtonElement> {
     onClick: (image: HTMLImageElement) => void = () => {};
 
     constructor(element: HTMLButtonElement | null, props: BackGroundButtonProps) {
-        super(element || 'button', props);
+        super(element || 'button');
 
-        const click = () => {
+        if (props.isActive) {
+            this.element.classList.add('active');
+        }
+        if (props.onClick) {
+            this.onClick = props.onClick;
+        }
+
+        this.element.classList.add('background-button');
+
+        let image: HTMLImageElement;
+        this.element.onclick = () => {
             this.onClick(image);
         };
-        const image = createElement<HTMLImageElement>('img', {
-            src: this.props.src,
-            alt: this.props.alt,
-            onclick: click
-        });
 
-        this.element.appendChild(image);
+        appendChildren(
+            this.element,
+            (image = createElement<HTMLImageElement>('img', {
+                src: props.src,
+                alt: props.alt
+            }))
+        );
     }
 }

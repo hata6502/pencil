@@ -1,63 +1,43 @@
-interface ConstructorSignature<HElement, VElement, Props> {
-    new (element: HElement | null, props: Props): VElement;
-}
-type ElementType<HElement, VElement, Props> =
-    | ConstructorSignature<HElement, VElement, Props>
-    | keyof HTMLElementTagNameMap;
-
-export const appendChildren = (element: HTMLElement, ...children: HTMLElement[]) => {
+export const appendChildren = (element: HTMLElement, ...children: (HTMLElement | VirtualElement)[]): void => {
     children.forEach(child => {
-        element.appendChild(child);
+        element.appendChild(child instanceof HTMLElement ? child : child.element);
     });
 };
 
-export const createElement = <
-    HElement extends HTMLElement,
-    VElement extends VirtualElement<HTMLElement> = VirtualElement<HTMLElement>,
-    Props extends AttributeMap = {}
->(
-    type: ElementType<HElement, VElement, Props>,
-    attributes: Props | null,
-    ...children: HTMLElement[]
+export const createElement = <HElement extends HTMLElement>(
+    type: keyof HTMLElementTagNameMap,
+    attributes: { [name: string]: any } | null,
+    ...children: (HTMLElement | VirtualElement)[]
 ): HElement => {
-    let htmlElement: HElement;
+    const htmlElement = <HElement>document.createElement(type);
 
-    if (typeof type === 'string') {
-        htmlElement = <HElement>document.createElement(type);
-
-        if (attributes !== null) {
-            for (const name in attributes) {
-                const value = attributes[name];
-
-                if (typeof value === 'string') {
-                    htmlElement.setAttribute(name, value);
-                } else {
-                    (htmlElement as any)[name] = value;
-                }
-            }
-        }
-    } else {
-        const props = attributes || <Props>{};
-        const virtualElement = new type(null, props);
-        console.log(virtualElement);
-        htmlElement = <HElement>virtualElement.element;
+    for (const name in attributes) {
+        (<any>htmlElement)[name] = attributes[name];
     }
 
     appendChildren(htmlElement, ...children);
     return htmlElement;
 };
 
-export default class VirtualElement<Element extends HTMLElement, Props extends AttributeMap = {}> {
-    element: Element;
-    protected props: Props;
+export const createVirtualElement = <VElement extends VirtualElement, Props = null>(
+    type: { new (element: null, props: Props): VElement },
+    props: Props,
+    ...children: (HTMLElement | VirtualElement)[]
+): VElement => {
+    const virtualElement = new type(null, props);
 
-    constructor(element: Element | keyof HTMLElementTagNameMap, props?: Props) {
+    appendChildren(virtualElement.element, ...children);
+    return virtualElement;
+};
+
+export default class VirtualElement<HElement extends HTMLElement = HTMLElement> {
+    element: HElement;
+
+    constructor(element: HElement | keyof HTMLElementTagNameMap) {
         if (typeof element === 'string') {
-            this.element = <Element>document.createElement(element);
+            this.element = <HElement>document.createElement(element);
         } else {
             this.element = element;
         }
-
-        this.props = props || <Props>{};
     }
 }

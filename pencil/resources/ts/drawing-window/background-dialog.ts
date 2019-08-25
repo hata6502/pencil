@@ -1,37 +1,69 @@
-import { createElement, appendChildren } from '../virtual-element';
+import { createElement, createVirtualElement, appendChildren } from '../virtual-element';
 import ModalDialog from './modal-dialog';
 import BackGroundButton from './background-button';
+import BackGroundFileButton from './background-file-button';
+import BackgroundFile from './background-file';
 import * as Settings from '../settings';
 
 export default class extends ModalDialog {
     constructor(element: HTMLDivElement) {
         super(element);
 
+        const onButtonClick = (image: HTMLImageElement) => {
+            //backgroundCanvas.setBackground(image);
+            //backgroundWindow.hide();
+        };
+
+        const onFileButtonClick = () => {
+            backgroundFile.click();
+        };
+
+        let backgroundFile: BackgroundFile;
+        let backgroundFileForm: HTMLFormElement;
         appendChildren(
             this.element,
-            /*<button class="background-button active">
-<img src={Settings.BACKGROUND_IMAGES.white.src} alt={Settings.BACKGROUND_IMAGES.white.alt} />
-</button>,
-<button class="background-button">
-<img src={Settings.BACKGROUND_IMAGES.wide.src} alt={Settings.BACKGROUND_IMAGES.wide.alt} />
-</button>,*/
-            createElement<HTMLButtonElement, BackGroundButton, BackGroundButtonProps>(BackGroundButton, {
+            createVirtualElement<BackGroundButton, BackGroundButtonProps>(BackGroundButton, {
                 src: Settings.BACKGROUND_IMAGES.white.src,
-                alt: Settings.BACKGROUND_IMAGES.white.alt
+                alt: Settings.BACKGROUND_IMAGES.white.alt,
+                isActive: true,
+                onClick: onButtonClick
+            }),
+            createVirtualElement<BackGroundButton, BackGroundButtonProps>(BackGroundButton, {
+                src: Settings.BACKGROUND_IMAGES.wide.src,
+                alt: Settings.BACKGROUND_IMAGES.wide.alt,
+                onClick: onButtonClick
+            }),
+            createVirtualElement<BackGroundFileButton, BackGroundFileButtonProps>(BackGroundFileButton, {
+                onClick: onFileButtonClick
+            }),
+            (backgroundFileForm = createElement<HTMLFormElement>(
+                'form',
+                {
+                    id: 'background-file-form',
+                    action: Settings.BACKGROUND_FILE_ACTION_URL,
+                    method: 'POST',
+                    enctype: 'multipart/form-data',
+                    target: 'background-file-iframe'
+                },
+                (backgroundFile = createVirtualElement<BackgroundFile>(
+                    BackgroundFile,
+                    null /*{
+                        onSelect: () => {
+                            if (!('FileReader' in window) || navigator.userAgent.toLowerCase().indexOf('nintendo wiiu') != -1) {
+                            backgroundFileForm.submit();
+                            }
+                        },
+                        onLoad: image => {
+                            backgroundCanvas.setBackground(image);
+                            backgroundWindow.hide();
+                        }
+                    }*/
+                ))
+            )),
+            createElement<HTMLIFrameElement>('iframe', {
+                id: 'background-file-iframe',
+                name: 'background-file-iframe'
             })
-            /*<button id="background-file-button">
-  <img src={Settings.BACKGROUND_IMAGES.file.src} alt={Settings.BACKGROUND_IMAGES.file.alt} />
-</button>,
-<form
-  id="background-file-form"
-  action={Settings.BACKGROUND_FILE_ACTION_URL}
-  method="POST"
-  encType="multipart/form-data"
-  target="background-file-iframe"
->
-  <input id="background-file" name="image" type="file" accept="image/png,image/jpeg" />
-</form>,
-<iframe id="background-file-iframe" name="background-file-iframe"></iframe>*/
         );
     }
 }

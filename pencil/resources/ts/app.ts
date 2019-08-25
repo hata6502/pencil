@@ -12,9 +12,6 @@ import PointerListener from './drawing-window/pointer-listener';
 import TextInput from './drawing-window/text-input';
 import ToneCanvas from './drawing-window/tone-canvas';
 import BackgroundDialog from './drawing-window/background-dialog';
-import BackgroundButton from './drawing-window/background-button';
-import BackgroundFileButton from './drawing-window/background-file-button';
-import BackgroundFile from './drawing-window/background-file';
 import BackgroundCanvas from './drawing-window/background-canvas';
 import PreviewCanvas from './preview-canvas';
 import * as Settings from './settings';
@@ -171,34 +168,6 @@ backgroundWindow.onHide = () => {
 };
 
 new BackgroundDialog(<HTMLDivElement>document.getElementById('background-dialog'));
-
-Array.prototype.forEach.call(document.getElementsByClassName('background-button'), (element: HTMLButtonElement) => {
-    /*const backgroundButton = new BackgroundButton(element);
-    backgroundButton.onClick = image => {
-        backgroundCanvas.setBackground(image);
-        backgroundWindow.hide();
-    };*/
-});
-
-const backgroundFileButton = new BackgroundFileButton(<HTMLButtonElement>(
-    document.getElementById('background-file-button')
-));
-backgroundFileButton.onClick = () => {
-    backgroundFile.click();
-};
-
-const backgroundFile = new BackgroundFile(<HTMLInputElement>document.getElementById('background-file'));
-backgroundFile.onSelect = () => {
-    if (!('FileReader' in window) || navigator.userAgent.toLowerCase().indexOf('nintendo wiiu') != -1) {
-        backgroundFileForm.submit();
-    }
-};
-backgroundFile.onLoad = image => {
-    backgroundCanvas.setBackground(image);
-    backgroundWindow.hide();
-};
-
-const backgroundFileForm = <HTMLFormElement>document.getElementById('background-file-form');
 
 const backgroundFileIframe = <HTMLIFrameElement>document.getElementById('background-file-iframe');
 backgroundFileIframe.onload = () => {

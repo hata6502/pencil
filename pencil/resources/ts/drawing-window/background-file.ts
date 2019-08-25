@@ -4,8 +4,13 @@ export default class extends VirtualElement<HTMLInputElement> {
     onSelect: () => void = () => {};
     onLoad: (image: HTMLImageElement) => void = () => {};
 
-    constructor(element: HTMLInputElement) {
-        super(element);
+    constructor(element: HTMLInputElement | null) {
+        super(element || 'input');
+
+        this.element.id = 'background-file';
+        this.element.name = 'image';
+        this.element.type = 'file';
+        this.element.accept = 'image/png,image/jpeg';
 
         this.element.onchange = () => {
             if (this.element.files !== null && this.element.files.length == 1) {
@@ -33,7 +38,7 @@ export default class extends VirtualElement<HTMLInputElement> {
             }
 
             // 同じファイルを選択しても onchange イベントを発火させるようにします。
-            element.value = '';
+            this.element.value = '';
         };
     }
 
