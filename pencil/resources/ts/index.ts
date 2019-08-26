@@ -11,9 +11,7 @@ import StickCursor from './drawing-window/stick-cursor';
 import PointerListener from './drawing-window/pointer-listener';
 import TextInput from './drawing-window/text-input';
 import ToneCanvas from './drawing-window/tone-canvas';
-import BackgroundButton from './drawing-window/background-button';
-import BackgroundFileButton from './drawing-window/background-file-button';
-import BackgroundFile from './drawing-window/background-file';
+import BackgroundDialog from './drawing-window/background-dialog';
 import BackgroundCanvas from './drawing-window/background-canvas';
 import PreviewCanvas from './preview-canvas';
 import * as Settings from './settings';
@@ -169,63 +167,11 @@ backgroundWindow.onHide = () => {
     stickCursor.enable = drawingCanvas.isDisplay = true;
 };
 
-new ModalDialog(<HTMLDivElement>document.getElementById('background-dialog'));
-
-Array.prototype.forEach.call(document.getElementsByClassName('background-button'), (element: HTMLButtonElement) => {
-    const backgroundButton = new BackgroundButton(element);
-    backgroundButton.onClick = image => {
-        backgroundCanvas.setBackground(image);
-        backgroundWindow.hide();
-    };
-});
-
-const backgroundFileButton = new BackgroundFileButton(<HTMLButtonElement>(
-    document.getElementById('background-file-button')
-));
-backgroundFileButton.onClick = () => {
-    backgroundFile.click();
-};
-
-const backgroundFile = new BackgroundFile(<HTMLInputElement>document.getElementById('background-file'));
-backgroundFile.onSelect = () => {
-    if (!('FileReader' in window) || navigator.userAgent.toLowerCase().indexOf('nintendo wiiu') != -1) {
-        backgroundFileForm.submit();
-    }
-};
-backgroundFile.onLoad = image => {
+const backgroundDialog = new BackgroundDialog(<HTMLDivElement>document.getElementById('background-dialog'));
+backgroundDialog.onLoad = (image) => {
     backgroundCanvas.setBackground(image);
     backgroundWindow.hide();
-};
-
-const backgroundFileForm = <HTMLFormElement>document.getElementById('background-file-form');
-
-const backgroundFileIframe = <HTMLIFrameElement>document.getElementById('background-file-iframe');
-backgroundFileIframe.onload = () => {
-    if (
-        backgroundFileIframe.contentDocument === null ||
-        backgroundFileIframe.contentDocument.body.textContent === null
-    ) {
-        throw "Couldn't get response. ";
-    }
-
-    const response: { errors?: string[]; image?: string } = JSON.parse(
-        backgroundFileIframe.contentDocument.body.textContent
-    );
-    if (response.errors !== undefined) {
-        alert(response.errors.join('\n'));
-        return;
-    }
-    if (response.image === undefined) {
-        throw "Couldn't get image. ";
-    }
-
-    const image = new Image();
-    image.src = response.image;
-    image.onload = () => {
-        backgroundCanvas.setBackground(image);
-        backgroundWindow.hide();
-    };
-};
+}
 
 const backgroundCanvas = new BackgroundCanvas(<HTMLCanvasElement>document.getElementById('background-canvas'));
 

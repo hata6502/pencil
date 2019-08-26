@@ -10,6 +10,23 @@ export const DRAW_COLOR = 'black';
 export const IMAGE_URL = '/images/image.png';
 export const TRANSPARENT_URL = '/images/transparent.png';
 
+export const BACKGROUND_IMAGES = {
+    white: {
+        src: '/images/background-white.png',
+        alt: 'ホワイト'
+    },
+    wide: {
+        src: '/images/background-wide.png',
+        alt: 'ワイド'
+    },
+    file: {
+        src: '/images/background-file.png',
+        alt: 'ファイル'
+    }
+};
+
+export const BACKGROUND_FILE_ACTION_URL = '/image';
+
 interface Brush {
     fontsize: number;
     pattern: number[][];
