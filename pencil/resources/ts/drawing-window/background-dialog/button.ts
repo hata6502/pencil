@@ -1,9 +1,16 @@
-import VirtualElement, { createElement, appendChildren } from '../virtual-element';
+import VirtualElement, { createElement, appendChildren } from '../../virtual-element';
+
+export interface ButtonProps {
+    src: string;
+    alt: string;
+    isActive?: boolean;
+    onClick?: (image: HTMLImageElement) => void;
+}
 
 export default class extends VirtualElement<HTMLButtonElement> {
-    onClick: (image: HTMLImageElement) => void = () => {};
+    onClick: (image: HTMLImageElement) => void = () => { };
 
-    constructor(element: HTMLButtonElement | null, props: BackGroundButtonProps) {
+    constructor(element: HTMLButtonElement | null, props: ButtonProps) {
         super(element || 'button');
 
         if (props.isActive) {
