@@ -1,11 +1,23 @@
-import VirtualElement from '../virtual-element';
+import VirtualElement from '../../virtual-element';
+
+export interface FileProps {
+    onSelect?: () => void;
+    onLoad?: (image: HTMLImageElement) => void;
+}
 
 export default class extends VirtualElement<HTMLInputElement> {
-    onSelect: () => void = () => {};
-    onLoad: (image: HTMLImageElement) => void = () => {};
+    onSelect: () => void = () => { };
+    onLoad: (image: HTMLImageElement) => void = () => { };
 
-    constructor(element: HTMLInputElement | null) {
+    constructor(element: HTMLInputElement | null, props: FileProps) {
         super(element || 'input');
+
+        if (props.onSelect) {
+            this.onSelect = props.onSelect;
+        }
+        if (props.onLoad) {
+            this.onLoad = props.onLoad;
+        }
 
         this.element.id = 'background-file';
         this.element.name = 'image';

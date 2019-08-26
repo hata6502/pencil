@@ -1,10 +1,14 @@
-import VirtualElement, { createElement } from '../virtual-element';
-import * as Settings from '../settings';
+import VirtualElement, { createElement } from '../../virtual-element';
+import * as Settings from '../../settings';
+
+export interface FileButtonProps {
+    onClick?: () => void;
+}
 
 export default class extends VirtualElement<HTMLButtonElement> {
-    onClick: () => void = () => {};
+    onClick: () => void = () => { };
 
-    constructor(element: HTMLButtonElement | null, props: BackGroundFileButtonProps) {
+    constructor(element: HTMLButtonElement | null, props: FileButtonProps) {
         super(element || 'button');
 
         if (props.onClick) {

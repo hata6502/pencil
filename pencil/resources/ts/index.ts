@@ -167,35 +167,11 @@ backgroundWindow.onHide = () => {
     stickCursor.enable = drawingCanvas.isDisplay = true;
 };
 
-new BackgroundDialog(<HTMLDivElement>document.getElementById('background-dialog'));
-
-const backgroundFileIframe = <HTMLIFrameElement>document.getElementById('background-file-iframe');
-backgroundFileIframe.onload = () => {
-    if (
-        backgroundFileIframe.contentDocument === null ||
-        backgroundFileIframe.contentDocument.body.textContent === null
-    ) {
-        throw "Couldn't get response. ";
-    }
-
-    const response: { errors?: string[]; image?: string } = JSON.parse(
-        backgroundFileIframe.contentDocument.body.textContent
-    );
-    if (response.errors !== undefined) {
-        alert(response.errors.join('\n'));
-        return;
-    }
-    if (response.image === undefined) {
-        throw "Couldn't get image. ";
-    }
-
-    const image = new Image();
-    image.src = response.image;
-    image.onload = () => {
-        backgroundCanvas.setBackground(image);
-        backgroundWindow.hide();
-    };
-};
+const backgroundDialog = new BackgroundDialog(<HTMLDivElement>document.getElementById('background-dialog'));
+backgroundDialog.onLoad = (image) => {
+    backgroundCanvas.setBackground(image);
+    backgroundWindow.hide();
+}
 
 const backgroundCanvas = new BackgroundCanvas(<HTMLCanvasElement>document.getElementById('background-canvas'));
 
