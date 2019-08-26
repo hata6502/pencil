@@ -1,52 +1,61 @@
-const CACHE_NAME = 'hood-pencil-cache-v0.1.11';
+const CACHE_NAME = 'hood-pencil-cache-v0.1.12';
 const URLS_TO_CACHE = ['/', '/js/app.js', '/css/app.css'];
 
-self.addEventListener('install', (event: any) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+self.addEventListener('install', (event: any): void => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then(cache => {
-            return cache.addAll(URLS_TO_CACHE);
-        })
+        caches.open(CACHE_NAME).then(
+            (cache): Promise<void> => {
+                return cache.addAll(URLS_TO_CACHE);
+            }
+        )
     );
 });
 
-self.addEventListener('activate', (event: any) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+self.addEventListener('activate', (event: any): void => {
     event.waitUntil(
-        caches.keys().then(cacheNames => {
-            const promises: Promise<boolean>[] = [];
+        caches.keys().then(
+            (cacheNames): Promise<boolean[]> => {
+                const promises: Promise<boolean>[] = [];
 
-            cacheNames.forEach(cacheName => {
-                if (cacheName !== CACHE_NAME) {
-                    promises.push(caches.delete(cacheName));
-                }
-            });
+                cacheNames.forEach((cacheName): void => {
+                    if (cacheName !== CACHE_NAME) {
+                        promises.push(caches.delete(cacheName));
+                    }
+                });
 
-            return Promise.all(promises);
-        })
+                return Promise.all(promises);
+            }
+        )
     );
 });
 
-self.addEventListener('fetch', (event: any) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+self.addEventListener('fetch', (event: any): void => {
     event.respondWith(
-        caches.match(event.request).then(response => {
+        caches.match(event.request).then((response): Response | Promise<Response> => {
             if (response) {
                 return response;
             }
 
             const fetchedRequest = event.request.clone();
 
-            return fetch(fetchedRequest).then(response => {
-                if (!response || response.status !== 200 || response.type !== 'basic') {
+            return fetch(fetchedRequest).then(
+                (response): Response => {
+                    if (!response || response.status !== 200 || response.type !== 'basic') {
+                        return response;
+                    }
+
+                    const cachedResponse = response.clone();
+
+                    caches.open(CACHE_NAME).then((cache): void => {
+                        cache.put(event.request, cachedResponse);
+                    });
+
                     return response;
                 }
-
-                const cachedResponse = response.clone();
-
-                caches.open(CACHE_NAME).then(cache => {
-                    cache.put(event.request, cachedResponse);
-                });
-
-                return response;
-            });
+            );
         })
     );
 });
