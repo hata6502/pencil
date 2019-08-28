@@ -46,7 +46,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         return { x: rect.left, y: rect.top };
     }
 
-    public getImage(): ImageData {
+    public getImageData(): ImageData {
         return this.context.getImageData(
             0,
             0,
@@ -133,7 +133,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.pushHistory();
     }
 
-    private setImage(image: ImageData): void {
+    private setImageData(image: ImageData): void {
         this.context.putImageData(image, 0, 0);
     }
 
@@ -189,7 +189,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
     }
 
     private drawText(x: number, y: number, alpha: number, isNormalize: boolean): void {
-        this.setImage(this.last);
+        this.setImageData(this.last);
 
         const brush = Settings.BRUSHES[this.brush];
 
@@ -209,7 +209,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
             this.history.pop();
         }
 
-        const image = this.getImage();
+        const image = this.getImageData();
         this.history.push(image);
 
         while (this.history.length > Settings.HISTORY_MAX_LENGTH) {

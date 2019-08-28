@@ -2,10 +2,10 @@ import VirtualElement from './virtual-element';
 import * as Settings from './settings';
 
 export default class extends VirtualElement<HTMLCanvasElement> {
-    onClick: () => void = () => {};
+    public onClick: () => void = (): void => {};
     private context: CanvasRenderingContext2D;
 
-    constructor(element: HTMLCanvasElement) {
+    public constructor(element: HTMLCanvasElement) {
         super(element);
 
         const context = this.element.getContext('2d');
@@ -21,7 +21,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
         const image = new Image();
         image.src = Settings.IMAGE_URL;
-        image.onload = () => {
+        image.onload = (): void => {
             this.context.drawImage(
                 image,
                 ((Settings.CANVAS_WIDTH - 64) * Settings.CANVAS_ZOOM) / 2,
@@ -31,12 +31,12 @@ export default class extends VirtualElement<HTMLCanvasElement> {
             );
         };
 
-        this.element.onclick = () => {
+        this.element.onclick = (): void => {
             this.onClick();
         };
     }
 
-    setDrawing(drawing: ImageData): void {
+    public setImageData(drawing: ImageData): void {
         this.context.putImageData(drawing, 0, 0);
     }
 }
