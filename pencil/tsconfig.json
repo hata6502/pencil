@@ -1,16 +1,14 @@
 {
   "compilerOptions": {
+    "target": "es5",
     "sourceMap": true,
-    "noImplicitReturns": true,
-    "noImplicitAny": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "jsx": "preserve",
-    "noEmit": true,
-    "strict": true,
-    "pretty": true
+    "pretty": true,
+    "strict": true
   },
   "include": [
-    "pencil/resources/ts/**/*"
+    "resources/ts/**/*"
   ]
 }
