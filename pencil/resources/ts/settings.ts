@@ -7,6 +7,9 @@ export const CANVAS_ZOOM = 2;
 export const DRAW_BRUSH = 'medium';
 export const DRAW_COLOR = 'black';
 
+export const HISTORY_MAX_LENGTH = 11;
+export const BACKUP_INTERVAL = 60;
+
 export const IMAGE_URL = '/images/image.png';
 export const TRANSPARENT_URL = '/images/transparent.png';
 
@@ -202,5 +205,3 @@ export const KEYCODE_DOWN = 40;
 export const KEYCODE_LEFT = 37;
 export const KEYCODE_RIGHT = 39;
 export const KEYCODE_ENTER = 13;
-
-export const HISTORY_MAX_LENGTH = 11;

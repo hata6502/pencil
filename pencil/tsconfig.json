@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
-    "outDir": "./built/",
+    "target": "es5",
     "sourceMap": true,
-    "strict": true,
-    "noImplicitReturns": true,
-    "noImplicitAny": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "pretty": true,
+    "strict": true
   },
   "include": [
     "resources/ts/**/*"
