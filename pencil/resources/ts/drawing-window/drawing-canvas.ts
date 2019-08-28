@@ -2,13 +2,13 @@ import VirtualElement from '../virtual-element';
 import * as Settings from '../settings';
 
 export default class extends VirtualElement<HTMLCanvasElement> {
-    brush: string;
-    color: string = Settings.DRAW_COLOR;
-    onChangeHistory: (index: number, length: number) => void = () => {};
-    text: string = '';
-    mode: 'pencil' | 'text' = 'pencil';
-    isDisplay: boolean = false;
-    tone: number[][] = Settings.TONES.black;
+    public brush: string;
+    public color: string = Settings.DRAW_COLOR;
+    public onChangeHistory: (index: number, length: number) => void = (): void => {};
+    public text: string = '';
+    public mode: 'pencil' | 'text' = 'pencil';
+    public isDisplay: boolean = false;
+    public tone: number[][] = Settings.TONES.black;
 
     private context: CanvasRenderingContext2D;
     private history: ImageData[] = [];
@@ -17,8 +17,9 @@ export default class extends VirtualElement<HTMLCanvasElement> {
     private prevY: number = NaN;
     private isDrawing: boolean = false;
     private last!: ImageData;
+    private isBackupScheduled: boolean = false;
 
-    constructor(element: HTMLCanvasElement) {
+    public constructor(element: HTMLCanvasElement) {
         super(element);
 
         const context = this.element.getContext('2d');
@@ -32,15 +33,20 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.element.setAttribute('width', (Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM).toString());
         this.element.setAttribute('height', (Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM).toString());
 
-        this.backup();
+        this.restore();
+        this.pushHistory();
+
+        setInterval((): void => {
+            this.isBackupScheduled = true;
+        }, 1000 * Settings.BACKUP_INTERVAL);
     }
 
-    getScreenPosition(): { x: number; y: number } {
+    public getScreenPosition(): { x: number; y: number } {
         const rect = this.element.getBoundingClientRect();
         return { x: rect.left, y: rect.top };
     }
 
-    getImage(): ImageData {
+    public getImage(): ImageData {
         return this.context.getImageData(
             0,
             0,
@@ -49,7 +55,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         );
     }
 
-    movePath(x: number, y: number): void {
+    public movePath(x: number, y: number): void {
         if (this.isDisplay) {
             if (x >= 0 && x < Settings.CANVAS_WIDTH && y >= 0 && y < Settings.CANVAS_HEIGHT) {
                 this.isDrawing = true;
@@ -72,20 +78,20 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         }
     }
 
-    finishPath(): void {
+    public finishPath(): void {
         if (this.isDrawing) {
             if (this.mode == 'text') {
                 this.drawText(this.prevX, this.prevY, 1, true);
             }
 
             this.isDrawing = false;
-            this.backup();
+            this.pushHistory();
         }
 
         this.prevX = NaN;
     }
 
-    undo(): void {
+    public undo(): void {
         if (this.historyIndex <= 0) {
             return;
         }
@@ -97,10 +103,11 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
         this.context.putImageData(image, 0, 0);
         this.last = image;
+        this.backup();
         this.onChangeHistory(this.historyIndex, this.history.length);
     }
 
-    redo(): void {
+    public redo(): void {
         if (this.historyIndex >= this.history.length - 1) {
             return;
         }
@@ -112,17 +119,18 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
         this.context.putImageData(image, 0, 0);
         this.last = image;
+        this.backup();
         this.onChangeHistory(this.historyIndex, this.history.length);
     }
 
-    clear(): void {
+    public clear(): void {
         this.context.clearRect(
             0,
             0,
             Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM,
             Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM
         );
-        this.backup();
+        this.pushHistory();
     }
 
     private setImage(image: ImageData): void {
@@ -136,20 +144,20 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.context.globalAlpha = 1;
         const fill =
             this.color != 'transparent'
-                ? (x: number, y: number, w: number, h: number) => {
-                      this.context.fillRect(x, y, w, h);
-                  }
-                : (x: number, y: number, w: number, h: number) => {
-                      this.context.clearRect(x, y, w, h);
-                  };
+                ? (x: number, y: number, w: number, h: number): void => {
+                    this.context.fillRect(x, y, w, h);
+                }
+                : (x: number, y: number, w: number, h: number): void => {
+                    this.context.clearRect(x, y, w, h);
+                };
 
         let y = originY - Math.floor(brush.pattern.length / 2);
 
-        brush.pattern.forEach(column => {
+        brush.pattern.forEach((column): void => {
             let x = originX - Math.floor(column.length / 2);
             const toneColumn = this.tone[Math.abs(y) % this.tone.length];
 
-            column.forEach(pattern => {
+            column.forEach((pattern): void => {
                 if (pattern && toneColumn[Math.abs(x) % toneColumn.length]) {
                     fill(
                         x * Settings.CANVAS_ZOOM,
@@ -196,38 +204,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         }
     }
 
-    private normalize(): void {
-        this.context.globalAlpha = 1;
-
-        for (let y = 0; y < Settings.CANVAS_HEIGHT; y++) {
-            for (let x = 0; x < Settings.CANVAS_WIDTH; x++) {
-                const imageData = this.context.getImageData(x * Settings.CANVAS_ZOOM, y * Settings.CANVAS_ZOOM, 1, 1);
-
-                if (imageData.data[3] < 128) {
-                    this.context.clearRect(
-                        x * Settings.CANVAS_ZOOM,
-                        y * Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM
-                    );
-                } else {
-                    const r = Number(imageData.data[0] >= 128) * 255;
-                    const g = Number(imageData.data[1] >= 128) * 255;
-                    const b = Number(imageData.data[2] >= 128) * 255;
-
-                    this.context.fillStyle = `rgb(${r},${g},${b})`;
-                    this.context.fillRect(
-                        x * Settings.CANVAS_ZOOM,
-                        y * Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM
-                    );
-                }
-            }
-        }
-    }
-
-    private backup(): void {
+    private pushHistory(): void {
         while (this.history.length - 1 > this.historyIndex) {
             this.history.pop();
         }
@@ -241,6 +218,78 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
         this.historyIndex = this.history.length - 1;
         this.last = image;
+        this.backup();
         this.onChangeHistory(this.historyIndex, this.history.length);
+    }
+
+    private getNormarizedDrawingData(): string {
+        let ndd = `${Settings.CANVAS_WIDTH},${Settings.CANVAS_HEIGHT},`;
+        for (let y = 0; y < Settings.CANVAS_HEIGHT; y++) {
+            for (let x = 0; x < Settings.CANVAS_WIDTH; x++) {
+                const imageData = this.context.getImageData(x * Settings.CANVAS_ZOOM, y * Settings.CANVAS_ZOOM, 1, 1);
+                const r = Number(imageData.data[0] >= 128);
+                const g = Number(imageData.data[1] >= 128);
+                const b = Number(imageData.data[2] >= 128);
+                const a = Number(imageData.data[3] >= 128);
+
+                ndd += ((r << 0) | (g << 1) | (b << 2) | (a << 3)).toString(16);
+            }
+        }
+
+        return ndd;
+    }
+
+    private setNormarizedDrawingData(ndd: string): void {
+        const [width, height, data] = ndd.split(',');
+
+        this.context.globalAlpha = 1;
+        let i = 0;
+        for (let y = 0; y < Number(height); y++) {
+            for (let x = 0; x < Number(width); x++) {
+                const pixel = parseInt(data.substring(i, i + 1), 16);
+                i++;
+
+                if (pixel & 8) {
+                    const r = Number((pixel & 1) !== 0) * 255;
+                    const g = Number((pixel & 2) !== 0) * 255;
+                    const b = Number((pixel & 4) !== 0) * 255;
+
+                    this.context.fillStyle = `rgb(${r},${g},${b})`;
+                    this.context.fillRect(
+                        x * Settings.CANVAS_ZOOM,
+                        y * Settings.CANVAS_ZOOM,
+                        Settings.CANVAS_ZOOM,
+                        Settings.CANVAS_ZOOM
+                    );
+                } else {
+                    this.context.clearRect(
+                        x * Settings.CANVAS_ZOOM,
+                        y * Settings.CANVAS_ZOOM,
+                        Settings.CANVAS_ZOOM,
+                        Settings.CANVAS_ZOOM
+                    );
+                }
+            }
+        }
+    }
+
+    private normalize(): void {
+        this.setNormarizedDrawingData(this.getNormarizedDrawingData());
+    }
+
+    private backup(): void {
+        if (this.isBackupScheduled) {
+            localStorage.setItem('drawing', this.getNormarizedDrawingData());
+            this.isBackupScheduled = false;
+        }
+    }
+
+    private restore(): void {
+        const ndd = localStorage.getItem('drawing');
+        if (!ndd) {
+            return;
+        }
+
+        this.setNormarizedDrawingData(ndd);
     }
 }

@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
-    "outDir": "./built/",
     "sourceMap": true,
-    "strict": true,
     "noImplicitReturns": true,
     "noImplicitAny": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "noEmit": true,
+    "strict": true,
+    "pretty": true
   },
   "include": [
-    "resources/ts/**/*"
+    "pencil/resources/ts/**/*"
   ]
 }
