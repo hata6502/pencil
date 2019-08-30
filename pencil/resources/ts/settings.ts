@@ -13,6 +13,9 @@ export const BACKUP_INTERVAL = 60;
 export const IMAGE_URL = '/images/image.png';
 export const TRANSPARENT_URL = '/images/transparent.png';
 
+export const BACKGROUND_FILE_ACTION_URL = '/image';
+export const BACKUP_URL = '/backup';
+
 export const BACKGROUND_IMAGES = {
     white: {
         src: '/images/background-white.png',
@@ -27,8 +30,6 @@ export const BACKGROUND_IMAGES = {
         alt: 'ファイル'
     }
 };
-
-export const BACKGROUND_FILE_ACTION_URL = '/image';
 
 interface Brush {
     fontsize: number;

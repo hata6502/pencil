@@ -133,6 +133,35 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.pushHistory();
     }
 
+    public upload(): void {
+        this.backup(true);
+
+        if (!confirm('お絵かきを HoodPencil サーバーに保存しますか?')) {
+            return;
+        }
+
+        const drawing = localStorage.getItem('drawing');
+        if (drawing === null) {
+            throw "Couldn't get drawing. ";
+        }
+
+        const request = new XMLHttpRequest();
+        request.onreadystatechange = (): void => {
+            if (request.readyState == 4) {
+                if (request.status == 200) {
+                    const response: { message: string } = JSON.parse(request.response);
+                    alert(response.message);
+                } else {
+                    const response: { errors: string[] } = JSON.parse(request.response);
+                    throw response.errors.join('\n');
+                }
+            }
+        };
+        request.open('POST', Settings.BACKUP_URL);
+        request.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+        request.send(`drawing=${encodeURIComponent(drawing)}`);
+    }
+
     private setImageData(image: ImageData): void {
         this.context.putImageData(image, 0, 0);
     }
@@ -277,19 +306,19 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.setNormarizedDrawingData(this.getNormarizedDrawingData());
     }
 
-    private backup(): void {
-        if (this.isBackupScheduled) {
+    private backup(isForce: boolean = false): void {
+        if (this.isBackupScheduled || isForce) {
             localStorage.setItem('drawing', this.getNormarizedDrawingData());
             this.isBackupScheduled = false;
         }
     }
 
     private restore(): void {
-        const ndd = localStorage.getItem('drawing');
-        if (!ndd) {
+        const drawing = localStorage.getItem('drawing');
+        if (!drawing) {
             return;
         }
 
-        this.setNormarizedDrawingData(ndd);
+        this.setNormarizedDrawingData(drawing);
     }
 }
