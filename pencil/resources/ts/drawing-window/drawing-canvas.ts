@@ -253,16 +253,19 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
     private getNormarizedDrawingData(): string {
         let ndd = `${Settings.CANVAS_WIDTH},${Settings.CANVAS_HEIGHT},`;
+        const imageData = this.getImageData();
+        let i = 0;
         for (let y = 0; y < Settings.CANVAS_HEIGHT; y++) {
             for (let x = 0; x < Settings.CANVAS_WIDTH; x++) {
-                const imageData = this.context.getImageData(x * Settings.CANVAS_ZOOM, y * Settings.CANVAS_ZOOM, 1, 1);
-                const r = Number(imageData.data[0] >= 128);
-                const g = Number(imageData.data[1] >= 128);
-                const b = Number(imageData.data[2] >= 128);
-                const a = Number(imageData.data[3] >= 128);
+                const r = Number(imageData.data[i] >= 128);
+                const g = Number(imageData.data[i + 1] >= 128);
+                const b = Number(imageData.data[i + 2] >= 128);
+                const a = Number(imageData.data[i + 3] >= 128);
 
                 ndd += ((r << 0) | (g << 1) | (b << 2) | (a << 3)).toString(16);
+                i += Settings.CANVAS_ZOOM * 4;
             }
+            i += Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM * 4;
         }
 
         return ndd;
