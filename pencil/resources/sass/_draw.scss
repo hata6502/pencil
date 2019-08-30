@@ -57,6 +57,7 @@
     }
 
     .history-button,
+    #upload-button,
     #clear-button {
       &:disabled {
         opacity: 0.25;

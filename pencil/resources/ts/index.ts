@@ -19,36 +19,54 @@ import * as Settings from './settings';
 Sentry.init({ dsn: Settings.SENTRY_DSN });
 
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
+    window.addEventListener('load', (): void => {
         navigator.serviceWorker.register('/service-worker.js');
     });
 }
 
-const drawingWindow = new ModalWindow(<HTMLDivElement>document.getElementById('drawing-window'));
-drawingWindow.onDisplay = () => {
+const drawingWindow = new ModalWindow(document.getElementById('drawing-window') as HTMLDivElement);
+const toolbar = document.getElementById('toolbar') as HTMLDivElement;
+const drawingCanvas = new DrawingCanvas(document.getElementById('drawing-canvas') as HTMLCanvasElement);
+const pencilButtons: PencilButton[] = [];
+let paletteButtons: PaletteButton[] = [];
+const undoButton = new HistoryButton(document.getElementById('undo-button') as HTMLButtonElement);
+const redoButton = new HistoryButton(document.getElementById('redo-button') as HTMLButtonElement);
+const clearButton = document.getElementById('clear-button') as HTMLButtonElement;
+const uploadButton = document.getElementById('upload-button') as HTMLButtonElement;
+const backgroundButton = document.getElementById('background-button') as HTMLButtonElement;
+const stickCursor = new StickCursor(document.getElementById('stick-cursor') as HTMLDivElement);
+const pointerListener = new PointerListener();
+const textInput = new TextInput(document.getElementById('text-input') as HTMLInputElement);
+const toneWindowButton = document.getElementById('tone-window-button') as HTMLButtonElement;
+const toneWindowButttonCanvas = new ToneCanvas(toneWindowButton.getElementsByTagName('canvas')[0]);
+const toneWindow = new ModalWindow(document.getElementById('tone-window') as HTMLDivElement);
+const backgroundWindow = new ModalWindow(document.getElementById('background-window') as HTMLDivElement);
+const backgroundDialog = new BackgroundDialog(document.getElementById('background-dialog') as HTMLDivElement);
+const backgroundCanvas = new BackgroundCanvas(document.getElementById('background-canvas') as HTMLCanvasElement);
+const previewCanvas = new PreviewCanvas(document.getElementById('preview-canvas') as HTMLCanvasElement);
+
+new ModalDialog(document.getElementById('tone-dialog') as HTMLDivElement);
+new ModalDialog(document.getElementById('drawing-dialog') as HTMLDivElement);
+
+drawingWindow.onDisplay = (): void => {
     stickCursor.enable = drawingCanvas.isDisplay = true;
 };
-drawingWindow.onHide = () => {
+drawingWindow.onHide = (): void => {
     stickCursor.enable = drawingCanvas.isDisplay = false;
-    previewCanvas.setDrawing(drawingCanvas.getImage());
+    previewCanvas.setImageData(drawingCanvas.getImageData());
 };
 
-new ModalDialog(<HTMLDivElement>document.getElementById('drawing-dialog'));
-
-const toolbar = <HTMLDivElement>document.getElementById('toolbar');
 toolbar.style.width = Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM + 2 + 'px';
 
-const drawingCanvas = new DrawingCanvas(<HTMLCanvasElement>document.getElementById('drawing-canvas'));
-drawingCanvas.onChangeHistory = (index, length) => {
+drawingCanvas.onChangeHistory = (index, length): void => {
     undoButton.setDisabled(index <= 0);
     redoButton.setDisabled(index >= length - 1);
 };
 
-const pencilButtons: PencilButton[] = [];
-Array.prototype.forEach.call(document.getElementsByClassName('pencil-button'), (element: HTMLButtonElement) => {
+Array.prototype.forEach.call(document.getElementsByClassName('pencil-button'), (element: HTMLButtonElement): void => {
     const pencilButton = new PencilButton(element);
-    pencilButton.onClick = () => {
-        pencilButtons.forEach((pencilButton: PencilButton) => {
+    pencilButton.onClick = (): void => {
+        pencilButtons.forEach((pencilButton: PencilButton): void => {
             pencilButton.inactivate();
         });
 
@@ -62,11 +80,10 @@ Array.prototype.forEach.call(document.getElementsByClassName('pencil-button'), (
     pencilButtons.push(pencilButton);
 });
 
-let paletteButtons: PaletteButton[] = [];
-Array.prototype.forEach.call(document.getElementsByClassName('palette-button'), (element: HTMLButtonElement) => {
+Array.prototype.forEach.call(document.getElementsByClassName('palette-button'), (element: HTMLButtonElement): void => {
     const paletteButton = new PaletteButton(element);
-    paletteButton.onPick = (color: string) => {
-        paletteButtons.forEach((paletteButton: PaletteButton) => {
+    paletteButton.onPick = (color: string): void => {
+        paletteButtons.forEach((paletteButton: PaletteButton): void => {
             paletteButton.inactivate();
         });
 
@@ -77,74 +94,65 @@ Array.prototype.forEach.call(document.getElementsByClassName('palette-button'), 
     paletteButtons.push(paletteButton);
 });
 
-const undoButton = new HistoryButton(<HTMLButtonElement>document.getElementById('undo-button'));
-undoButton.onClick = () => {
+undoButton.onClick = (): void => {
     drawingCanvas.undo();
 };
 
-const redoButton = new HistoryButton(<HTMLButtonElement>document.getElementById('redo-button'));
-redoButton.onClick = () => {
+redoButton.onClick = (): void => {
     drawingCanvas.redo();
 };
 
-const clearButton = <HTMLButtonElement>document.getElementById('clear-button');
-clearButton.onclick = () => {
+clearButton.onclick = (): void => {
     drawingCanvas.clear();
 };
 
-const backgroundButton = <HTMLButtonElement>document.getElementById('background-button');
-backgroundButton.onclick = () => {
+uploadButton.onclick = (): void => {
+    drawingCanvas.upload();
+};
+
+backgroundButton.onclick = (): void => {
     backgroundWindow.display();
 };
 
-const stickCursor = new StickCursor(<HTMLDivElement>document.getElementById('stick-cursor'));
-stickCursor.onMove = () => {
+stickCursor.onMove = (): void => {
     drawingCanvas.movePath(Math.floor(stickCursor.x), Math.floor(stickCursor.y));
 };
-stickCursor.onEnd = () => {
+stickCursor.onEnd = (): void => {
     drawingCanvas.finishPath();
 };
 
-const pointerListener = new PointerListener();
-pointerListener.onStart = () => {
+pointerListener.onStart = (): void => {
     stickCursor.hide();
 };
-pointerListener.onMove = (screenX, screenY) => {
+pointerListener.onMove = (screenX, screenY): void => {
     const canvasPosition = drawingCanvas.getScreenPosition();
     const canvasX = Math.floor((screenX - 2 - canvasPosition.x) / Settings.CANVAS_ZOOM);
     const canvasY = Math.floor((screenY - 2 - canvasPosition.y) / Settings.CANVAS_ZOOM);
 
     drawingCanvas.movePath(canvasX, canvasY);
 };
-pointerListener.onEnd = () => {
+pointerListener.onEnd = (): void => {
     drawingCanvas.finishPath();
 };
 
-const textInput = new TextInput(<HTMLInputElement>document.getElementById('text-input'));
-textInput.onActive = text => {
+textInput.onActive = (text): void => {
     drawingCanvas.text = text;
     drawingCanvas.mode = 'text';
 };
 
-const toneWindowButton = <HTMLButtonElement>document.getElementById('tone-window-button');
-toneWindowButton.onclick = () => {
+toneWindowButton.onclick = (): void => {
     toneWindow.display();
 };
 
-const toneWindowButttonCanvas = new ToneCanvas(toneWindowButton.getElementsByTagName('canvas')[0]);
-
-const toneWindow = new ModalWindow(<HTMLDivElement>document.getElementById('tone-window'));
-toneWindow.onDisplay = () => {
+toneWindow.onDisplay = (): void => {
     stickCursor.enable = drawingCanvas.isDisplay = false;
 };
-toneWindow.onHide = () => {
+toneWindow.onHide = (): void => {
     stickCursor.enable = drawingCanvas.isDisplay = true;
 };
 
-new ModalDialog(<HTMLDivElement>document.getElementById('tone-dialog'));
-
-Array.prototype.forEach.call(document.getElementsByClassName('tone-button'), (button: HTMLButtonElement) => {
-    button.onclick = () => {
+Array.prototype.forEach.call(document.getElementsByClassName('tone-button'), (button: HTMLButtonElement): void => {
+    button.onclick = (): void => {
         if (button.dataset.tone !== undefined) {
             drawingCanvas.tone = Settings.TONES[button.dataset.tone];
             toneWindowButttonCanvas.setTone(Settings.TONES[button.dataset.tone]);
@@ -159,23 +167,18 @@ Array.prototype.forEach.call(document.getElementsByClassName('tone-button'), (bu
     }
 });
 
-const backgroundWindow = new ModalWindow(<HTMLDivElement>document.getElementById('background-window'));
-backgroundWindow.onDisplay = () => {
+backgroundWindow.onDisplay = (): void => {
     stickCursor.enable = drawingCanvas.isDisplay = false;
 };
-backgroundWindow.onHide = () => {
+backgroundWindow.onHide = (): void => {
     stickCursor.enable = drawingCanvas.isDisplay = true;
 };
 
-const backgroundDialog = new BackgroundDialog(<HTMLDivElement>document.getElementById('background-dialog'));
-backgroundDialog.onLoad = (image) => {
+backgroundDialog.onLoad = (image): void => {
     backgroundCanvas.setBackground(image);
     backgroundWindow.hide();
-}
+};
 
-const backgroundCanvas = new BackgroundCanvas(<HTMLCanvasElement>document.getElementById('background-canvas'));
-
-const previewCanvas = new PreviewCanvas(<HTMLCanvasElement>document.getElementById('preview-canvas'));
-previewCanvas.onClick = () => {
+previewCanvas.onClick = (): void => {
     drawingWindow.display();
 };
