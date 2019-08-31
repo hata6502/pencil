@@ -7,7 +7,7 @@ export interface PreviewCanvasProps {
 }
 
 export default class extends VirtualElement<HTMLCanvasElement> {
-    public onClick: () => void = (): void => { };
+    public onClick: () => void = (): void => {};
     private context: CanvasRenderingContext2D;
 
     public constructor(element: HTMLCanvasElement | null, props: PreviewCanvasProps) {
@@ -50,5 +50,9 @@ export default class extends VirtualElement<HTMLCanvasElement> {
     public setPreview(ndd: string, background: HTMLImageElement): void {
         setBackground(this.context, background, 3);
         setNormarizedDrawingData(this.context, ndd, 3, true);
+    }
+
+    public toDataURL(): string {
+        return this.element.toDataURL();
     }
 }

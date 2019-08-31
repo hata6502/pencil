@@ -9,8 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class TwitterController extends Controller
 {
-    public function post()
+    public function post(Request $request)
     {
+        $request->validate([
+            'preview' => 'required|max:2097152'
+        ]);
+
         $user = Auth::user();
         $twitterOAuth = new TwitterOAuth(
             config('twitter.consumer_key'),
@@ -19,9 +23,18 @@ class TwitterController extends Controller
             $user->token_secret
         );
 
-        $status = $twitterOAuth->post('statuses/update', ['status' => '#HoodPencil Twitter API テストです。']);
+        $preview = $twitterOAuth->post('media/upload', ['media_data' => $request->preview], false, true);
+        if ($twitterOAuth->getLastHttpCode() != 200) {
+            throw new TwitterOAuthException(print_r($preview, true));
+        }
+        $status = $twitterOAuth->post('statuses/update', [
+            'status' => '#HoodPencil',
+            'media_ids' => $preview->media_id_string
+        ]);
         if ($twitterOAuth->getLastHttpCode() != 200) {
             throw new TwitterOAuthException(print_r($status, true));
         }
+
+        return redirect()->route('top');
     }
 }

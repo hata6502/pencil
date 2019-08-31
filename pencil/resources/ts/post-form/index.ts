@@ -4,6 +4,8 @@ import PreviewCanvas, { PreviewCanvasProps } from './preview-canvas';
 export default class extends VirtualElement<HTMLFormElement> {
     public onPreviewClick: () => void = (): void => {};
     private previewCanvas: PreviewCanvas;
+    private preview: HTMLInputElement;
+    private submitButton: HTMLInputElement;
 
     public constructor(element: HTMLFormElement | null) {
         super(element || 'form');
@@ -15,18 +17,26 @@ export default class extends VirtualElement<HTMLFormElement> {
                     this.onPreviewClick();
                 }
             })),
-            createElement<HTMLInputElement>('input', {
+            (this.preview = createElement<HTMLInputElement>('input', {
                 name: 'preview',
                 type: 'hidden'
-            }),
-            createElement<HTMLInputElement>('input', {
+            })),
+            (this.submitButton = createElement<HTMLInputElement>('input', {
                 type: 'submit',
-                value: 'ツイート'
-            })
+                value: 'ツイート',
+                onclick: this.submit
+            }))
         );
     }
 
     public setPreview(ndd: string, background: HTMLImageElement): void {
         this.previewCanvas.setPreview(ndd, background);
     }
+
+    private submit = (): void => {
+        this.preview.value = this.previewCanvas.toDataURL().replace('data:image/png;base64,', '');
+        this.submitButton.value = '送信中';
+        this.submitButton.disabled = true;
+        this.element.submit();
+    };
 }
