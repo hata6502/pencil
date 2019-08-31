@@ -1,5 +1,6 @@
 import VirtualElement from '../virtual-element';
 import * as Settings from '../settings';
+import { setNormarizedDrawingData } from '../canvas-utils';
 
 export default class extends VirtualElement<HTMLCanvasElement> {
     public brush: string;
@@ -39,6 +40,9 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         setInterval((): void => {
             this.isBackupScheduled = true;
         }, 1000 * Settings.BACKUP_INTERVAL);
+        window.addEventListener('beforeunload', (): void => {
+            this.backup(true);
+        });
     }
 
     public getScreenPosition(): { x: number; y: number } {
@@ -46,13 +50,24 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         return { x: rect.left, y: rect.top };
     }
 
-    public getImageData(): ImageData {
-        return this.context.getImageData(
-            0,
-            0,
-            Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM,
-            Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM
-        );
+    public getNormarizedDrawingData(): string {
+        let ndd = `${Settings.CANVAS_WIDTH},${Settings.CANVAS_HEIGHT},`;
+        const imageData = this.getImageData();
+        let i = 0;
+        for (let y = 0; y < Settings.CANVAS_HEIGHT; y++) {
+            for (let x = 0; x < Settings.CANVAS_WIDTH; x++) {
+                const r = Number(imageData.data[i] >= 128);
+                const g = Number(imageData.data[i + 1] >= 128);
+                const b = Number(imageData.data[i + 2] >= 128);
+                const a = Number(imageData.data[i + 3] >= 128);
+
+                ndd += ((r << 0) | (g << 1) | (b << 2) | (a << 3)).toString(16);
+                i += Settings.CANVAS_ZOOM * 4;
+            }
+            i += Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM * 4;
+        }
+
+        return ndd;
     }
 
     public movePath(x: number, y: number): void {
@@ -133,33 +148,13 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.pushHistory();
     }
 
-    public upload(): void {
-        this.backup(true);
-
-        if (!confirm('お絵かきを HoodPencil サーバーに保存しますか?')) {
-            return;
-        }
-
-        const drawing = localStorage.getItem('drawing');
-        if (drawing === null) {
-            throw "Couldn't get drawing. ";
-        }
-
-        const request = new XMLHttpRequest();
-        request.onreadystatechange = (): void => {
-            if (request.readyState == 4) {
-                if (request.status == 200) {
-                    const response: { message: string } = JSON.parse(request.response);
-                    alert(response.message);
-                } else {
-                    const response: { errors: string[] } = JSON.parse(request.response);
-                    throw response.errors.join('\n');
-                }
-            }
-        };
-        request.open('POST', Settings.BACKUP_URL);
-        request.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
-        request.send(`drawing=${encodeURIComponent(drawing)}`);
+    private getImageData(): ImageData {
+        return this.context.getImageData(
+            0,
+            0,
+            Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM,
+            Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM
+        );
     }
 
     private setImageData(image: ImageData): void {
@@ -251,77 +246,39 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.onChangeHistory(this.historyIndex, this.history.length);
     }
 
-    private getNormarizedDrawingData(): string {
-        let ndd = `${Settings.CANVAS_WIDTH},${Settings.CANVAS_HEIGHT},`;
-        const imageData = this.getImageData();
-        let i = 0;
-        for (let y = 0; y < Settings.CANVAS_HEIGHT; y++) {
-            for (let x = 0; x < Settings.CANVAS_WIDTH; x++) {
-                const r = Number(imageData.data[i] >= 128);
-                const g = Number(imageData.data[i + 1] >= 128);
-                const b = Number(imageData.data[i + 2] >= 128);
-                const a = Number(imageData.data[i + 3] >= 128);
-
-                ndd += ((r << 0) | (g << 1) | (b << 2) | (a << 3)).toString(16);
-                i += Settings.CANVAS_ZOOM * 4;
-            }
-            i += Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM * 4;
-        }
-
-        return ndd;
-    }
-
-    private setNormarizedDrawingData(ndd: string): void {
-        const [width, height, data] = ndd.split(',');
-
-        this.context.globalAlpha = 1;
-        let i = 0;
-        for (let y = 0; y < Number(height); y++) {
-            for (let x = 0; x < Number(width); x++) {
-                const pixel = parseInt(data.substring(i, i + 1), 16);
-                i++;
-
-                if (pixel & 8) {
-                    const r = Number((pixel & 1) !== 0) * 255;
-                    const g = Number((pixel & 2) !== 0) * 255;
-                    const b = Number((pixel & 4) !== 0) * 255;
-
-                    this.context.fillStyle = `rgb(${r},${g},${b})`;
-                    this.context.fillRect(
-                        x * Settings.CANVAS_ZOOM,
-                        y * Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM
-                    );
-                } else {
-                    this.context.clearRect(
-                        x * Settings.CANVAS_ZOOM,
-                        y * Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM
-                    );
-                }
-            }
-        }
-    }
-
     private normalize(): void {
-        this.setNormarizedDrawingData(this.getNormarizedDrawingData());
+        setNormarizedDrawingData(this.context, this.getNormarizedDrawingData(), Settings.CANVAS_ZOOM, false);
     }
 
     private backup(isForce: boolean = false): void {
         if (this.isBackupScheduled || isForce) {
-            localStorage.setItem('drawing', this.getNormarizedDrawingData());
+            const request = new XMLHttpRequest();
+            request.open('POST', Settings.BACKUP_URL);
+            request.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+            request.onload = (): void => {
+                if (request.status != 200) {
+                    const response: { errors: string[] } = JSON.parse(request.response);
+                    alert(response.errors.join('\n'));
+                }
+            };
+            request.onerror = (): void => {
+                alert(request.statusText !== '' ? request.statusText : '通信エラーが発生しました。');
+            };
+            request.send(`drawing=${encodeURIComponent(this.getNormarizedDrawingData())}`);
+
             this.isBackupScheduled = false;
         }
     }
 
     private restore(): void {
-        const drawing = localStorage.getItem('drawing');
-        if (!drawing) {
-            return;
-        }
-
-        this.setNormarizedDrawingData(drawing);
+        const request = new XMLHttpRequest();
+        request.open('GET', Settings.RESTORE_URL);
+        request.onload = (): void => {
+            if (request.status == 200) {
+                const response: { drawing: string } = JSON.parse(request.response);
+                setNormarizedDrawingData(this.context, response.drawing, Settings.CANVAS_ZOOM, false);
+            }
+        };
+        request.send(null);
     }
 }
