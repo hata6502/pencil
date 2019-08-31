@@ -5,7 +5,7 @@ import { setBackground } from '../canvas-utils';
 export default class extends VirtualElement<HTMLCanvasElement> {
     private context: CanvasRenderingContext2D;
 
-    constructor(element: HTMLCanvasElement) {
+    public constructor(element: HTMLCanvasElement) {
         super(element);
 
         const context = this.element.getContext('2d');
@@ -18,7 +18,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.element.setAttribute('height', (Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM).toString());
     }
 
-    setBackground(image: HTMLImageElement) {
-        setBackground(this.context, image);
+    public setBackground(image: HTMLImageElement): void {
+        setBackground(this.context, image, Settings.CANVAS_ZOOM);
     }
 }

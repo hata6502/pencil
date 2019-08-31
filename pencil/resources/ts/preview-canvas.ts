@@ -1,5 +1,5 @@
 import VirtualElement from './virtual-element';
-import { setBackground } from './canvas-utils';
+import { setBackground, setNormarizedDrawingData } from './canvas-utils';
 import * as Settings from './settings';
 
 export default class extends VirtualElement<HTMLCanvasElement> {
@@ -37,8 +37,8 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         };
     }
 
-    public setDrawing(ndd: string, background: HTMLImageElement): void {
-        setBackground(this.context, background);
-        //this.context.putImageData(ndd, 0, 0);
+    public setPreview(ndd: string, background: HTMLImageElement): void {
+        setBackground(this.context, background, 3);
+        setNormarizedDrawingData(this.context, ndd, 3, true);
     }
 }

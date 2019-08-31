@@ -3,19 +3,19 @@ import VirtualElement from '../virtual-element';
 let displayCount = 0;
 
 export default class extends VirtualElement<HTMLDivElement> {
-    onDisplay: () => void = () => {};
-    onHide: () => void = () => {};
+    public onDisplay: () => void = (): void => {};
+    public onHide: () => void = (): void => {};
 
-    constructor(element: HTMLDivElement) {
+    public constructor(element: HTMLDivElement) {
         super(element);
 
-        element.onclick = e => {
+        element.onclick = (e): void => {
             this.hide();
             e.stopPropagation();
         };
     }
 
-    display() {
+    public display(): void {
         if (this.element.style.display != 'table') {
             this.element.style.display = 'table';
             this.onDisplay();
@@ -24,7 +24,7 @@ export default class extends VirtualElement<HTMLDivElement> {
         }
     }
 
-    hide() {
+    public hide(): void {
         if (this.element.style.display == 'table') {
             this.element.style.display = 'none';
             this.onHide();

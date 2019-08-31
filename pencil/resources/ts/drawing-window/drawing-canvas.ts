@@ -1,5 +1,6 @@
 import VirtualElement from '../virtual-element';
 import * as Settings from '../settings';
+import { setNormarizedDrawingData } from '../canvas-utils';
 
 export default class extends VirtualElement<HTMLCanvasElement> {
     public brush: string;
@@ -245,42 +246,8 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.onChangeHistory(this.historyIndex, this.history.length);
     }
 
-    private setNormarizedDrawingData(ndd: string): void {
-        const [width, height, data] = ndd.split(',');
-
-        this.context.globalAlpha = 1;
-        let i = 0;
-        for (let y = 0; y < Number(height); y++) {
-            for (let x = 0; x < Number(width); x++) {
-                const pixel = parseInt(data.substring(i, i + 1), 16);
-                i++;
-
-                if (pixel & 8) {
-                    const r = Number((pixel & 1) !== 0) * 255;
-                    const g = Number((pixel & 2) !== 0) * 255;
-                    const b = Number((pixel & 4) !== 0) * 255;
-
-                    this.context.fillStyle = `rgb(${r},${g},${b})`;
-                    this.context.fillRect(
-                        x * Settings.CANVAS_ZOOM,
-                        y * Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM
-                    );
-                } else {
-                    this.context.clearRect(
-                        x * Settings.CANVAS_ZOOM,
-                        y * Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM
-                    );
-                }
-            }
-        }
-    }
-
     private normalize(): void {
-        this.setNormarizedDrawingData(this.getNormarizedDrawingData());
+        setNormarizedDrawingData(this.context, this.getNormarizedDrawingData(), Settings.CANVAS_ZOOM, false);
     }
 
     private backup(isForce: boolean = false): void {
@@ -309,7 +276,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         request.onload = (): void => {
             if (request.status == 200) {
                 const response: { drawing: string } = JSON.parse(request.response);
-                this.setNormarizedDrawingData(response.drawing);
+                setNormarizedDrawingData(this.context, response.drawing, Settings.CANVAS_ZOOM, false);
             }
         };
         request.send(null);
