@@ -69,11 +69,6 @@
                             </button>
                         </div>
                         <div>
-                            <button id="upload-button">
-                                <img src="{{ url('images/upload.png') }}" alt="アップロード" />
-                            </button>
-                        </div>
-                        <div>
                             <button id="background-button">
                                 <img src="{{ url('images/image.png') }}" alt="背景" />
                             </button>
