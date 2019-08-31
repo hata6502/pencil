@@ -1,6 +1,7 @@
 import 'core-js';
 import * as Sentry from '@sentry/browser';
 
+import PostForm from './post-form';
 import ModalWindow from './drawing-window/modal-window';
 import ModalDialog from './drawing-window/modal-dialog';
 import DrawingCanvas from './drawing-window/drawing-canvas';
@@ -13,7 +14,6 @@ import TextInput from './drawing-window/text-input';
 import ToneCanvas from './drawing-window/tone-canvas';
 import BackgroundDialog from './drawing-window/background-dialog';
 import BackgroundCanvas from './drawing-window/background-canvas';
-import PreviewCanvas from './preview-canvas';
 import * as Settings from './settings';
 
 Sentry.init({ dsn: Settings.SENTRY_DSN });
@@ -24,6 +24,7 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+const postForm = new PostForm(document.getElementById('post-form') as HTMLFormElement);
 const drawingWindow = new ModalWindow(document.getElementById('drawing-window') as HTMLDivElement);
 const toolbar = document.getElementById('toolbar') as HTMLDivElement;
 const drawingCanvas = new DrawingCanvas(document.getElementById('drawing-canvas') as HTMLCanvasElement);
@@ -32,7 +33,6 @@ let paletteButtons: PaletteButton[] = [];
 const undoButton = new HistoryButton(document.getElementById('undo-button') as HTMLButtonElement);
 const redoButton = new HistoryButton(document.getElementById('redo-button') as HTMLButtonElement);
 const clearButton = document.getElementById('clear-button') as HTMLButtonElement;
-const uploadButton = document.getElementById('upload-button') as HTMLButtonElement;
 const backgroundButton = document.getElementById('background-button') as HTMLButtonElement;
 const stickCursor = new StickCursor(document.getElementById('stick-cursor') as HTMLDivElement);
 const pointerListener = new PointerListener();
@@ -43,17 +43,21 @@ const toneWindow = new ModalWindow(document.getElementById('tone-window') as HTM
 const backgroundWindow = new ModalWindow(document.getElementById('background-window') as HTMLDivElement);
 const backgroundDialog = new BackgroundDialog(document.getElementById('background-dialog') as HTMLDivElement);
 const backgroundCanvas = new BackgroundCanvas(document.getElementById('background-canvas') as HTMLCanvasElement);
-const previewCanvas = new PreviewCanvas(document.getElementById('preview-canvas') as HTMLCanvasElement);
+let backgroundImage: HTMLImageElement = new Image();
 
 new ModalDialog(document.getElementById('tone-dialog') as HTMLDivElement);
 new ModalDialog(document.getElementById('drawing-dialog') as HTMLDivElement);
+
+postForm.onPreviewClick = (): void => {
+    drawingWindow.display();
+};
 
 drawingWindow.onDisplay = (): void => {
     stickCursor.enable = drawingCanvas.isDisplay = true;
 };
 drawingWindow.onHide = (): void => {
     stickCursor.enable = drawingCanvas.isDisplay = false;
-    previewCanvas.setImageData(drawingCanvas.getImageData());
+    postForm.setPreview(drawingCanvas.getNormarizedDrawingData(), backgroundImage);
 };
 
 toolbar.style.width = Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM + 2 + 'px';
@@ -104,10 +108,6 @@ redoButton.onClick = (): void => {
 
 clearButton.onclick = (): void => {
     drawingCanvas.clear();
-};
-
-uploadButton.onclick = (): void => {
-    drawingCanvas.upload();
 };
 
 backgroundButton.onclick = (): void => {
@@ -175,10 +175,7 @@ backgroundWindow.onHide = (): void => {
 };
 
 backgroundDialog.onLoad = (image): void => {
-    backgroundCanvas.setBackground(image);
+    backgroundImage = image;
+    backgroundCanvas.setBackground(backgroundImage);
     backgroundWindow.hide();
-};
-
-previewCanvas.onClick = (): void => {
-    drawingWindow.display();
 };

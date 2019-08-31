@@ -15,6 +15,7 @@ export const TRANSPARENT_URL = '/images/transparent.png';
 
 export const BACKGROUND_FILE_ACTION_URL = '/image';
 export const BACKUP_URL = '/backup';
+export const RESTORE_URL = '/restore';
 
 export const BACKGROUND_IMAGES = {
     white: {

@@ -12,8 +12,6 @@
 */
 
 Route::get('', 'TopController@index')->name('top');
-Route::post('image', 'TopController@image')->name('image');
-Route::post('backup', 'TopController@backup')->name('backup');
 
 Route::group(['middleware' => 'auth.very_basic'], function () {
     Route::get('login', 'AuthController@twitterLogin')->name('login');
@@ -24,4 +22,7 @@ Route::group(['middleware' => 'auth.very_basic'], function () {
 Route::group(['middleware' => 'auth'], function () {
     Route::get('draw', 'TopController@draw')->name('draw');
     Route::post('post', 'TwitterController@post')->name('post');
+    Route::post('image', 'ImageController@image')->name('image');
+    Route::post('backup', 'ImageController@backup')->name('backup');
+    Route::get('restore', 'ImageController@restore')->name('restore');
 });
