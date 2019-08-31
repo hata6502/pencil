@@ -39,6 +39,9 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         setInterval((): void => {
             this.isBackupScheduled = true;
         }, 1000 * Settings.BACKUP_INTERVAL);
+        window.addEventListener('beforeunload', (): void => {
+            this.backup(true);
+        });
     }
 
     public getScreenPosition(): { x: number; y: number } {
@@ -149,11 +152,13 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         request.onreadystatechange = (): void => {
             if (request.readyState == 4) {
                 if (request.status == 200) {
+                    localStorage.removeItem('drawing');
+
                     const response: { message: string } = JSON.parse(request.response);
                     alert(response.message);
                 } else {
                     const response: { errors: string[] } = JSON.parse(request.response);
-                    throw response.errors.join('\n');
+                    alert(response.errors.join('\n'));
                 }
             }
         };
@@ -252,7 +257,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
     }
 
     private getNormarizedDrawingData(): string {
-        let ndd = `${Settings.CANVAS_WIDTH},${Settings.CANVAS_HEIGHT},`;
+        let ndd = `${Date.now()},${Settings.CANVAS_WIDTH},${Settings.CANVAS_HEIGHT},`;
         const imageData = this.getImageData();
         let i = 0;
         for (let y = 0; y < Settings.CANVAS_HEIGHT; y++) {
@@ -272,7 +277,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
     }
 
     private setNormarizedDrawingData(ndd: string): void {
-        const [width, height, data] = ndd.split(',');
+        const [date, width, height, data] = ndd.split(',');
 
         this.context.globalAlpha = 1;
         let i = 0;
@@ -317,11 +322,29 @@ export default class extends VirtualElement<HTMLCanvasElement> {
     }
 
     private restore(): void {
-        const drawing = localStorage.getItem('drawing');
-        if (!drawing) {
-            return;
-        }
+        const localDrawing = localStorage.getItem('drawing');
 
-        this.setNormarizedDrawingData(drawing);
+        const request = new XMLHttpRequest();
+        request.onreadystatechange = (): void => {
+            if (request.readyState == 4) {
+                if (request.status == 200) {
+                    localStorage.removeItem('drawing');
+
+                    const response: { drawing: string } = JSON.parse(request.response);
+                    if (localDrawing === null || localDrawing.split(',')[3] == response.drawing.split(',')[3]) {
+                        this.setNormarizedDrawingData(response.drawing);
+                        return;
+                    } else {
+                        alert('端末に一時保存されたお絵かきがあります。\nどちらのお絵かきを使用しますか?');
+                    }
+                }
+
+                if (localDrawing !== null) {
+                    this.setNormarizedDrawingData(localDrawing);
+                }
+            }
+        };
+        request.open('GET', Settings.RESTORE_URL);
+        request.send(null);
     }
 }
