@@ -46,13 +46,24 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         return { x: rect.left, y: rect.top };
     }
 
-    public getImageData(): ImageData {
-        return this.context.getImageData(
-            0,
-            0,
-            Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM,
-            Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM
-        );
+    public getNormarizedDrawingData(): string {
+        let ndd = `${Settings.CANVAS_WIDTH},${Settings.CANVAS_HEIGHT},`;
+        const imageData = this.getImageData();
+        let i = 0;
+        for (let y = 0; y < Settings.CANVAS_HEIGHT; y++) {
+            for (let x = 0; x < Settings.CANVAS_WIDTH; x++) {
+                const r = Number(imageData.data[i] >= 128);
+                const g = Number(imageData.data[i + 1] >= 128);
+                const b = Number(imageData.data[i + 2] >= 128);
+                const a = Number(imageData.data[i + 3] >= 128);
+
+                ndd += ((r << 0) | (g << 1) | (b << 2) | (a << 3)).toString(16);
+                i += Settings.CANVAS_ZOOM * 4;
+            }
+            i += Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM * 4;
+        }
+
+        return ndd;
     }
 
     public movePath(x: number, y: number): void {
@@ -162,6 +173,15 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         request.send(`drawing=${encodeURIComponent(drawing)}`);
     }
 
+    private getImageData(): ImageData {
+        return this.context.getImageData(
+            0,
+            0,
+            Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM,
+            Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM
+        );
+    }
+
     private setImageData(image: ImageData): void {
         this.context.putImageData(image, 0, 0);
     }
@@ -249,26 +269,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.last = image;
         this.backup();
         this.onChangeHistory(this.historyIndex, this.history.length);
-    }
-
-    private getNormarizedDrawingData(): string {
-        let ndd = `${Settings.CANVAS_WIDTH},${Settings.CANVAS_HEIGHT},`;
-        const imageData = this.getImageData();
-        let i = 0;
-        for (let y = 0; y < Settings.CANVAS_HEIGHT; y++) {
-            for (let x = 0; x < Settings.CANVAS_WIDTH; x++) {
-                const r = Number(imageData.data[i] >= 128);
-                const g = Number(imageData.data[i + 1] >= 128);
-                const b = Number(imageData.data[i + 2] >= 128);
-                const a = Number(imageData.data[i + 3] >= 128);
-
-                ndd += ((r << 0) | (g << 1) | (b << 2) | (a << 3)).toString(16);
-                i += Settings.CANVAS_ZOOM * 4;
-            }
-            i += Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM * 4;
-        }
-
-        return ndd;
     }
 
     private setNormarizedDrawingData(ndd: string): void {

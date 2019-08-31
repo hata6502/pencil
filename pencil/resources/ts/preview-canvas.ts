@@ -1,4 +1,5 @@
 import VirtualElement from './virtual-element';
+import { setBackground } from './canvas-utils';
 import * as Settings from './settings';
 
 export default class extends VirtualElement<HTMLCanvasElement> {
@@ -16,18 +17,18 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
         this.element.style.width = Settings.CANVAS_WIDTH + 'px';
         this.element.style.height = Settings.CANVAS_HEIGHT + 'px';
-        this.element.setAttribute('width', (Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM).toString());
-        this.element.setAttribute('height', (Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM).toString());
+        this.element.setAttribute('width', (Settings.CANVAS_WIDTH * 3).toString());
+        this.element.setAttribute('height', (Settings.CANVAS_HEIGHT * 3).toString());
 
         const image = new Image();
         image.src = Settings.IMAGE_URL;
         image.onload = (): void => {
             this.context.drawImage(
                 image,
-                ((Settings.CANVAS_WIDTH - 64) * Settings.CANVAS_ZOOM) / 2,
-                ((Settings.CANVAS_HEIGHT - 64) * Settings.CANVAS_ZOOM) / 2,
-                64 * Settings.CANVAS_ZOOM,
-                64 * Settings.CANVAS_ZOOM
+                ((Settings.CANVAS_WIDTH - 64) * 3) / 2,
+                ((Settings.CANVAS_HEIGHT - 64) * 3) / 2,
+                64 * 3,
+                64 * 3
             );
         };
 
@@ -36,7 +37,8 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         };
     }
 
-    public setImageData(drawing: ImageData): void {
-        this.context.putImageData(drawing, 0, 0);
+    public setDrawing(ndd: string, background: HTMLImageElement): void {
+        setBackground(this.context, background);
+        //this.context.putImageData(ndd, 0, 0);
     }
 }

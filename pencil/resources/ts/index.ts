@@ -44,6 +44,7 @@ const backgroundWindow = new ModalWindow(document.getElementById('background-win
 const backgroundDialog = new BackgroundDialog(document.getElementById('background-dialog') as HTMLDivElement);
 const backgroundCanvas = new BackgroundCanvas(document.getElementById('background-canvas') as HTMLCanvasElement);
 const previewCanvas = new PreviewCanvas(document.getElementById('preview-canvas') as HTMLCanvasElement);
+let backgroundImage: HTMLImageElement;
 
 new ModalDialog(document.getElementById('tone-dialog') as HTMLDivElement);
 new ModalDialog(document.getElementById('drawing-dialog') as HTMLDivElement);
@@ -53,7 +54,7 @@ drawingWindow.onDisplay = (): void => {
 };
 drawingWindow.onHide = (): void => {
     stickCursor.enable = drawingCanvas.isDisplay = false;
-    previewCanvas.setImageData(drawingCanvas.getImageData());
+    previewCanvas.setDrawing(drawingCanvas.getNormarizedDrawingData(), backgroundImage);
 };
 
 toolbar.style.width = Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM + 2 + 'px';
@@ -175,7 +176,8 @@ backgroundWindow.onHide = (): void => {
 };
 
 backgroundDialog.onLoad = (image): void => {
-    backgroundCanvas.setBackground(image);
+    backgroundImage = image;
+    backgroundCanvas.setBackground(backgroundImage);
     backgroundWindow.hide();
 };
 
