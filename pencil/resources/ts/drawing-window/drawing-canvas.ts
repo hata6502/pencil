@@ -148,6 +148,26 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.pushHistory();
     }
 
+    public backup(isForce: boolean = false): void {
+        if (this.isBackupScheduled || isForce) {
+            const request = new XMLHttpRequest();
+            request.open('POST', Settings.BACKUP_URL);
+            request.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+            request.onload = (): void => {
+                if (request.status != 200) {
+                    const response: { errors: string[] } = JSON.parse(request.response);
+                    alert(response.errors.join('\n'));
+                }
+            };
+            request.onerror = (): void => {
+                alert(request.statusText !== '' ? request.statusText : '通信エラーが発生しました。');
+            };
+            request.send(`drawing=${encodeURIComponent(this.getNormarizedDrawingData())}`);
+
+            this.isBackupScheduled = false;
+        }
+    }
+
     private getImageData(): ImageData {
         return this.context.getImageData(
             0,
@@ -248,26 +268,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
     private normalize(): void {
         setNormarizedDrawingData(this.context, this.getNormarizedDrawingData(), Settings.CANVAS_ZOOM, false);
-    }
-
-    private backup(isForce: boolean = false): void {
-        if (this.isBackupScheduled || isForce) {
-            const request = new XMLHttpRequest();
-            request.open('POST', Settings.BACKUP_URL);
-            request.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
-            request.onload = (): void => {
-                if (request.status != 200) {
-                    const response: { errors: string[] } = JSON.parse(request.response);
-                    alert(response.errors.join('\n'));
-                }
-            };
-            request.onerror = (): void => {
-                alert(request.statusText !== '' ? request.statusText : '通信エラーが発生しました。');
-            };
-            request.send(`drawing=${encodeURIComponent(this.getNormarizedDrawingData())}`);
-
-            this.isBackupScheduled = false;
-        }
     }
 
     private restore(): void {

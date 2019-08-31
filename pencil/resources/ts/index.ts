@@ -57,6 +57,7 @@ drawingWindow.onDisplay = (): void => {
 };
 drawingWindow.onHide = (): void => {
     stickCursor.enable = drawingCanvas.isDisplay = false;
+    drawingCanvas.backup(true);
     postForm.setPreview(drawingCanvas.getNormarizedDrawingData(), backgroundImage);
 };
 
