@@ -39,6 +39,9 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         setInterval((): void => {
             this.isBackupScheduled = true;
         }, 1000 * Settings.BACKUP_INTERVAL);
+        window.addEventListener('beforeunload', (): void => {
+            this.backup(true);
+        });
     }
 
     public getScreenPosition(): { x: number; y: number } {
@@ -142,35 +145,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
             Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM
         );
         this.pushHistory();
-    }
-
-    public upload(): void {
-        this.backup(true);
-
-        if (!confirm('お絵かきを HoodPencil サーバーに保存しますか?')) {
-            return;
-        }
-
-        const drawing = localStorage.getItem('drawing');
-        if (drawing === null) {
-            throw "Couldn't get drawing. ";
-        }
-
-        const request = new XMLHttpRequest();
-        request.onreadystatechange = (): void => {
-            if (request.readyState == 4) {
-                if (request.status == 200) {
-                    const response: { message: string } = JSON.parse(request.response);
-                    alert(response.message);
-                } else {
-                    const response: { errors: string[] } = JSON.parse(request.response);
-                    throw response.errors.join('\n');
-                }
-            }
-        };
-        request.open('POST', Settings.BACKUP_URL);
-        request.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
-        request.send(`drawing=${encodeURIComponent(drawing)}`);
     }
 
     private getImageData(): ImageData {
@@ -311,17 +285,33 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
     private backup(isForce: boolean = false): void {
         if (this.isBackupScheduled || isForce) {
-            localStorage.setItem('drawing', this.getNormarizedDrawingData());
+            const request = new XMLHttpRequest();
+            request.open('POST', Settings.BACKUP_URL);
+            request.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+            request.onload = (): void => {
+                if (request.status != 200) {
+                    const response: { errors: string[] } = JSON.parse(request.response);
+                    alert(response.errors.join('\n'));
+                }
+            };
+            request.onerror = (): void => {
+                alert(request.statusText !== '' ? request.statusText : '通信エラーが発生しました。');
+            };
+            request.send(`drawing=${encodeURIComponent(this.getNormarizedDrawingData())}`);
+
             this.isBackupScheduled = false;
         }
     }
 
     private restore(): void {
-        const drawing = localStorage.getItem('drawing');
-        if (!drawing) {
-            return;
-        }
-
-        this.setNormarizedDrawingData(drawing);
+        const request = new XMLHttpRequest();
+        request.open('GET', Settings.RESTORE_URL);
+        request.onload = (): void => {
+            if (request.status == 200) {
+                const response: { drawing: string } = JSON.parse(request.response);
+                this.setNormarizedDrawingData(response.drawing);
+            }
+        };
+        request.send(null);
     }
 }

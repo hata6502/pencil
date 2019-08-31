@@ -32,7 +32,6 @@ let paletteButtons: PaletteButton[] = [];
 const undoButton = new HistoryButton(document.getElementById('undo-button') as HTMLButtonElement);
 const redoButton = new HistoryButton(document.getElementById('redo-button') as HTMLButtonElement);
 const clearButton = document.getElementById('clear-button') as HTMLButtonElement;
-const uploadButton = document.getElementById('upload-button') as HTMLButtonElement;
 const backgroundButton = document.getElementById('background-button') as HTMLButtonElement;
 const stickCursor = new StickCursor(document.getElementById('stick-cursor') as HTMLDivElement);
 const pointerListener = new PointerListener();
@@ -105,10 +104,6 @@ redoButton.onClick = (): void => {
 
 clearButton.onclick = (): void => {
     drawingCanvas.clear();
-};
-
-uploadButton.onclick = (): void => {
-    drawingCanvas.upload();
 };
 
 backgroundButton.onclick = (): void => {
