@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->string('token');
             $table->string('token_secret');
+            $table->text('drawing');
             $table->rememberToken();
             $table->timestamps();
         });
