@@ -1,13 +1,23 @@
-import VirtualElement from './virtual-element';
-import { setBackground, setNormarizedDrawingData } from './canvas-utils';
-import * as Settings from './settings';
+import VirtualElement from '../virtual-element';
+import { setBackground, setNormarizedDrawingData } from '../canvas-utils';
+import * as Settings from '../settings';
+
+export interface PreviewCanvasProps {
+    onClick?: () => void;
+}
 
 export default class extends VirtualElement<HTMLCanvasElement> {
-    public onClick: () => void = (): void => {};
+    public onClick: () => void = (): void => { };
     private context: CanvasRenderingContext2D;
 
-    public constructor(element: HTMLCanvasElement) {
-        super(element);
+    public constructor(element: HTMLCanvasElement | null, props: PreviewCanvasProps) {
+        super(element || 'canvas');
+
+        if (props.onClick) {
+            this.onClick = props.onClick;
+        }
+
+        this.element.classList.add('preview-canvas');
 
         const context = this.element.getContext('2d');
         if (context === null) {
