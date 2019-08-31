@@ -25,29 +25,24 @@
             </h1>
         </div>
 
-        <h2>Drawing Only Beta Version</h2>
         <p>
             現在開発中のため、お絵かきの投稿はできません。
         </p>
 
-        <h2>プライバシーポリシー</h2>
+        <h2>利用規約・プライバシーポリシー</h2>
         <p>
             当アプリケーションでは、アクセス解析として「<a href="https://www.google.com/analytics/terms/jp.html"
                 >Googleアナリティクス</a
             >」を利用しています。<br />
             また、エラー収集として「<a href="https://sentry.io/">Sentry</a>」を利用しています。<br />
-            送信される情報は匿名で収集されており、個人を特定するものではありません。<br />
+            送信される情報は匿名で収集されており、個人を特定するものではありません。
         </p>
-
-        <h2>Privacy Policy</h2>
         <p>
-            This application uses <a href="https://www.google.com/analytics/terms/jp.html">Google Analytics</a>: access
-            log service. <br />
-            And uses <a href="https://sentry.io/">Sentry</a>: error logging service. <br />
-            These sended informations contain no personal information. <br />
+            お絵かきデータは、バックアップのために HoodPencil サーバへ自動で定期的にアップロードされます。<br />
+            当アプリケーションで発生する通信料は利用者負担となります。
         </p>
 
-        <p>↓タッチするとお絵かきウィンドウが開きます。 Tap or click here to draw.</p>
+        <p>↓タッチするとお絵かきウィンドウが開きます。</p>
 
         <canvas id="preview-canvas"></canvas>
 
