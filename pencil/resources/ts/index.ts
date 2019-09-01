@@ -16,7 +16,10 @@ import BackgroundDialog from './drawing-window/background-dialog';
 import BackgroundCanvas from './drawing-window/background-canvas';
 import * as Settings from './settings';
 
-Sentry.init({ dsn: Settings.SENTRY_DSN });
+// eslint-disable-next-line no-undef
+if (process.env.NODE_ENV == 'production') {
+    Sentry.init({ dsn: Settings.SENTRY_DSN });
+}
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', (): void => {
@@ -57,6 +60,7 @@ drawingWindow.onDisplay = (): void => {
 };
 drawingWindow.onHide = (): void => {
     stickCursor.enable = drawingCanvas.isDisplay = false;
+    drawingCanvas.backup(true);
     postForm.setPreview(drawingCanvas.getNormarizedDrawingData(), backgroundImage);
 };
 

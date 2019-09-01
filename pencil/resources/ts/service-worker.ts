@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hood-pencil-cache-v0.2.0';
+const CACHE_NAME = 'hood-pencil-cache-v0.2.1';
 const URLS_TO_CACHE = ['/', '/js/app.js', '/css/app.css'];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
