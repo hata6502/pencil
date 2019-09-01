@@ -1,7 +1,6 @@
-const CACHE_NAME = 'hood-pencil-cache-v0.2.2';
+const CACHE_NAME = 'hood-pencil-cache-v0.2.3';
 const URLS_TO_CACHE = [
     '/',
-    '/draw',
 
     '/js/app.js',
 
