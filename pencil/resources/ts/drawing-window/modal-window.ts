@@ -1,4 +1,4 @@
-import VirtualElement from '../virtual-element';
+import VirtualElement from 'virtual-element';
 
 let displayCount = 0;
 

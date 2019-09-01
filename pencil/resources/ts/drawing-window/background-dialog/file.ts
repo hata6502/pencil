@@ -1,4 +1,4 @@
-import VirtualElement from '../../virtual-element';
+import VirtualElement from 'virtual-element';
 
 export interface FileProps {
     onSelect?: () => void;
@@ -6,8 +6,8 @@ export interface FileProps {
 }
 
 export default class extends VirtualElement<HTMLInputElement> {
-    onSelect: () => void = () => { };
-    onLoad: (image: HTMLImageElement) => void = () => { };
+    onSelect: () => void = () => {};
+    onLoad: (image: HTMLImageElement) => void = () => {};
 
     constructor(element: HTMLInputElement | null, props: FileProps) {
         super(element || 'input');
