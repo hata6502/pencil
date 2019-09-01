@@ -8,6 +8,8 @@ const URLS_TO_CACHE = [
 
     '/images/favicon@32px.png',
     '/images/favicon@192px.png',
+    '/images/favicon@512px.png',
+    '/images/apple-touch-icon.png',
     '/images/wing.png',
     '/images/ground.png',
     '/images/image.png',

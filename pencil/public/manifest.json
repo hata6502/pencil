@@ -6,6 +6,8 @@
   "start_url": ".",
   "display": "fullscreen",
   "orientation": "landscape",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "icons": [
     {
       "src": "images/favicon@32px.png",
@@ -15,6 +17,11 @@
     {
       "src": "images/favicon@192px.png",
       "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/favicon@512px.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
