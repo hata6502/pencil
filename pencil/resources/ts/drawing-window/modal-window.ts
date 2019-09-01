@@ -9,7 +9,7 @@ export default class extends VirtualElement<HTMLDivElement> {
     public constructor(element: HTMLDivElement) {
         super(element);
 
-        element.onclick = (e): void => {
+        this.element.onclick = (e): void => {
             this.hide();
             e.stopPropagation();
         };
