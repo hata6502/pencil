@@ -180,21 +180,6 @@
       }
     }
   }
-
-  #text-input {
-    display: block;
-    width: 100%;
-    border: 1px solid rgba($color-black, 0.1);
-
-    &.active {
-      border-color: $color-primary;
-      border-width: 2px;
-    }
-
-    &:not(.active) {
-      padding: 1px;
-    }
-  }
 }
 
 #tone-dialog {

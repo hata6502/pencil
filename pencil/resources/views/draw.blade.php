@@ -70,7 +70,6 @@
                         <div></div>
                     </div>
                 </div>
-                <input id="text-input" placeholder="テキストを入力して埋め込みます。" />
             </div>
             <div id="tone-window" class="modal-window">
                 <div>
