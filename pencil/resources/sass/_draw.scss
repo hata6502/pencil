@@ -45,10 +45,40 @@
 }
 
 #drawing-dialog {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 1;
+    width: 17px;
+    height: 34px;
+    content: '';
+    background: linear-gradient(to right, $color-white, rgba($color-white, 0));
+  }
+
+  &::after {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 17px;
+    height: 34px;
+    content: '';
+    background: linear-gradient(to right, rgba($color-white, 0), $color-white);
+  }
+
   #toolbar {
     margin-bottom: 4px;
     overflow-x: auto;
     white-space: nowrap;
+
+    &::before,
+    &::after {
+      display: inline-block;
+      width: 8px;
+      content: '';
+    }
 
     & > div {
       display: inline-block;
