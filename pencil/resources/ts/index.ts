@@ -10,7 +10,6 @@ import PaletteButton from './drawing-window/palette-button';
 import HistoryButton from './drawing-window/history-button';
 import StickCursor from './drawing-window/stick-cursor';
 import PointerListener from './drawing-window/pointer-listener';
-import TextInput from './drawing-window/text-input';
 import ToneCanvas from './drawing-window/tone-canvas';
 import BackgroundDialog from './drawing-window/background-dialog';
 import BackgroundCanvas from './drawing-window/background-canvas';
@@ -40,7 +39,6 @@ if (location.pathname == '/draw') {
     const backgroundButton = document.getElementById('background-button') as HTMLButtonElement;
     const stickCursor = new StickCursor(document.getElementById('stick-cursor') as HTMLDivElement);
     const pointerListener = new PointerListener();
-    const textInput = new TextInput(document.getElementById('text-input') as HTMLInputElement);
     const toneWindowButton = document.getElementById('tone-window-button') as HTMLButtonElement;
     const toneWindowButttonCanvas = new ToneCanvas(toneWindowButton.getElementsByTagName('canvas')[0]);
     const toneWindow = new ModalWindow(document.getElementById('tone-window') as HTMLDivElement);
@@ -83,9 +81,6 @@ if (location.pathname == '/draw') {
 
                 pencilButton.activate();
                 drawingCanvas.brush = pencilButton.getBrush();
-
-                textInput.inactivate();
-                drawingCanvas.mode = 'pencil';
             };
 
             pencilButtons.push(pencilButton);
@@ -144,11 +139,6 @@ if (location.pathname == '/draw') {
     };
     pointerListener.onEnd = (): void => {
         drawingCanvas.finishPath();
-    };
-
-    textInput.onActive = (text): void => {
-        drawingCanvas.text = text;
-        drawingCanvas.mode = 'text';
     };
 
     toneWindowButton.onclick = (): void => {

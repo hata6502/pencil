@@ -21,4 +21,7 @@
 <link rel="canonical" href="{{ $canonical }}" />
 <link rel="icon" href="{{ url('/images/favicon@32px.png') }}" sizes="32x32" />
 <link rel="icon" href="{{ url('/images/favicon@192px.png') }}" sizes="192x192" />
+<link rel="icon" href="{{ url('/images/favicon@512px.png') }}" sizes="512x512" />
+<link rel="apple-touch-icon" href="{{ url('/images/apple-touch-icon.png') }}" />
+<meta name="theme-color" content="#ffffff" />
 {{--<link rel="prev" href="前のページのURL" /> <link rel="next" href="次のページのURL" />--}}

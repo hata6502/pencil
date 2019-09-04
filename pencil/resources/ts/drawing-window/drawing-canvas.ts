@@ -1,4 +1,4 @@
-import VirtualElement from '../virtual-element';
+import VirtualElement from 'virtual-element';
 import * as Settings from '../settings';
 import { setNormarizedDrawingData } from '../canvas-utils';
 
@@ -6,8 +6,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
     public brush: string;
     public color: string = Settings.DRAW_COLOR;
     public onChangeHistory: (index: number, length: number) => void = (): void => {};
-    public text: string = '';
-    public mode: 'pencil' | 'text' = 'pencil';
     public isDisplay: boolean = false;
     public tone: number[][] = Settings.TONES.black;
 
@@ -77,14 +75,10 @@ export default class extends VirtualElement<HTMLCanvasElement> {
             }
 
             if (this.isDrawing) {
-                if (this.mode == 'pencil') {
-                    if (isNaN(this.prevX)) {
-                        this.drawPoint(x, y);
-                    } else {
-                        this.drawLine(this.prevX, this.prevY, x, y);
-                    }
-                } else if (this.mode == 'text') {
-                    this.drawText(x, y, 0.25, false);
+                if (isNaN(this.prevX)) {
+                    this.drawPoint(x, y);
+                } else {
+                    this.drawLine(this.prevX, this.prevY, x, y);
                 }
             }
 
@@ -95,10 +89,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
     public finishPath(): void {
         if (this.isDrawing) {
-            if (this.mode == 'text') {
-                this.drawText(this.prevX, this.prevY, 1, true);
-            }
-
             this.isDrawing = false;
             this.pushHistory();
         }
@@ -185,7 +175,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         const brush = Settings.BRUSHES[this.brush];
 
         this.context.fillStyle = this.color;
-        this.context.globalAlpha = 1;
         const fill =
             this.color != 'transparent'
                 ? (x: number, y: number, w: number, h: number): void => {
@@ -219,32 +208,12 @@ export default class extends VirtualElement<HTMLCanvasElement> {
     }
 
     private drawLine(fromX: number, fromY: number, toX: number, toY: number): void {
-        if (this.mode == 'text') {
-            return;
-        }
-
         const distance = Math.round(Math.sqrt(Math.pow(toX - fromX, 2.0) + Math.pow(toY - fromY, 2.0)));
 
         for (let i = 0; i < distance; i++) {
             const rate = i / distance;
 
             this.drawPoint(fromX + Math.round((toX - fromX) * rate), fromY + Math.round((toY - fromY) * rate));
-        }
-    }
-
-    private drawText(x: number, y: number, alpha: number, isNormalize: boolean): void {
-        this.setImageData(this.last);
-
-        const brush = Settings.BRUSHES[this.brush];
-
-        this.context.fillStyle = this.color;
-        this.context.globalAlpha = alpha;
-        this.context.font = brush.fontsize * Settings.CANVAS_ZOOM + 'px sans-serif';
-        this.context.textBaseline = 'middle';
-        this.context.fillText(this.text, x * Settings.CANVAS_ZOOM, y * Settings.CANVAS_ZOOM);
-
-        if (isNormalize) {
-            this.normalize();
         }
     }
 
@@ -264,10 +233,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.last = image;
         this.backup();
         this.onChangeHistory(this.historyIndex, this.history.length);
-    }
-
-    private normalize(): void {
-        setNormarizedDrawingData(this.context, this.getNormarizedDrawingData(), Settings.CANVAS_ZOOM, false);
     }
 
     private restore(): void {

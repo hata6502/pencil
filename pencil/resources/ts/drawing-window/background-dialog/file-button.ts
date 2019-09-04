@@ -1,4 +1,4 @@
-import VirtualElement, { createElement } from '../../virtual-element';
+import VirtualElement, { createElement } from 'virtual-element';
 import * as Settings from '../../settings';
 
 export interface FileButtonProps {
@@ -6,7 +6,7 @@ export interface FileButtonProps {
 }
 
 export default class extends VirtualElement<HTMLButtonElement> {
-    onClick: () => void = () => { };
+    onClick: () => void = () => {};
 
     constructor(element: HTMLButtonElement | null, props: FileButtonProps) {
         super(element || 'button');

@@ -1,11 +1,12 @@
 <!-- htmllint spec-char-escape="false" -->
 <!-- textlint-disable -->
-@extends('html') @section('meta') @include('meta', [ 'title' => 'お絵かきの投稿', ]) @endsection @section('content')
+@extends('html') @section('meta') @include('meta', [ 'title' => 'お絵かきのツイート', 'description' =>
+'お絵かきをツイートします。']) @endsection @section('content')
 <!-- htmllint spec-char-escape="$previous" -->
 <!-- textlint-enable -->
 
 <div class="article article-draw">
-    <h2>お絵かきの投稿</h2>
+    <h2>お絵かきのツイート</h2>
     <form id="post-form" action="{{ route('post') }}" method="POST">
         {{ csrf_field() }}
     </form>
@@ -69,7 +70,6 @@
                         <div></div>
                     </div>
                 </div>
-                <input id="text-input" placeholder="テキストを入力して埋め込みます。" />
             </div>
             <div id="tone-window" class="modal-window">
                 <div>

@@ -1,4 +1,4 @@
-import VirtualElement, { createElement, appendChildren } from '../../virtual-element';
+import VirtualElement, { createElement, appendChildren } from 'virtual-element';
 
 export interface ButtonProps {
     src: string;
@@ -8,7 +8,7 @@ export interface ButtonProps {
 }
 
 export default class extends VirtualElement<HTMLButtonElement> {
-    onClick: (image: HTMLImageElement) => void = () => { };
+    onClick: (image: HTMLImageElement) => void = () => {};
 
     constructor(element: HTMLButtonElement | null, props: ButtonProps) {
         super(element || 'button');

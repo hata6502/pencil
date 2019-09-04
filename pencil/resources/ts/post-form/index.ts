@@ -1,4 +1,4 @@
-import VirtualElement, { createElement, createVirtualElement, appendChildren } from '../virtual-element';
+import VirtualElement, { createElement, createVirtualElement, appendChildren } from 'virtual-element';
 import PreviewCanvas, { PreviewCanvasProps } from './preview-canvas';
 
 export default class extends VirtualElement<HTMLFormElement> {

@@ -1,4 +1,4 @@
-import { createElement, createVirtualElement, appendChildren } from '../../virtual-element';
+import { createElement, createVirtualElement, appendChildren } from 'virtual-element';
 import ModalDialog from '../modal-dialog';
 import Button, { ButtonProps } from './button';
 import FileButton, { FileButtonProps } from './file-button';
