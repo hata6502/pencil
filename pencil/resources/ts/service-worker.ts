@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hood-pencil-cache-v0.2.3';
+const CACHE_NAME = 'hood-pencil-cache-v0.2.4';
 const URLS_TO_CACHE = [
     '/',
 
