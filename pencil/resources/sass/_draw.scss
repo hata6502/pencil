@@ -47,18 +47,17 @@
 #drawing-dialog {
   position: relative;
 
-  &::before {
+  .left-shadow {
     position: absolute;
     top: 8px;
     left: 8px;
-    z-index: 1;
     width: 17px;
     height: 34px;
     content: '';
     background: linear-gradient(to right, $color-white, rgba($color-white, 0));
   }
 
-  &::after {
+  .right-shadow {
     position: absolute;
     top: 8px;
     right: 8px;

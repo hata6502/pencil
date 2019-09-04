@@ -59,6 +59,8 @@
                         <button class="palette-button" data-color="transparent"></button>
                     </div>
                 </div>
+                <div class="left-shadow"></div>
+                <div class="right-shadow"></div>
                 <div class="canvas-container">
                     <canvas id="background-canvas"></canvas>
                     <canvas id="drawing-canvas"></canvas>
