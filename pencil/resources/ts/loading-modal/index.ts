@@ -1,11 +1,34 @@
-import VirtualElement, { createElement, createVirtualElement, appendChildren } from 'virtual-element';
+import { createElement, appendChildren } from 'virtual-element';
 import modalWindow from '../modal-window';
+import * as Settings from '../settings';
 
 class LoadingModal extends modalWindow {
     public constructor(element: HTMLDivElement) {
         super(element);
 
-        appendChildren(this.element, createElement<HTMLSpanElement>('span', null));
+        this.isHideOnClick = false;
+
+        appendChildren(
+            this.element,
+            createElement<HTMLDivElement>(
+                'div',
+                null,
+                createElement<HTMLDivElement>(
+                    'div',
+                    {
+                        style: `
+                        display: inline-block;
+                        background-color: white;
+                    `
+                    },
+                    createElement<HTMLImageElement>('img', {
+                        src: Settings.SPINNER_URL,
+                        alt: '読み込み中',
+                        style: 'vertical-align: text-bottom;'
+                    })
+                )
+            )
+        );
     }
 }
 

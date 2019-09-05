@@ -2,6 +2,7 @@ import VirtualElement, { createElement, createVirtualElement, appendChildren } f
 import Button, { ButtonProps } from './button';
 import FileButton, { FileButtonProps } from './file-button';
 import File, { FileProps } from './file';
+import LoadingModal from '../../loading-modal';
 import * as Settings from '../../settings';
 
 export default class extends VirtualElement<HTMLDivElement> {
@@ -46,6 +47,8 @@ export default class extends VirtualElement<HTMLDivElement> {
                 },
                 (this.backgroundFile = createVirtualElement<File, FileProps>(File, {
                     onSelect: (): void => {
+                        LoadingModal.display();
+
                         if (
                             !('FileReader' in window) ||
                             navigator.userAgent.toLowerCase().indexOf('nintendo wiiu') != -1
@@ -68,6 +71,7 @@ export default class extends VirtualElement<HTMLDivElement> {
 
     private dispatchLoad = (image: HTMLImageElement): void => {
         this.onLoad(image);
+        LoadingModal.hide();
     };
 
     private proceedResponse = (): void => {
@@ -75,6 +79,7 @@ export default class extends VirtualElement<HTMLDivElement> {
             this.backgroundFileIframe.contentDocument === null ||
             this.backgroundFileIframe.contentDocument.body.textContent === null
         ) {
+            LoadingModal.hide();
             throw "Couldn't get response. ";
         }
 
@@ -83,9 +88,11 @@ export default class extends VirtualElement<HTMLDivElement> {
         );
         if (response.errors !== undefined) {
             alert(response.errors.join('\n'));
+            LoadingModal.hide();
             return;
         }
         if (response.image === undefined) {
+            LoadingModal.hide();
             throw "Couldn't get image. ";
         }
 
@@ -93,6 +100,7 @@ export default class extends VirtualElement<HTMLDivElement> {
         image.src = response.image;
         image.onload = (): void => {
             this.onLoad(image);
+            LoadingModal.hide();
         };
     };
 }

@@ -27,8 +27,6 @@ if ('serviceWorker' in navigator) {
 }
 
 if (location.pathname == '/draw') {
-    LoadingModal.display();
-
     const postForm = new PostForm(document.getElementById('post-form') as HTMLFormElement);
     const drawingWindow = new ModalWindow(document.getElementById('drawing-window') as HTMLDivElement);
     const toolbar = document.getElementById('toolbar') as HTMLDivElement;
@@ -64,9 +62,14 @@ if (location.pathname == '/draw') {
         stickCursor.enable = drawingCanvas.isDisplay = true;
     };
     drawingWindow.onHide = (): void => {
-        stickCursor.enable = drawingCanvas.isDisplay = false;
-        drawingCanvas.backup(true);
-        postForm.setPreview(drawingCanvas.getNormarizedDrawingData(), backgroundImage);
+        LoadingModal.display();
+
+        setTimeout((): void => {
+            stickCursor.enable = drawingCanvas.isDisplay = false;
+            drawingCanvas.backup(true);
+            postForm.setPreview(drawingCanvas.getNormarizedDrawingData(), backgroundImage);
+            LoadingModal.hide();
+        });
     };
 
     toolbar.style.width = Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM + 2 + 'px';
