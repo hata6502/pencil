@@ -1,11 +1,10 @@
-import { createElement, createVirtualElement, appendChildren } from 'virtual-element';
-import ModalDialog from '../modal-dialog';
+import VirtualElement, { createElement, createVirtualElement, appendChildren } from 'virtual-element';
 import Button, { ButtonProps } from './button';
 import FileButton, { FileButtonProps } from './file-button';
 import File, { FileProps } from './file';
 import * as Settings from '../../settings';
 
-export default class extends ModalDialog {
+export default class extends VirtualElement<HTMLDivElement> {
     public onLoad: (image: HTMLImageElement) => void = (): void => {};
     private backgroundFile: File;
     private backgroundFileForm: HTMLFormElement;
@@ -13,6 +12,10 @@ export default class extends ModalDialog {
 
     public constructor(element: HTMLDivElement) {
         super(element);
+
+        this.element.onclick = (e): void => {
+            e.stopPropagation();
+        };
 
         appendChildren(
             this.element,

@@ -9,6 +9,8 @@ export default class extends VirtualElement<HTMLDivElement> {
     public constructor(element: HTMLDivElement) {
         super(element);
 
+        this.element.classList.add('modal-window');
+
         this.element.onclick = (e): void => {
             this.hide();
             e.stopPropagation();
