@@ -2,8 +2,7 @@ import 'core-js';
 import * as Sentry from '@sentry/browser';
 
 import PostForm from './post-form';
-import ModalWindow from './drawing-window/modal-window';
-import ModalDialog from './drawing-window/modal-dialog';
+import ModalWindow from './modal-window';
 import DrawingCanvas from './drawing-window/drawing-canvas';
 import PencilButton from './drawing-window/pencil-button';
 import PaletteButton from './drawing-window/palette-button';
@@ -13,6 +12,7 @@ import PointerListener from './drawing-window/pointer-listener';
 import ToneCanvas from './drawing-window/tone-canvas';
 import BackgroundDialog from './drawing-window/background-dialog';
 import BackgroundCanvas from './drawing-window/background-canvas';
+import LoadingModal from './loading-modal';
 import * as Settings from './settings';
 
 // eslint-disable-next-line no-undef
@@ -47,8 +47,12 @@ if (location.pathname == '/draw') {
     const backgroundCanvas = new BackgroundCanvas(document.getElementById('background-canvas') as HTMLCanvasElement);
     let backgroundImage: HTMLImageElement = new Image();
 
-    new ModalDialog(document.getElementById('tone-dialog') as HTMLDivElement);
-    new ModalDialog(document.getElementById('drawing-dialog') as HTMLDivElement);
+    (document.getElementById('tone-dialog') as HTMLDivElement).onclick = (e): void => {
+        e.stopPropagation();
+    };
+    (document.getElementById('drawing-dialog') as HTMLDivElement).onclick = (e): void => {
+        e.stopPropagation();
+    };
 
     postForm.onPreviewClick = (): void => {
         drawingWindow.display();
@@ -58,9 +62,14 @@ if (location.pathname == '/draw') {
         stickCursor.enable = drawingCanvas.isDisplay = true;
     };
     drawingWindow.onHide = (): void => {
-        stickCursor.enable = drawingCanvas.isDisplay = false;
-        drawingCanvas.backup(true);
-        postForm.setPreview(drawingCanvas.getNormarizedDrawingData(), backgroundImage);
+        LoadingModal.display();
+
+        setTimeout((): void => {
+            stickCursor.enable = drawingCanvas.isDisplay = false;
+            drawingCanvas.backup(true);
+            postForm.setPreview(drawingCanvas.getNormarizedDrawingData(), backgroundImage);
+            LoadingModal.hide();
+        }, 16);
     };
 
     toolbar.style.width = Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM + 2 + 'px';

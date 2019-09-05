@@ -11,7 +11,7 @@
         {{ csrf_field() }}
     </form>
 
-    <div id="drawing-window" class="modal-window">
+    <div id="drawing-window">
         <div>
             <div id="drawing-dialog" class="modal-dialog">
                 <div id="toolbar">
@@ -59,6 +59,8 @@
                         <button class="palette-button" data-color="transparent"></button>
                     </div>
                 </div>
+                <div class="left-shadow"></div>
+                <div class="right-shadow"></div>
                 <div class="canvas-container">
                     <canvas id="background-canvas"></canvas>
                     <canvas id="drawing-canvas"></canvas>
@@ -71,7 +73,7 @@
                     </div>
                 </div>
             </div>
-            <div id="tone-window" class="modal-window">
+            <div id="tone-window">
                 <div>
                     <div id="tone-dialog" class="modal-dialog">
                         <div>
@@ -113,7 +115,7 @@
                     </div>
                 </div>
             </div>
-            <div id="background-window" class="modal-window">
+            <div id="background-window">
                 <div>
                     <div id="background-dialog" class="modal-dialog"></div>
                 </div>

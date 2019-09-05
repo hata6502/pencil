@@ -1,11 +1,11 @@
-import { createElement, createVirtualElement, appendChildren } from 'virtual-element';
-import ModalDialog from '../modal-dialog';
+import VirtualElement, { createElement, createVirtualElement, appendChildren } from 'virtual-element';
 import Button, { ButtonProps } from './button';
 import FileButton, { FileButtonProps } from './file-button';
 import File, { FileProps } from './file';
+import LoadingModal from '../../loading-modal';
 import * as Settings from '../../settings';
 
-export default class extends ModalDialog {
+export default class extends VirtualElement<HTMLDivElement> {
     public onLoad: (image: HTMLImageElement) => void = (): void => {};
     private backgroundFile: File;
     private backgroundFileForm: HTMLFormElement;
@@ -13,6 +13,10 @@ export default class extends ModalDialog {
 
     public constructor(element: HTMLDivElement) {
         super(element);
+
+        this.element.onclick = (e): void => {
+            e.stopPropagation();
+        };
 
         appendChildren(
             this.element,
@@ -43,6 +47,8 @@ export default class extends ModalDialog {
                 },
                 (this.backgroundFile = createVirtualElement<File, FileProps>(File, {
                     onSelect: (): void => {
+                        LoadingModal.display();
+
                         if (
                             !('FileReader' in window) ||
                             navigator.userAgent.toLowerCase().indexOf('nintendo wiiu') != -1
@@ -65,6 +71,7 @@ export default class extends ModalDialog {
 
     private dispatchLoad = (image: HTMLImageElement): void => {
         this.onLoad(image);
+        LoadingModal.hide();
     };
 
     private proceedResponse = (): void => {
@@ -72,6 +79,7 @@ export default class extends ModalDialog {
             this.backgroundFileIframe.contentDocument === null ||
             this.backgroundFileIframe.contentDocument.body.textContent === null
         ) {
+            LoadingModal.hide();
             throw "Couldn't get response. ";
         }
 
@@ -80,9 +88,11 @@ export default class extends ModalDialog {
         );
         if (response.errors !== undefined) {
             alert(response.errors.join('\n'));
+            LoadingModal.hide();
             return;
         }
         if (response.image === undefined) {
+            LoadingModal.hide();
             throw "Couldn't get image. ";
         }
 
@@ -90,6 +100,7 @@ export default class extends ModalDialog {
         image.src = response.image;
         image.onload = (): void => {
             this.onLoad(image);
+            LoadingModal.hide();
         };
     };
 }
