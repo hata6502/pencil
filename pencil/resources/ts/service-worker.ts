@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hood-pencil-cache-v0.2.5';
+const CACHE_NAME = 'hood-pencil-cache-v0.3.0';
 const URLS_TO_CACHE = [
     '/',
 
@@ -17,6 +17,7 @@ const URLS_TO_CACHE = [
     '/images/clear.png',
     '/images/undo.png',
     '/images/redo.png',
+    '/images/fill.png',
     '/images/transparent.png',
     '/images/pencil-light.png',
     '/images/pencil-medium.png',
