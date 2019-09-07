@@ -1,4 +1,4 @@
-import VirtualElement from 'virtual-element';
+import VirtualElement from 'velement';
 import { setBackground, setNormarizedDrawingData } from '../canvas-utils';
 import * as Settings from '../settings';
 

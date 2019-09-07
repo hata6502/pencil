@@ -1,4 +1,4 @@
-import VirtualElement, { createElement, appendChildren } from 'virtual-element';
+import VirtualElement, { createElement, appendChildren } from 'velement';
 
 export interface ButtonProps {
     src: string;

@@ -45,18 +45,23 @@
                         </button>
                     </div>
                     <div>
+                        <button id="fill-button">
+                            <img src="{{ url('images/fill.png') }}" alt="塗りつぶし" />
+                        </button>
+                    </div>
+                    <div>
                         <button id="tone-window-button"><canvas></canvas></button>
                     </div>
                     <div>
                         <button class="palette-button active" data-color="#000000"></button>
-                        <button class="palette-button" data-color="#ffffff"></button>
+                        <button class="palette-button" data-color="transparent"></button>
                         <button class="palette-button" data-color="#ff0000"></button>
                         <button class="palette-button" data-color="#00ffff"></button>
                         <button class="palette-button" data-color="#00ff00"></button>
                         <button class="palette-button" data-color="#ff00ff"></button>
                         <button class="palette-button" data-color="#0000ff"></button>
                         <button class="palette-button" data-color="#ffff00"></button>
-                        <button class="palette-button" data-color="transparent"></button>
+                        <button class="palette-button" data-color="#ffffff"></button>
                     </div>
                 </div>
                 <div class="left-shadow"></div>
@@ -71,6 +76,7 @@
                         <div></div>
                         <div></div>
                     </div>
+                    <canvas id="fill-canvas"></canvas>
                 </div>
             </div>
             <div id="tone-window">

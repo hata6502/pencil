@@ -25,7 +25,7 @@
         "sass-loader": "^7.1.0",
         "ts-loader": "^6.0.4",
         "typescript": "^3.5.2",
-        "virtual-element": "github:blue-hood/virtual-element",
+        "velement": "github:blue-hood/velement",
         "vue": "^2.5.17"
     }
 }

@@ -1,4 +1,4 @@
-import VirtualElement from 'virtual-element';
+import VirtualElement from 'velement';
 import * as Settings from '../settings';
 import { setBackground } from '../canvas-utils';
 
