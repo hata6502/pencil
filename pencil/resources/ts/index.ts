@@ -12,6 +12,7 @@ import PointerListener from './drawing-window/pointer-listener';
 import ToneCanvas from './drawing-window/tone-canvas';
 import BackgroundDialog from './drawing-window/background-dialog';
 import BackgroundCanvas from './drawing-window/background-canvas';
+import FillCanvas from './drawing-window/fill-canvas';
 import LoadingModal from './loading-modal';
 import * as Settings from './settings';
 
@@ -29,14 +30,17 @@ if ('serviceWorker' in navigator) {
 if (location.pathname == '/draw') {
     const postForm = new PostForm(document.getElementById('post-form') as HTMLFormElement);
     const drawingWindow = new ModalWindow(document.getElementById('drawing-window') as HTMLDivElement);
-    const toolbar = document.getElementById('toolbar') as HTMLDivElement;
+    const backgroundCanvas = new BackgroundCanvas(document.getElementById('background-canvas') as HTMLCanvasElement);
+    const fillCanvas = new FillCanvas(document.getElementById('fill-canvas') as HTMLCanvasElement);
     const drawingCanvas = new DrawingCanvas(document.getElementById('drawing-canvas') as HTMLCanvasElement);
+    const toolbar = document.getElementById('toolbar') as HTMLDivElement;
     const pencilButtons: PencilButton[] = [];
     let paletteButtons: PaletteButton[] = [];
     const undoButton = new HistoryButton(document.getElementById('undo-button') as HTMLButtonElement);
     const redoButton = new HistoryButton(document.getElementById('redo-button') as HTMLButtonElement);
     const clearButton = document.getElementById('clear-button') as HTMLButtonElement;
     const backgroundButton = document.getElementById('background-button') as HTMLButtonElement;
+    const fillButton = document.getElementById('fill-button') as HTMLButtonElement;
     const stickCursor = new StickCursor(document.getElementById('stick-cursor') as HTMLDivElement);
     const pointerListener = new PointerListener();
     const toneWindowButton = document.getElementById('tone-window-button') as HTMLButtonElement;
@@ -44,7 +48,6 @@ if (location.pathname == '/draw') {
     const toneWindow = new ModalWindow(document.getElementById('tone-window') as HTMLDivElement);
     const backgroundWindow = new ModalWindow(document.getElementById('background-window') as HTMLDivElement);
     const backgroundDialog = new BackgroundDialog(document.getElementById('background-dialog') as HTMLDivElement);
-    const backgroundCanvas = new BackgroundCanvas(document.getElementById('background-canvas') as HTMLCanvasElement);
     let backgroundImage: HTMLImageElement = new Image();
 
     (document.getElementById('tone-dialog') as HTMLDivElement).onclick = (e): void => {
@@ -78,6 +81,9 @@ if (location.pathname == '/draw') {
         undoButton.setDisabled(index <= 0);
         redoButton.setDisabled(index >= length - 1);
     };
+    drawingCanvas.onChangeMask = (mask): void => {
+        fillCanvas.setMask(mask);
+    };
 
     Array.prototype.forEach.call(
         document.getElementsByClassName('pencil-button'),
@@ -95,6 +101,11 @@ if (location.pathname == '/draw') {
             pencilButtons.push(pencilButton);
         }
     );
+
+    fillButton.onclick = (): void => {
+        fillButton.classList.toggle('active');
+        drawingCanvas.mode = fillButton.classList.contains('active') ? 'fill' : 'pencil';
+    };
 
     Array.prototype.forEach.call(
         document.getElementsByClassName('palette-button'),
