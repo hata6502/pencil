@@ -33,7 +33,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.element.setAttribute('height', (Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM).toString());
 
         this.restore();
-        this.pushHistory();
 
         setInterval((): void => {
             this.isBackupScheduled = true;
@@ -167,10 +166,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         );
     }
 
-    private setImageData(image: ImageData): void {
-        this.context.putImageData(image, 0, 0);
-    }
-
     private drawPoint(originX: number, originY: number): void {
         const brush = Settings.BRUSHES[this.brush];
 
@@ -242,6 +237,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
             if (request.status == 200) {
                 const response: { drawing: string } = JSON.parse(request.response);
                 setNormarizedDrawingData(this.context, response.drawing, Settings.CANVAS_ZOOM, false);
+                this.pushHistory();
             }
         };
         request.send(null);
