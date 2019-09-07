@@ -1,4 +1,4 @@
-import { createElement, appendChildren } from 'virtual-element';
+import { createElement, appendChildren } from 'velement';
 import modalWindow from '../modal-window';
 import * as Settings from '../settings';
 

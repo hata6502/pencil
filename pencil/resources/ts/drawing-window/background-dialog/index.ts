@@ -1,4 +1,4 @@
-import VirtualElement, { createElement, createVirtualElement, appendChildren } from 'virtual-element';
+import VirtualElement, { createElement, createVirtualElement, appendChildren } from 'velement';
 import Button, { ButtonProps } from './button';
 import FileButton, { FileButtonProps } from './file-button';
 import File, { FileProps } from './file';

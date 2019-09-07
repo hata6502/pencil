@@ -1,4 +1,4 @@
-import VirtualElement from 'virtual-element';
+import VirtualElement from 'velement';
 
 export interface FileProps {
     onSelect?: () => void;

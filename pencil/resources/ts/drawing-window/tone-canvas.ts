@@ -1,11 +1,11 @@
-import VirtualElement from 'virtual-element';
+import VirtualElement from 'velement';
 import * as Settings from '../settings';
 
 export default class extends VirtualElement<HTMLCanvasElement> {
     private context: CanvasRenderingContext2D;
     private tone: number[][] = Settings.TONES.black;
 
-    constructor(element: HTMLCanvasElement) {
+    public constructor(element: HTMLCanvasElement) {
         super(element);
 
         const context = this.element.getContext('2d');
@@ -17,7 +17,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.draw();
     }
 
-    setTone(tone: number[][]): void {
+    public setTone(tone: number[][]): void {
         this.tone = tone;
         this.draw();
     }
@@ -26,8 +26,8 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.element.setAttribute('width', (this.tone.length * 4).toString());
         this.element.setAttribute('height', (this.tone.length * 4).toString());
 
-        this.tone.forEach((column, y) => {
-            column.forEach((pattern, x) => {
+        this.tone.forEach((column, y): void => {
+            column.forEach((pattern, x): void => {
                 this.context.fillStyle = pattern ? 'black' : 'white';
                 this.context.fillRect(x * 4, y * 4, 4, 4);
             });

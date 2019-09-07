@@ -1,4 +1,4 @@
-import VirtualElement from 'virtual-element';
+import VirtualElement from 'velement';
 import * as Settings from '../settings';
 import { setNormarizedDrawingData } from '../canvas-utils';
 
@@ -15,8 +15,8 @@ export default class extends VirtualElement<HTMLCanvasElement> {
     private prevX: number = NaN;
     private prevY: number = NaN;
     private isDrawing: boolean = false;
-    private last!: ImageData;
     private isBackupScheduled: boolean = false;
+    private innerMask: boolean[][] = new Array<boolean[]>(Settings.CANVAS_HEIGHT);
 
     public constructor(element: HTMLCanvasElement) {
         super(element);
@@ -75,6 +75,8 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
             if (this.isDrawing) {
                 if (isNaN(this.prevX)) {
+                    this.getInner(x, y);
+
                     this.drawPoint(x, y);
                 } else {
                     this.drawLine(this.prevX, this.prevY, x, y);
@@ -106,7 +108,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         }
 
         this.context.putImageData(image, 0, 0);
-        this.last = image;
         this.backup();
         this.onChangeHistory(this.historyIndex, this.history.length);
     }
@@ -122,7 +123,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         }
 
         this.context.putImageData(image, 0, 0);
-        this.last = image;
         this.backup();
         this.onChangeHistory(this.historyIndex, this.history.length);
     }
@@ -212,6 +212,54 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         }
     }
 
+    private getInner(originX: number, originY: number): void {
+        for (let y = 0; y < Settings.CANVAS_HEIGHT; y++) {
+            this.innerMask[y] = new Array<boolean>(Settings.CANVAS_WIDTH).fill(false);
+        }
+
+        const originImageData = this.context.getImageData(
+            originX * Settings.CANVAS_ZOOM,
+            originY * Settings.CANVAS_ZOOM,
+            1,
+            1
+        );
+
+        const queue = [{ x: originX, y: originY }];
+        let point;
+        while ((point = queue.shift())) {
+            const { x, y } = point;
+            if (x < 0 || x >= Settings.CANVAS_WIDTH || y < 0 || y >= Settings.CANVAS_HEIGHT) {
+                continue;
+            }
+            if (this.innerMask[y][x]) {
+                continue;
+            }
+
+            const imageData = this.context.getImageData(x * Settings.CANVAS_ZOOM, y * Settings.CANVAS_ZOOM, 1, 1);
+            if (
+                imageData.data[0] != originImageData.data[0] ||
+                imageData.data[1] != originImageData.data[1] ||
+                imageData.data[2] != originImageData.data[2] ||
+                imageData.data[3] != originImageData.data[3]
+            ) {
+                continue;
+            }
+
+            this.innerMask[y][x] = true;
+            this.context.fillStyle = this.color;
+            this.context.fillRect(
+                x * Settings.CANVAS_ZOOM,
+                y * Settings.CANVAS_ZOOM,
+                Settings.CANVAS_ZOOM,
+                Settings.CANVAS_ZOOM
+            );
+            queue.push({ x: x, y: y - 1 });
+            queue.push({ x: x + 1, y: y });
+            queue.push({ x: x, y: y + 1 });
+            queue.push({ x: x - 1, y: y });
+        }
+    }
+
     private pushHistory(): void {
         while (this.history.length - 1 > this.historyIndex) {
             this.history.pop();
@@ -225,7 +273,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         }
 
         this.historyIndex = this.history.length - 1;
-        this.last = image;
         this.backup();
         this.onChangeHistory(this.historyIndex, this.history.length);
     }
