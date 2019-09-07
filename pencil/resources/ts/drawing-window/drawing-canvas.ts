@@ -1,13 +1,17 @@
-import VirtualElement from 'virtual-element';
+import VirtualElement from 'velement';
 import * as Settings from '../settings';
 import { setNormarizedDrawingData } from '../canvas-utils';
+
+type Mode = 'pencil' | 'fill';
 
 export default class extends VirtualElement<HTMLCanvasElement> {
     public brush: string;
     public color: string = Settings.DRAW_COLOR;
-    public onChangeHistory: (index: number, length: number) => void = (): void => {};
     public isDisplay: boolean = false;
     public tone: number[][] = Settings.TONES.black;
+    public mode: Mode = 'pencil';
+    public onChangeHistory: (index: number, length: number) => void = (): void => {};
+    public onChangeMask: (mask: boolean[][]) => void = (): void => {};
 
     private context: CanvasRenderingContext2D;
     private history: ImageData[] = [];
@@ -15,8 +19,8 @@ export default class extends VirtualElement<HTMLCanvasElement> {
     private prevX: number = NaN;
     private prevY: number = NaN;
     private isDrawing: boolean = false;
-    private last!: ImageData;
     private isBackupScheduled: boolean = false;
+    private mask: boolean[][] = new Array<boolean[]>(Settings.CANVAS_HEIGHT);
 
     public constructor(element: HTMLCanvasElement) {
         super(element);
@@ -33,7 +37,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         this.element.setAttribute('height', (Settings.CANVAS_HEIGHT * Settings.CANVAS_ZOOM).toString());
 
         this.restore();
-        this.pushHistory();
+        this.clearMask();
 
         setInterval((): void => {
             this.isBackupScheduled = true;
@@ -76,6 +80,10 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
             if (this.isDrawing) {
                 if (isNaN(this.prevX)) {
+                    if (this.mode == 'fill') {
+                        this.fillMask(x, y);
+                    }
+
                     this.drawPoint(x, y);
                 } else {
                     this.drawLine(this.prevX, this.prevY, x, y);
@@ -89,6 +97,10 @@ export default class extends VirtualElement<HTMLCanvasElement> {
 
     public finishPath(): void {
         if (this.isDrawing) {
+            if (this.mode == 'fill') {
+                this.clearMask();
+            }
+
             this.isDrawing = false;
             this.pushHistory();
         }
@@ -107,7 +119,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         }
 
         this.context.putImageData(image, 0, 0);
-        this.last = image;
         this.backup();
         this.onChangeHistory(this.historyIndex, this.history.length);
     }
@@ -123,7 +134,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         }
 
         this.context.putImageData(image, 0, 0);
-        this.last = image;
         this.backup();
         this.onChangeHistory(this.historyIndex, this.history.length);
     }
@@ -167,10 +177,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         );
     }
 
-    private setImageData(image: ImageData): void {
-        this.context.putImageData(image, 0, 0);
-    }
-
     private drawPoint(originX: number, originY: number): void {
         const brush = Settings.BRUSHES[this.brush];
 
@@ -187,21 +193,25 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         let y = originY - Math.floor(brush.pattern.length / 2);
 
         brush.pattern.forEach((column): void => {
-            let x = originX - Math.floor(column.length / 2);
-            const toneColumn = this.tone[Math.abs(y) % this.tone.length];
+            if (y >= 0 && y < Settings.CANVAS_HEIGHT) {
+                let x = originX - Math.floor(column.length / 2);
+                const toneColumn = this.tone[y % this.tone.length];
 
-            column.forEach((pattern): void => {
-                if (pattern && toneColumn[Math.abs(x) % toneColumn.length]) {
-                    fill(
-                        x * Settings.CANVAS_ZOOM,
-                        y * Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM,
-                        Settings.CANVAS_ZOOM
-                    );
-                }
+                column.forEach((pattern): void => {
+                    if (x >= 0 && x < Settings.CANVAS_WIDTH) {
+                        if (pattern && toneColumn[x % toneColumn.length] && this.mask[y][x]) {
+                            fill(
+                                x * Settings.CANVAS_ZOOM,
+                                y * Settings.CANVAS_ZOOM,
+                                Settings.CANVAS_ZOOM,
+                                Settings.CANVAS_ZOOM
+                            );
+                        }
+                    }
 
-                x++;
-            });
+                    x++;
+                });
+            }
 
             y++;
         });
@@ -217,6 +227,57 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         }
     }
 
+    private clearMask(): void {
+        for (let y = 0; y < Settings.CANVAS_HEIGHT; y++) {
+            this.mask[y] = new Array<boolean>(Settings.CANVAS_WIDTH).fill(true);
+        }
+
+        this.onChangeMask(this.mask);
+    }
+
+    private fillMask(originX: number, originY: number): void {
+        for (let y = 0; y < Settings.CANVAS_HEIGHT; y++) {
+            this.mask[y] = new Array<boolean>(Settings.CANVAS_WIDTH).fill(false);
+        }
+
+        const originImageData = this.context.getImageData(
+            originX * Settings.CANVAS_ZOOM,
+            originY * Settings.CANVAS_ZOOM,
+            1,
+            1
+        );
+
+        const queue = [{ x: originX, y: originY }];
+        let point;
+        while ((point = queue.shift())) {
+            const { x, y } = point;
+            if (x < 0 || x >= Settings.CANVAS_WIDTH || y < 0 || y >= Settings.CANVAS_HEIGHT) {
+                continue;
+            }
+            if (this.mask[y][x]) {
+                continue;
+            }
+
+            const imageData = this.context.getImageData(x * Settings.CANVAS_ZOOM, y * Settings.CANVAS_ZOOM, 1, 1);
+            if (
+                imageData.data[0] != originImageData.data[0] ||
+                imageData.data[1] != originImageData.data[1] ||
+                imageData.data[2] != originImageData.data[2] ||
+                imageData.data[3] != originImageData.data[3]
+            ) {
+                continue;
+            }
+
+            this.mask[y][x] = true;
+            queue.push({ x: x, y: y - 1 });
+            queue.push({ x: x + 1, y: y });
+            queue.push({ x: x, y: y + 1 });
+            queue.push({ x: x - 1, y: y });
+        }
+
+        this.onChangeMask(this.mask);
+    }
+
     private pushHistory(): void {
         while (this.history.length - 1 > this.historyIndex) {
             this.history.pop();
@@ -230,7 +291,6 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         }
 
         this.historyIndex = this.history.length - 1;
-        this.last = image;
         this.backup();
         this.onChangeHistory(this.historyIndex, this.history.length);
     }
@@ -242,6 +302,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
             if (request.status == 200) {
                 const response: { drawing: string } = JSON.parse(request.response);
                 setNormarizedDrawingData(this.context, response.drawing, Settings.CANVAS_ZOOM, false);
+                this.pushHistory();
             }
         };
         request.send(null);

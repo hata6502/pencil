@@ -1,4 +1,4 @@
-import VirtualElement, { createElement } from 'virtual-element';
+import VirtualElement, { createElement } from 'velement';
 import * as Settings from '../../settings';
 
 export interface FileButtonProps {
