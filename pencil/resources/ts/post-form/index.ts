@@ -1,5 +1,6 @@
 import VirtualElement, { createElement, createVirtualElement, appendChildren } from 'velement';
 import PreviewCanvas, { PreviewCanvasProps } from './preview-canvas';
+import Textarea from './textarea';
 
 export default class extends VirtualElement<HTMLFormElement> {
     public onPreviewClick: () => void = (): void => {};
@@ -21,6 +22,7 @@ export default class extends VirtualElement<HTMLFormElement> {
                 name: 'preview',
                 type: 'hidden'
             })),
+            createVirtualElement(Textarea, null),
             (this.submitButton = createElement<HTMLInputElement>('input', {
                 type: 'submit',
                 value: 'ツイート',
