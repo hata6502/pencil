@@ -1,11 +1,14 @@
 import VirtualElement, { createElement, createVirtualElement, appendChildren } from 'velement';
 import PreviewCanvas, { PreviewCanvasProps } from './preview-canvas';
+import Textarea, { TextareaProps } from './textarea';
 
 export default class extends VirtualElement<HTMLFormElement> {
     public onPreviewClick: () => void = (): void => {};
     private previewCanvas: PreviewCanvas;
     private preview: HTMLInputElement;
+    private text: HTMLInputElement;
     private submitButton: HTMLInputElement;
+    private lengthSpan: HTMLSpanElement;
 
     public constructor(element: HTMLFormElement | null) {
         super(element || 'form');
@@ -17,11 +20,31 @@ export default class extends VirtualElement<HTMLFormElement> {
                     this.onPreviewClick();
                 }
             })),
-            (this.preview = createElement<HTMLInputElement>('input', {
+            (this.preview = createElement('input', {
                 name: 'preview',
                 type: 'hidden'
             })),
-            (this.submitButton = createElement<HTMLInputElement>('input', {
+            createVirtualElement<Textarea, TextareaProps>(
+                Textarea,
+                {
+                    onInput: this.changeStatus
+                },
+                '#HoodPencil'
+            ),
+            (this.lengthSpan = createElement(
+                'span',
+                {
+                    style: `
+                        display: block;
+                    `
+                },
+                '0 / 280'
+            )),
+            (this.text = createElement('input', {
+                name: 'text',
+                type: 'hidden'
+            })),
+            (this.submitButton = createElement('input', {
                 type: 'submit',
                 value: 'ツイート',
                 onclick: this.submit
@@ -38,5 +61,11 @@ export default class extends VirtualElement<HTMLFormElement> {
         this.submitButton.value = '送信中';
         this.submitButton.disabled = true;
         this.element.submit();
+    };
+
+    private changeStatus = (valid: boolean, weightedLength: number, text: string): void => {
+        this.submitButton.disabled = !valid;
+        this.lengthSpan.innerText = `${weightedLength} / 280`;
+        this.text.value = text;
     };
 }
