@@ -1,5 +1,8 @@
 export const SENTRY_DSN = 'https://19e4397c2e5c47279823b887f7c74444@sentry.io/1509084';
 
+export const COLOR_PRIMARY = 'mediumslateblue';
+export const COLOR_DANGER = 'tomato';
+
 export const CANVAS_WIDTH = 320;
 export const CANVAS_HEIGHT = 180;
 export const CANVAS_ZOOM = 2;
