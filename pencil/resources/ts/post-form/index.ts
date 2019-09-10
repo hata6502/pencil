@@ -6,6 +6,7 @@ export default class extends VirtualElement<HTMLFormElement> {
     public onPreviewClick: () => void = (): void => {};
     private previewCanvas: PreviewCanvas;
     private preview: HTMLInputElement;
+    private text: HTMLInputElement;
     private submitButton: HTMLInputElement;
     private lengthSpan: HTMLSpanElement;
 
@@ -23,18 +24,26 @@ export default class extends VirtualElement<HTMLFormElement> {
                 name: 'preview',
                 type: 'hidden'
             })),
-            createVirtualElement<Textarea, TextareaProps>(Textarea, {
-                onInput: this.changeStatus
-            }),
+            createVirtualElement<Textarea, TextareaProps>(
+                Textarea,
+                {
+                    onInput: this.changeStatus
+                },
+                '#HoodPencil'
+            ),
             (this.lengthSpan = createElement(
                 'span',
                 {
                     style: `
-                    display: block;
-                `
+                        display: block;
+                    `
                 },
                 '0 / 280'
             )),
+            (this.text = createElement('input', {
+                name: 'text',
+                type: 'hidden'
+            })),
             (this.submitButton = createElement('input', {
                 type: 'submit',
                 value: 'ツイート',
@@ -54,9 +63,9 @@ export default class extends VirtualElement<HTMLFormElement> {
         this.element.submit();
     };
 
-    private changeStatus = (valid: boolean, weightedLength: number): void => {
+    private changeStatus = (valid: boolean, weightedLength: number, text: string): void => {
         this.submitButton.disabled = !valid;
-
         this.lengthSpan.innerText = `${weightedLength} / 280`;
+        this.text.value = text;
     };
 }
