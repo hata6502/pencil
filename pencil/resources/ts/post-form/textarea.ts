@@ -38,6 +38,8 @@ export default class Textarea extends VirtualElement<HTMLDivElement> {
         };
 
         window.addEventListener('load', (): void => {
+            const parsedTweet = twitter.parseTweet(this.element.innerText);
+            this.onInput(parsedTweet.valid, parsedTweet.weightedLength, this.element.innerText);
             this.decorate();
         });
     }

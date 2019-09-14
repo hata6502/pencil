@@ -31,15 +31,11 @@ export default class extends VirtualElement<HTMLFormElement> {
                 },
                 '#HoodPencil'
             ),
-            (this.lengthSpan = createElement(
-                'span',
-                {
-                    style: `
+            (this.lengthSpan = createElement('span', {
+                style: `
                         display: block;
                     `
-                },
-                '0 / 280'
-            )),
+            })),
             (this.text = createElement('input', {
                 name: 'text',
                 type: 'hidden'
