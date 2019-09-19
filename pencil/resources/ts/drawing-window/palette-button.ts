@@ -1,4 +1,4 @@
-import VirtualElement from 'velement';
+import VirtualElement from '@blue-hood/velement';
 import * as Settings from '../settings';
 
 export default class extends VirtualElement<HTMLButtonElement> {

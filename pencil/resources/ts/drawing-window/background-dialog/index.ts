@@ -1,4 +1,4 @@
-import VirtualElement, { createElement, createVirtualElement, appendChildren } from 'velement';
+import VirtualElement, { createElement, appendChildren } from '@blue-hood/velement';
 import Button, { ButtonProps } from './button';
 import FileButton, { FileButtonProps } from './file-button';
 import File, { FileProps } from './file';
@@ -20,18 +20,18 @@ export default class extends VirtualElement<HTMLDivElement> {
 
         appendChildren(
             this.element,
-            createVirtualElement<Button, ButtonProps>(Button, {
+            createElement<Button, ButtonProps>(Button, {
                 src: Settings.BACKGROUND_IMAGES.white.src,
                 alt: Settings.BACKGROUND_IMAGES.white.alt,
                 isActive: true,
                 onClick: this.dispatchLoad
             }),
-            createVirtualElement<Button, ButtonProps>(Button, {
+            createElement<Button, ButtonProps>(Button, {
                 src: Settings.BACKGROUND_IMAGES.wide.src,
                 alt: Settings.BACKGROUND_IMAGES.wide.alt,
                 onClick: this.dispatchLoad
             }),
-            createVirtualElement<FileButton, FileButtonProps>(FileButton, {
+            createElement<FileButton, FileButtonProps>(FileButton, {
                 onClick: (): void => {
                     this.backgroundFile.click();
                 }
@@ -45,7 +45,7 @@ export default class extends VirtualElement<HTMLDivElement> {
                     enctype: 'multipart/form-data',
                     target: 'background-file-iframe'
                 },
-                (this.backgroundFile = createVirtualElement<File, FileProps>(File, {
+                (this.backgroundFile = createElement<File, FileProps>(File, {
                     onSelect: (): void => {
                         LoadingModal.display();
 

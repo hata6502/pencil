@@ -1,4 +1,4 @@
-import VirtualElement from 'velement';
+import VirtualElement from '@blue-hood/velement';
 import * as twitter from 'twitter-text';
 import * as Settings from '../settings';
 

@@ -1,4 +1,4 @@
-import VirtualElement, { createElement, createVirtualElement, appendChildren } from 'velement';
+import VirtualElement, { createElement, appendChildren } from '@blue-hood/velement';
 import PreviewCanvas, { PreviewCanvasProps } from './preview-canvas';
 import Textarea, { TextareaProps } from './textarea';
 
@@ -15,7 +15,7 @@ export default class extends VirtualElement<HTMLFormElement> {
 
         appendChildren(
             this.element,
-            (this.previewCanvas = createVirtualElement<PreviewCanvas, PreviewCanvasProps>(PreviewCanvas, {
+            (this.previewCanvas = createElement<PreviewCanvas, PreviewCanvasProps>(PreviewCanvas, {
                 onClick: (): void => {
                     this.onPreviewClick();
                 }
@@ -24,7 +24,7 @@ export default class extends VirtualElement<HTMLFormElement> {
                 name: 'preview',
                 type: 'hidden'
             })),
-            createVirtualElement<Textarea, TextareaProps>(
+            createElement<Textarea, TextareaProps>(
                 Textarea,
                 {
                     onInput: this.changeStatus

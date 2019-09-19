@@ -1,4 +1,4 @@
-import VirtualElement, { createElement, appendChildren } from 'velement';
+import VirtualElement, { createElement, appendChildren } from '@blue-hood/velement';
 
 export interface ButtonProps {
     src: string;
@@ -8,9 +8,9 @@ export interface ButtonProps {
 }
 
 export default class extends VirtualElement<HTMLButtonElement> {
-    onClick: (image: HTMLImageElement) => void = () => {};
+    public onClick: (image: HTMLImageElement) => void = (): void => {};
 
-    constructor(element: HTMLButtonElement | null, props: ButtonProps) {
+    public constructor(element: HTMLButtonElement | null, props: ButtonProps) {
         super(element || 'button');
 
         if (props.isActive) {
@@ -23,7 +23,7 @@ export default class extends VirtualElement<HTMLButtonElement> {
         this.element.classList.add('background-button');
 
         let image: HTMLImageElement;
-        this.element.onclick = () => {
+        this.element.onclick = (): void => {
             this.onClick(image);
         };
 

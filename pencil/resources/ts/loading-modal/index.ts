@@ -1,4 +1,4 @@
-import { createElement, appendChildren } from 'velement';
+import { createElement, appendChildren } from '@blue-hood/velement';
 import modalWindow from '../modal-window';
 import * as Settings from '../settings';
 

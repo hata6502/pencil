@@ -10,6 +10,7 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
+        "@blue-hood/velement": "0.0.1",
         "@sentry/browser": "^5.5.0",
         "@types/twitter-text": "^2.0.0",
         "axios": "^0.18",
@@ -27,7 +28,6 @@
         "ts-loader": "^6.0.4",
         "twitter-text": "^3.0.0",
         "typescript": "^3.5.2",
-        "velement": "github:blue-hood/velement",
         "vue": "^2.5.17"
     }
 }

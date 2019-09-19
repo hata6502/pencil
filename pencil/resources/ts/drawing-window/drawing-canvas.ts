@@ -1,4 +1,4 @@
-import VirtualElement from 'velement';
+import VirtualElement from '@blue-hood/velement';
 import * as Settings from '../settings';
 import { setNormarizedDrawingData } from '../canvas-utils';
 
@@ -184,11 +184,11 @@ export default class extends VirtualElement<HTMLCanvasElement> {
         const fill =
             this.color != 'transparent'
                 ? (x: number, y: number, w: number, h: number): void => {
-                    this.context.fillRect(x, y, w, h);
-                }
+                      this.context.fillRect(x, y, w, h);
+                  }
                 : (x: number, y: number, w: number, h: number): void => {
-                    this.context.clearRect(x, y, w, h);
-                };
+                      this.context.clearRect(x, y, w, h);
+                  };
 
         let y = originY - Math.floor(brush.pattern.length / 2);
 
