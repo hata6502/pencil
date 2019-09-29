@@ -45,6 +45,8 @@ export default class Reply extends VirtualElement<HTMLDivElement> {
             // @ts-ignore
             // eslint-disable-next-line no-undef
             twttr.widgets.createTweet(id, this.container);
+        } else {
+            alert('リプライ URL を読み込めませんでした。URL をご確認ください。');
         }
 
         this.onChange(id);
