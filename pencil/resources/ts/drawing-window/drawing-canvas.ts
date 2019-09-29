@@ -66,7 +66,7 @@ export default class extends VirtualElement<HTMLCanvasElement> {
                 ndd += ((r << 0) | (g << 1) | (b << 2) | (a << 3)).toString(16);
                 i += Settings.CANVAS_ZOOM * 4;
             }
-            i += Settings.CANVAS_WIDTH * Settings.CANVAS_ZOOM * 4;
+            i += Settings.CANVAS_ZOOM * 4 * Settings.CANVAS_WIDTH * (Settings.CANVAS_ZOOM - 1);
         }
 
         return ndd;

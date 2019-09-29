@@ -5,7 +5,10 @@ export const COLOR_DANGER = 'tomato';
 
 export const CANVAS_WIDTH = 320;
 export const CANVAS_HEIGHT = 180;
-export const CANVAS_ZOOM = 2;
+
+const widthZoom = window.innerWidth > 980 ? 3 : window.innerWidth > 660 ? 2 : 1;
+const heightZoom = window.innerHeight > 610 ? 3 : window.innerHeight > 450 ? 2 : 1;
+export const CANVAS_ZOOM = Math.min(widthZoom, heightZoom);
 
 export const DRAW_BRUSH = 'medium';
 export const DRAW_COLOR = 'black';

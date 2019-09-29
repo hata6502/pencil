@@ -1,6 +1,6 @@
 import * as Settings from './settings';
 
-export const setBackground = (context: CanvasRenderingContext2D, image: HTMLImageElement, zoom: number): void => {
+export function setBackground(context: CanvasRenderingContext2D, image: HTMLImageElement, zoom: number): void {
     const canvasWidth = Settings.CANVAS_WIDTH * zoom;
     const canvasHeight = Settings.CANVAS_HEIGHT * zoom;
 
@@ -13,14 +13,14 @@ export const setBackground = (context: CanvasRenderingContext2D, image: HTMLImag
     const height = image.naturalHeight * imageZoom;
 
     context.drawImage(image, (canvasWidth - width) / 2, (canvasHeight - height) / 2, width, height);
-};
+}
 
-export const setNormarizedDrawingData = (
+export function setNormarizedDrawingData(
     context: CanvasRenderingContext2D,
     ndd: string,
     zoom: number,
     isTransparent: boolean
-): void => {
+): void {
     const [width, height, data] = ndd.split(',');
 
     context.globalAlpha = 1;
@@ -44,4 +44,4 @@ export const setNormarizedDrawingData = (
             }
         }
     }
-};
+}
