@@ -1,12 +1,14 @@
 import VirtualElement, { createElement, appendChildren } from '@blue-hood/velement';
 import PreviewCanvas, { PreviewCanvasProps } from './preview-canvas';
 import Textarea, { TextareaProps } from './textarea';
+import Reply from './reply';
 
 export default class extends VirtualElement<HTMLFormElement> {
     public onPreviewClick: () => void = (): void => {};
     private previewCanvas: PreviewCanvas;
     private preview: HTMLInputElement;
     private text: HTMLInputElement;
+    private reply: HTMLInputElement;
     private submitButton: HTMLInputElement;
     private lengthSpan: HTMLSpanElement;
 
@@ -24,6 +26,8 @@ export default class extends VirtualElement<HTMLFormElement> {
                 name: 'preview',
                 type: 'hidden'
             })),
+            createElement('br', null),
+            createElement('br', null),
             createElement<Textarea, TextareaProps>(
                 Textarea,
                 {
@@ -40,6 +44,15 @@ export default class extends VirtualElement<HTMLFormElement> {
                 name: 'text',
                 type: 'hidden'
             })),
+            createElement('br', null),
+            createElement(Reply, {
+                onChange: this.setReplyID
+            }),
+            (this.reply = createElement('input', {
+                name: 'reply',
+                type: 'hidden'
+            })),
+            createElement('br', null),
             (this.submitButton = createElement('input', {
                 type: 'submit',
                 value: 'ツイート',
@@ -63,5 +76,9 @@ export default class extends VirtualElement<HTMLFormElement> {
         this.submitButton.disabled = !valid;
         this.lengthSpan.innerText = `${weightedLength} / 280`;
         this.text.value = text;
+    };
+
+    private setReplyID = (id: string): void => {
+        this.reply.value = id;
     };
 }
