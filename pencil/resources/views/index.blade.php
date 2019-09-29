@@ -1,8 +1,8 @@
 @extends('html')
 <!-- htmllint spec-char-escape="false" -->
 <!-- textlint-disable -->
-@section('meta') @include('meta', [ 'description' => 'Twitter に直接投稿できる気軽なお絵かきサービスです。', ]) {{--
-画像の上からお絵かきを重ねたり、自分の気持ちをアイコンで添えることもできます。 --}} @endsection
+@section('meta') @include('meta', [ 'description' => 'Twitter に直接投稿できる気軽なお絵かきサービスです。', ])
+@endsection
 <!-- htmllint spec-char-escape="$previous" -->
 <!-- textlint-enable -->
 

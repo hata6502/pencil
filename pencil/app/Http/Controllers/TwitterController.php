@@ -13,7 +13,8 @@ class TwitterController extends Controller
     {
         $request->validate([
             'preview' => 'required|max:2097152',
-            'text' => 'required|max:1024'
+            'text' => 'required|max:1024',
+            'reply' => 'max:2048'
         ]);
 
         $user = Auth::user();
@@ -28,10 +29,16 @@ class TwitterController extends Controller
         if ($twitterOAuth->getLastHttpCode() != 200) {
             throw new TwitterOAuthException(print_r($preview, true));
         }
-        $status = $twitterOAuth->post('statuses/update', [
+
+        $parameters = [
             'status' => $request->text,
             'media_ids' => $preview->media_id_string
-        ]);
+        ];
+        if (!empty($request->reply)) {
+            $parameters['in_reply_to_status_id'] = $request->reply;
+        }
+
+        $status = $twitterOAuth->post('statuses/update', $parameters);
         if ($twitterOAuth->getLastHttpCode() != 200) {
             throw new TwitterOAuthException(print_r($status, true));
         }

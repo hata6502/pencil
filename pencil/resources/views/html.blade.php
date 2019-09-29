@@ -20,6 +20,7 @@
     <body>
         @yield('content')
         <script src="{{ mix('/js/app.js') }}"></script>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
         @stack('scripts')
     </body>
 </html>
