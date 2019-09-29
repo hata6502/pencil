@@ -1,4 +1,4 @@
-import VirtualElement from 'velement';
+import VirtualElement from '@blue-hood/velement';
 import { setBackground, setNormarizedDrawingData } from '../canvas-utils';
 import * as Settings from '../settings';
 

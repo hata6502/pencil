@@ -3,7 +3,7 @@ module.exports = {
         browser: true,
         es6: true
     },
-    extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
+    extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
     globals: {
         Atomics: 'readonly',
         SharedArrayBuffer: 'readonly'
@@ -12,5 +12,7 @@ module.exports = {
         ecmaVersion: 2018,
         sourceType: 'module'
     },
-    rules: {}
+    rules: {
+        '@typescript-eslint/indent': 0
+    }
 };

@@ -1,4 +1,4 @@
-import VirtualElement from 'velement';
+import VirtualElement from '@blue-hood/velement';
 
 export default class extends VirtualElement<HTMLButtonElement> {
     onClick: () => void = () => {};
