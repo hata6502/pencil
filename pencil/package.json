@@ -10,24 +10,24 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
-        "@sentry/browser": "^5.6.3",
+        "@sentry/browser": "^5.10.2",
         "@types/twitter-text": "^2.0.0",
         "axios": "^0.18",
-        "bootstrap": "^4.1.0",
-        "core-js": "^3.2.1",
+        "bootstrap": "^4.4.1",
+        "core-js": "^3.6.1",
         "cross-env": "^5.2.1",
         "jquery": "^3.2",
         "laravel-mix": "^4.1.4",
         "lodash": "^4.17.15",
-        "popper.js": "^1.12",
+        "popper.js": "^1.16.0",
         "resolve-url-loader": "^2.3.1",
         "ress": "^1.2.2",
-        "sass": "^1.22.12",
+        "sass": "^1.24.0",
         "sass-loader": "^7.3.1",
-        "ts-loader": "^6.1.2",
-        "twitter-text": "^3.0.0",
-        "typescript": "^3.6.3",
-        "vue": "^2.5.17"
+        "ts-loader": "^6.2.1",
+        "twitter-text": "^3.0.1",
+        "typescript": "^3.7.4",
+        "vue": "^2.6.11"
     },
     "dependencies": {
         "@blue-hood/velement": "^0.1.1"
