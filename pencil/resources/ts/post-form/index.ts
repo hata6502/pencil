@@ -8,6 +8,7 @@ export default class extends VirtualElement<HTMLFormElement> {
     private previewCanvas: PreviewCanvas;
     private preview: HTMLInputElement;
     private text: HTMLInputElement;
+    private textArea: Textarea;
     private reply: HTMLInputElement;
     private submitButton: HTMLInputElement;
     private lengthSpan: HTMLSpanElement;
@@ -28,13 +29,13 @@ export default class extends VirtualElement<HTMLFormElement> {
             })),
             createElement('br', null),
             createElement('br', null),
-            createElement<Textarea, TextareaProps>(
+            (this.textArea = createElement<Textarea, TextareaProps>(
                 Textarea,
                 {
                     onInput: this.changeStatus
                 },
                 '#HoodPencil'
-            ),
+            )),
             (this.lengthSpan = createElement('span', {
                 style: `
                         display: block;
@@ -46,7 +47,7 @@ export default class extends VirtualElement<HTMLFormElement> {
             })),
             createElement('br', null),
             createElement(Reply, {
-                onChange: this.setReplyID
+                onChange: this.setReply
             }),
             (this.reply = createElement('input', {
                 name: 'reply',
@@ -78,7 +79,11 @@ export default class extends VirtualElement<HTMLFormElement> {
         this.text.value = text;
     };
 
-    private setReplyID = (id: string): void => {
+    private setReply = (id: string, screenName: string): void => {
         this.reply.value = id;
+
+        if (screenName !== '') {
+            this.textArea.change(`@${screenName} ${this.textArea.element.innerText}`);
+        }
     };
 }
