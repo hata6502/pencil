@@ -12,6 +12,7 @@
 */
 
 Route::get('', 'TopController@index')->name('top');
+Route::get('fit', 'TopController@fit')->name('fit');
 
 Route::group(['middleware' => 'auth.very_basic'], function () {
     Route::get('login', 'AuthController@twitterLogin')->name('login');

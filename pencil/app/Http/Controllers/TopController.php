@@ -16,4 +16,9 @@ class TopController extends Controller
     {
         return view('draw');
     }
+
+    public function fit()
+    {
+        return view('fit');
+    }
 }

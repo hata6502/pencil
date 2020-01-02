@@ -1,13 +1,13 @@
 import VirtualElement, { createElement, appendChildren } from '@blue-hood/velement';
 
 interface ReplyProps {
-    onChange?: (id: string) => void;
+    onChange?: (id: string, screenName: string) => void;
 }
 
 export default class Reply extends VirtualElement<HTMLDivElement> {
     private input: HTMLInputElement;
     private container: HTMLDivElement;
-    private onChange: (id: string) => void = (): void => {};
+    private onChange: (id: string, screenName: string) => void = (): void => {};
 
     public constructor(element: HTMLDivElement | null, props: ReplyProps) {
         super(element || 'div');
@@ -36,20 +36,25 @@ export default class Reply extends VirtualElement<HTMLDivElement> {
     }
 
     private onInputChange = (): void => {
-        const match = this.input.value.match(/(?:mobile\.)?twitter\.com\/[0-9a-zA-Z_]{1,15}\/status\/(\d+)/);
+        const match = this.input.value.match(/(?:mobile\.)?twitter\.com\/([0-9a-zA-Z_]{1,15})\/status\/(\d+)/);
+        let screenName = '';
         let id = '';
 
         this.container.innerHTML = '';
         if (match) {
-            id = match[1];
+            screenName = match[1];
+            id = match[2];
+
             // @ts-ignore
             // eslint-disable-next-line no-undef
             twttr.widgets.createTweet(id, this.container);
+
+            alert(`リプライするには @${screenName} を消さずにツイートしてください。`);
         } else {
             alert('リプライ URL を読み込めませんでした。URL をご確認ください。');
         }
 
-        this.onChange(id);
+        this.onChange(id, screenName);
     };
 }
 

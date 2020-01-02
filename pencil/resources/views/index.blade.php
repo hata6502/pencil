@@ -20,13 +20,19 @@
             <img class="landscape" src="{{ $landscapeUrl }}" alt="{{ $landscapeAlt }}" />
             <img class="animal" src="{{ $animalUrl }}" alt="{{ $animalAlt }}" />
             <h1>
-                <img src="{{ url('images/wing.png') }}" alt="羽根" />
+                <!-- htmllint img-req-alt="false" -->
+                <img src="{{ url('images/wing.png') }}" />
+                <!-- htmllint img-req-alt="$previous" -->
                 Hood Pencil
             </h1>
         </div>
 
         <p>
             Beta Version
+        </p>
+        <p>
+            2019/01/02<br />
+            リプライができない不具合を修正しました。<br />「16:9 画像フィットツール」を公開しました。
         </p>
 
         <h2>利用規約・プライバシーポリシー</h2>
@@ -43,7 +49,8 @@
             今後バックアップのために使用する予定です。
         </p>
 
-        <a href="{{ route('draw') }}">ログイン</a>
+        <a href="{{ route('draw') }}">ログイン</a><br />
+        <a href="{{ route('fit') }}">16:9 画像フィットツール</a>
     </div>
 </div>
 @endsection

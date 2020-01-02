@@ -44,6 +44,14 @@ export default class Textarea extends VirtualElement<HTMLDivElement> {
         });
     }
 
+    public change(text: string): void {
+        this.element.innerText = text;
+
+        const parsedTweet = twitter.parseTweet(this.element.innerText);
+        this.onInput(parsedTweet.valid, parsedTweet.weightedLength, this.element.innerText);
+        this.decorate();
+    }
+
     private decorate(): void {
         let prevText = this.element.innerText;
         const parsedTweet = twitter.parseTweet(prevText);
