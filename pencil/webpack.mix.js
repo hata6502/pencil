@@ -12,6 +12,7 @@ const mix = require('laravel-mix');
  */
 
 mix.ts('resources/ts/index.ts', 'public/js/app.js');
+mix.ts('resources/ts/fit.ts', 'public/js/fit.js');
 mix.ts('resources/ts/service-worker.ts', 'public');
 mix.sass('resources/sass/index.scss', 'public/css/app.css');
 mix.version();
