@@ -28,11 +28,7 @@
         </div>
 
         <p>
-            Beta Version
-        </p>
-        <p>
-            2019/01/02<br />
-            リプライができない不具合を修正しました。<br />「16:9 画像フィットツール」を公開しました。
+            Twitter に直接投稿できる気軽なお絵かきサービスです。
         </p>
 
         <h2>利用規約・プライバシーポリシー</h2>
@@ -50,7 +46,10 @@
         </p>
 
         <a href="{{ route('draw') }}">ログイン</a><br />
-        <a href="{{ route('fit') }}">16:9 画像フィットツール</a>
+        <a href="{{ route('fit') }}">16:9 画像フィットツール</a><br />
+        <br />
+        <a href="https://github.com/blue-hood/pencil">GitHub</a><br />
+        <a href="https://b-hood.site/">Hood</a>
     </div>
 </div>
 @endsection
