@@ -19,7 +19,7 @@
         "bootstrap": "^4.4.1",
         "core-js": "^3.6.1",
         "cross-env": "^5.2.1",
-        "jquery": "^3.2",
+        "jquery": "^3.5",
         "laravel-mix": "^5.0.1",
         "lodash": "^4.17.15",
         "popper.js": "^1.16.0",
@@ -31,9 +31,5 @@
         "twitter-text": "^3.0.1",
         "typescript": "^3.7.4",
         "vue": "^2.6.11"
-    },
-    "resolution": {
-        "minimist": ">=0.2.1",
-        "kind-of": ">=6.0.3"
     }
 }
