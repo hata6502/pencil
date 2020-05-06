@@ -56,7 +56,7 @@ export default class extends VirtualElement<HTMLFormElement> {
             createElement('br', null),
             (this.submitButton = createElement('input', {
                 type: 'submit',
-                value: 'ツイート',
+                value: 'ツイートする',
                 onclick: this.submit
             }))
         );
