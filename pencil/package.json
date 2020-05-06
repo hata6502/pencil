@@ -3,11 +3,14 @@
     "scripts": {
         "dev": "npm run development",
         "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "watch": "npm run development -- --watch",
-        "watch-poll": "npm run watch -- --watch-poll",
         "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
         "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "watch": "npm run development -- --watch",
+        "watch-poll": "npm run watch -- --watch-poll"
+    },
+    "dependencies": {
+        "@blue-hood/velement": "^0.1.1"
     },
     "devDependencies": {
         "@sentry/browser": "^5.10.2",
@@ -29,7 +32,8 @@
         "typescript": "^3.7.4",
         "vue": "^2.6.11"
     },
-    "dependencies": {
-        "@blue-hood/velement": "^0.1.1"
+    "resolution": {
+        "minimist": ">=0.2.1",
+        "kind-of": ">=6.0.3"
     }
 }

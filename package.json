@@ -2,20 +2,20 @@
   "name": "pencil",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "lint-staged && cd pencil/ && tsc --noEmit && php artisan code:analyse"
+  "homepage": "https://github.com/blue-hood/pencil#readme",
+  "bugs": {
+    "url": "https://github.com/blue-hood/pencil/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/blue-hood/pencil.git"
   },
-  "author": "",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/blue-hood/pencil/issues"
+  "author": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "lint-staged && cd pencil/ && tsc --noEmit && php artisan code:analyse"
   },
-  "homepage": "https://github.com/blue-hood/pencil#readme",
   "devDependencies": {
     "@prettier/plugin-php": "^0.11.2",
     "@typescript-eslint/eslint-plugin": "^1.13.0",
@@ -42,5 +42,9 @@
     "textlint-rule-preset-jtf-style": "^2.3.4",
     "textlint-rule-prh": "^5.3.0",
     "typescript": "^3.7.4"
+  },
+  "resolution": {
+    "minimist": ">=0.2.1",
+    "kind-of": ">=6.0.3"
   }
 }
