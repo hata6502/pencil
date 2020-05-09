@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\SnapShot;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,6 +43,11 @@ class ImageController extends Controller
         $user = Auth::user();
         $user->drawing = $request->drawing;
         $user->save();
+
+        $snap_shot = new SnapShot();
+        $snap_shot->user_id = $user->id;
+        $snap_shot->drawing = $request->drawing;
+        $snap_shot->save();
 
         return [];
     }
