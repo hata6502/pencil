@@ -45,7 +45,8 @@
             今後バックアップのために使用する予定です。
         </p>
 
-        <a href="{{ route('draw') }}">ログイン</a><br />
+        <a href="{{ route('draw') }}">ログインしてお絵かきをする</a><br />
+        <a href="https://youtu.be/T9ErB0TdWYs">リプライの方法紹介動画</a><br />
         <a href="{{ route('fit') }}">16:9 画像フィットツール</a><br />
         <br />
         <a href="https://github.com/blue-hood/pencil">GitHub</a><br />
