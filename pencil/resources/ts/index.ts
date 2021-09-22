@@ -1,4 +1,4 @@
-import 'core-js';
+//import 'core-js';
 import * as Sentry from '@sentry/browser';
 
 import PostForm from './post-form';
@@ -21,13 +21,13 @@ if (process.env.NODE_ENV == 'production') {
     Sentry.init({ dsn: Settings.SENTRY_DSN });
 }
 
-if ('serviceWorker' in navigator) {
+/*if ('serviceWorker' in navigator) {
     window.addEventListener('load', (): void => {
         navigator.serviceWorker.register('/service-worker.js');
     });
-}
+}*/
 
-if (location.pathname == '/draw') {
+if (true) {
     const postForm = new PostForm(document.getElementById('post-form') as HTMLFormElement);
     const drawingWindow = new ModalWindow(document.getElementById('drawing-window') as HTMLDivElement);
     const backgroundCanvas = new BackgroundCanvas(document.getElementById('background-canvas') as HTMLCanvasElement);
