@@ -15,7 +15,7 @@
     "devDependencies": {
         "@sentry/browser": "^5.10.2",
         "@types/twitter-text": "^2.0.0",
-        "axios": "^0.18",
+        "axios": "^0.21",
         "bootstrap": "^4.4.1",
         "core-js": "^3.6.1",
         "cross-env": "^5.2.1",
